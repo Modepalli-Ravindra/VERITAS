@@ -88,8 +88,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Navigation Links */}
-        <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 gap-2 sm:gap-4 lg:gap-6">
+        {/* Center: Navigation Links (Orange color with border buttons) */}
+        <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 gap-2 sm:gap-2.5 lg:gap-3">
           {activeNavList.map((item) => {
             const Icon = item.icon;
             const isActive = !isLanding && pathname === item.href;
@@ -97,13 +97,13 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`h-[40px] flex items-center gap-2 px-3.5 rounded-xl text-sm font-semibold tracking-wide transition-all ${
+                className={`h-[36px] flex items-center gap-1.5 px-3.5 rounded-full text-xs lg:text-sm font-semibold tracking-wide transition-all border ${
                   isActive
-                    ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 shadow-sm"
-                    : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
+                    ? "bg-[#f2572b] text-white border-[#f2572b] shadow-md shadow-[#f2572b]/30"
+                    : "bg-[#f2572b]/10 text-[#f2572b] border-[#f2572b]/40 hover:bg-[#f2572b] hover:text-white hover:border-[#f2572b] hover:shadow-md hover:shadow-[#f2572b]/30"
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? "text-[#f2572b]" : "text-[#737373]"}`} />
+                <Icon className="w-3.5 h-3.5 shrink-0" />
                 <span>{item.name}</span>
               </Link>
             );
@@ -177,11 +177,13 @@ export default function Navbar() {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
-                      isActive ? "bg-[#f2572b]/15 text-[#f2572b] font-semibold" : "text-[#a3a3a3] hover:text-white"
+                    className={`flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all border ${
+                      isActive
+                        ? "bg-[#f2572b] text-white border-[#f2572b] shadow-sm"
+                        : "bg-[#f2572b]/10 text-[#f2572b] border-[#f2572b]/30 hover:bg-[#f2572b] hover:text-white hover:border-[#f2572b]"
                     }`}
                   >
-                    <Icon className="w-4 h-4 text-[#f2572b]" />
+                    <Icon className="w-4 h-4 shrink-0" />
                     <span>{item.name}</span>
                   </Link>
                 );
