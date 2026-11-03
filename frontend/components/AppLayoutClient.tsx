@@ -101,10 +101,10 @@ export default function AppLayoutClient({
     );
   }
 
-  // If on login/signup page: pure clean full screen
+  // If on login/signup page: pure clean full screen viewport locked (no scroll)
   if (isAuthPage) {
     return (
-      <div className="min-h-screen bg-[#171717] text-white w-full flex items-center justify-center p-4 selection:bg-[#f2572b]/30 selection:text-white">
+      <div className="h-screen w-screen overflow-hidden bg-[#171717] text-white flex items-center justify-center selection:bg-[#f2572b]/30 selection:text-white relative">
         {children}
       </div>
     );
