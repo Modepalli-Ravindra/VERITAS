@@ -49,6 +49,17 @@ export default function LoginPage() {
   return (
     <div className="h-screen w-screen overflow-hidden flex items-center justify-center p-4 bg-[#171717] relative select-none">
       
+      {/* 1. Floating Back Button in Background Top-Left */}
+      <div className="absolute top-6 left-6 z-20">
+        <Link 
+          href="/" 
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.1] glass-card hover:border-[#f2572b]/80 hover:bg-white/[0.08] text-xs font-mono text-[#e5e5e5] hover:text-white transition-all group shadow-lg backdrop-blur-xl"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 text-[#f2572b] group-hover:-translate-x-1 transition-transform" />
+          <span>Back to Home</span>
+        </Link>
+      </div>
+
       {/* Full Screen Ambient Light Orbs */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#f2572b]/25 blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#ff7a52]/20 blur-[150px] pointer-events-none" />
@@ -58,53 +69,39 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-[#171717]/65 backdrop-blur-3xl pointer-events-none z-0" />
 
       {/* Main Glass Panel Card */}
-      <div className="max-w-md w-full glass-panel rounded-3xl p-7 sm:p-9 shadow-2xl space-y-6 relative z-10 border border-white/[0.1] bg-[#171717]/85 backdrop-blur-2xl">
+      <div className="max-w-md w-full glass-panel rounded-3xl p-8 sm:p-10 shadow-2xl space-y-6 relative z-10 border border-white/[0.1] bg-[#171717]/85 backdrop-blur-2xl">
         
-        {/* Back to Home Navigation */}
-        <div className="flex items-center justify-between pb-1">
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/[0.08] glass-card hover:border-[#f2572b]/80 hover:bg-white/[0.06] text-xs font-mono text-[#e5e5e5] hover:text-white transition-all group shadow-sm"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#f2572b] group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Home</span>
-          </Link>
-          <span className="text-[11px] font-mono text-[#f2572b] px-3.5 py-1 rounded-full glass-card border border-white/[0.08]">
-            Sign In
-          </span>
-        </div>
-
         {/* Distinct Brand Identity Box (Logo + Name) */}
-        <div className="flex justify-center pt-1">
+        <div className="flex justify-center">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl glass-card border border-white/[0.08] hover:border-[#f2572b]/80 shadow-md group transition-all"
+            className="inline-flex items-center gap-3.5 px-6 py-2.5 rounded-2xl glass-card border border-white/[0.1] hover:border-[#f2572b]/80 shadow-md group transition-all"
             title="VERITAS Home"
           >
-            <div className="w-10 h-10 rounded-xl overflow-hidden border border-[#f2572b]/50 shadow-sm shrink-0">
-              <img src="/veritas_emblem.jpg" alt="VERITAS" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+            <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#f2572b]/50 shadow-sm shrink-0 bg-[#120a05]">
+              <img src="/veritas_logo.jpg" alt="VERITAS" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
             </div>
             <div className="text-left">
               <span className="font-serif font-bold text-xl tracking-wider text-white group-hover:text-[#f2572b] transition-colors block leading-tight">
                 VERITAS
               </span>
-              <span className="text-[10px] font-mono text-[#f2572b] uppercase tracking-wider block">
+              <span className="text-[10px] font-mono text-[#f2572b] uppercase tracking-wider block font-semibold">
                 Verification Suite
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Separator Divider Line with Label */}
-        <div className="relative flex items-center justify-center my-1">
+        {/* Separator Divider Line with Sign In Label (Moved from top to here) */}
+        <div className="relative flex items-center justify-center my-2">
           <div className="w-full border-t border-white/[0.08]" />
-          <div className="absolute px-3 bg-[#171717] text-[10px] font-mono text-[#a3a3a3] uppercase tracking-widest rounded-full border border-white/[0.08]">
-            Authentication
+          <div className="absolute px-4 py-0.5 bg-[#171717] text-[11px] font-mono text-[#f2572b] font-bold uppercase tracking-widest rounded-full border border-white/[0.1] shadow-sm">
+            Sign In
           </div>
         </div>
 
         {/* Welcome Back Heading & Description */}
-        <div className="space-y-1 text-center">
+        <div className="space-y-1 text-center pt-1">
           <h1 className="font-serif text-2xl font-bold tracking-tight text-white">
             Welcome Back
           </h1>
