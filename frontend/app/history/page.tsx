@@ -77,29 +77,19 @@ export default function HistoryPage() {
     <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
       
       {/* Header & New Audit CTA */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
+      {/* Audit Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-3 shrink-0">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-[#f2572b] uppercase tracking-wider">
-              Audit Records
-            </span>
-            <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[10px] font-mono text-emerald-400">
-              Active Ledger
-            </span>
-          </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+          <h1 className="font-serif text-lg sm:text-xl font-bold text-white tracking-tight">
             Submissions Audit Ledger
           </h1>
-          <p className="text-xs text-[#a3a3a3] mt-1 font-sans">
-            Chronological registry of manuscripts, research papers, and source code files analyzed for originality.
-          </p>
         </div>
 
         <Link
           href="/dashboard"
-          className="px-5 py-2.5 rounded-full btn-juicy text-xs font-bold transition-all shadow-md shadow-[#f2572b]/25 flex items-center gap-2"
+          className="h-8 px-3 rounded-lg btn-juicy text-xs font-bold transition-all shadow-sm shadow-[#f2572b]/25 flex items-center gap-1.5 hover:brightness-110 text-white"
         >
-          <Plus className="w-4 h-4 text-white" />
+          <Plus className="w-3.5 h-3.5 text-white" />
           <span>New Audit</span>
         </Link>
       </div>
@@ -113,37 +103,37 @@ export default function HistoryPage() {
             placeholder="Search by title or scan key..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] outline-none font-sans"
+            className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 bg-[#141414] border border-white/10 text-xs text-white placeholder:text-[#737373] outline-none font-sans focus:border-[#f2572b]"
           />
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-mono">
+        <div className="flex items-center gap-1.5 bg-[#141414] p-1 rounded-xl border border-white/10 text-xs font-mono">
           <button
             onClick={() => setFilterType("all")}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               filterType === "all"
-                ? "bg-[#262626]/90 text-[#ffffff] border border-[#f2572b] shadow-sm"
-                : "glass-card text-[#a3a3a3] hover:text-[#ffffff]"
+                ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 font-semibold shadow-sm"
+                : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
             }`}
           >
             All ({scans.length})
           </button>
           <button
             onClick={() => setFilterType("text")}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               filterType === "text"
-                ? "bg-[#262626]/90 text-[#ffffff] border border-[#f2572b] shadow-sm"
-                : "glass-card text-[#a3a3a3] hover:text-[#ffffff]"
+                ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 font-semibold shadow-sm"
+                : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
             }`}
           >
             Manuscripts
           </button>
           <button
             onClick={() => setFilterType("code")}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               filterType === "code"
-                ? "bg-[#262626]/90 text-[#ffffff] border border-[#f2572b] shadow-sm"
-                : "glass-card text-[#a3a3a3] hover:text-[#ffffff]"
+                ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 font-semibold shadow-sm"
+                : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
             }`}
           >
             Source Code
@@ -157,9 +147,9 @@ export default function HistoryPage() {
           Loading audit ledger...
         </div>
       ) : filteredScans.length === 0 ? (
-        <div className="glass-panel rounded-3xl p-12 text-center space-y-3">
+        <div className="glass-panel rounded-3xl p-12 text-center space-y-3 border border-white/[0.08] bg-[#1a1a1a]/90">
           <Clock className="w-8 h-8 mx-auto text-[#f2572b]" />
-          <p className="text-sm font-semibold text-[#ffffff]">No Audit Records Found</p>
+          <p className="text-sm font-semibold text-white">No Audit Records Found</p>
           <p className="text-xs text-[#a3a3a3] max-w-md mx-auto">
             Audit manuscripts or source code files from the studio workbench to generate persistent verification dossiers.
           </p>
@@ -170,11 +160,11 @@ export default function HistoryPage() {
             <Link
               key={scan.id}
               href={`/report/${scan.id}`}
-              className="p-6 glass-card glass-card-hover rounded-3xl flex flex-col justify-between space-y-4 shadow-xl group cursor-pointer"
+              className="p-6 glass-card glass-card-hover rounded-3xl flex flex-col justify-between space-y-4 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90 group cursor-pointer"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-[#1f1f1f]/80 border border-[white/[0.08]] text-[#f2572b]">
+                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-[#141414] border border-white/10 text-[#f2572b]">
                     {scan.content_type}
                   </span>
                   <button
@@ -186,20 +176,20 @@ export default function HistoryPage() {
                   </button>
                 </div>
 
-                <h3 className="font-serif text-base font-bold text-[#ffffff] leading-snug line-clamp-2 group-hover:text-white transition-colors">
+                <h3 className="font-serif text-base font-bold text-white leading-snug line-clamp-2 group-hover:text-white transition-colors">
                   {scan.title}
                 </h3>
               </div>
 
-              <div className="space-y-3 pt-3 border-t border-[white/[0.08]]/60">
+              <div className="space-y-3 pt-3 border-t border-white/[0.08]">
                 <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                  <div className="p-2.5 bg-[#1f1f1f]/80 backdrop-blur-md border border-[white/[0.08]]/70 rounded-xl">
+                  <div className="p-2.5 bg-[#141414] border border-white/10 rounded-xl">
                     <span className="text-[10px] text-[#a3a3a3] block">Similarity</span>
                     <span className="font-bold text-rose-400 text-sm tabular-nums">
                       {Math.round(scan.plagiarism_score)}%
                     </span>
                   </div>
-                  <div className="p-2.5 bg-[#1f1f1f]/80 backdrop-blur-md border border-[white/[0.08]]/70 rounded-xl">
+                  <div className="p-2.5 bg-[#141414] border border-white/10 rounded-xl">
                     <span className="text-[10px] text-[#a3a3a3] block">AI Score</span>
                     <span className="font-bold text-[#f2572b] text-sm tabular-nums">
                       {Math.round(scan.ai_score)}%

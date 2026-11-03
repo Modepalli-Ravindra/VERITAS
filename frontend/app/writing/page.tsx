@@ -267,23 +267,15 @@ export default function WritingStudioPage() {
 
   return (
     <div className="h-full w-full flex flex-col overflow-hidden bg-[#171717] text-white p-4 sm:p-6 space-y-4">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-3 border-b border-white/[0.08] shrink-0">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pb-3 border-b border-white/[0.08] shrink-0">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-[#f2572b]/40 shadow-sm text-xs font-semibold uppercase tracking-wider text-[#e5e5e5] mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#f2572b]" />
-            VERITAS // Writing &amp; Research Intelligence
-          </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          <h1 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white">
             Scholarly Writing &amp; Citation Studio
           </h1>
-          <p className="mt-0.5 text-xs text-[#a3a3a3] max-w-2xl font-sans">
-            Multi-provider LLM API gateway (Groq, Gemini, OpenRouter, NVIDIA), rule-based grammar audit, 10-mode stylistic rewrite studio, and anti-bypass forensics.
-          </p>
-
         </div>
 
-        <div className="flex items-center gap-1.5 bg-[#1f1f1f]/80 p-1.5 rounded-2xl border border-white/[0.08] backdrop-blur-md">
+        <div className="flex items-center gap-1.5 bg-[#141414] p-1 rounded-xl border border-white/10">
           {[
             { id: "grammar", label: "Grammar & Clarity", icon: CheckCircle2 },
             { id: "rewrite", label: "Rewrite Studio", icon: PenTool },
@@ -296,9 +288,9 @@ export default function WritingStudioPage() {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id as any)}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
-                    ? "bg-[#f2572b] text-white shadow-md shadow-[#f2572b]/20"
+                    ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 font-semibold shadow-sm"
                     : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
@@ -314,21 +306,21 @@ export default function WritingStudioPage() {
       <div className="flex-1 overflow-y-auto pr-1 pb-4 space-y-4">
         {/* ================= TAB 1: GRAMMAR & READABILITY ================= */}
         {activeTab === "grammar" && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {/* Editor Side */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-[white/[0.08]]">
+              <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl">
+                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                   <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
                     Document Editor ({inputText.length} chars)
                   </span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleCopy(inputText)}
-                      className="text-xs text-[#a3a3a3] hover:text-[#ffffff] flex items-center gap-1"
+                      className="text-xs text-[#a3a3a3] hover:text-white flex items-center gap-1"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      Copy
+                      <span>Copy</span>
                     </button>
                   </div>
                 </div>
@@ -337,21 +329,21 @@ export default function WritingStudioPage() {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   rows={12}
-                  className="w-full mt-4 p-4 rounded-xl bg-[#171717]/70 border border-[white/[0.08]] text-sm text-[#ffffff] font-sans focus:outline-none focus:border-[#f2572b] transition-all resize-y"
+                  className="w-full mt-4 p-4 rounded-xl bg-[#141414] border border-white/10 text-sm text-white font-sans focus:outline-none focus:border-[#f2572b] transition-all resize-y placeholder:text-[#737373]"
                   placeholder="Paste academic manuscript or essay to audit grammar, style, and readability..."
                 />
 
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-xs text-[#737373]">
-                    Auditing 60+ academic redundancy rules & homophone traps locally.
+                    Auditing 60+ academic redundancy rules &amp; homophone traps locally.
                   </span>
                   <button
                     onClick={() => handleRunGrammar(inputText)}
                     disabled={loading}
-                    className="px-6 py-2.5 rounded-[60px] btn-juicy text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
+                    className="h-10 px-5 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
                   >
                     {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                    Analyze Writing
+                    <span>Analyze Writing</span>
                   </button>
                 </div>
               </div>
@@ -359,33 +351,33 @@ export default function WritingStudioPage() {
               {/* Readability Scorecard */}
               {grammarReport?.metrics && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="p-4 rounded-xl bg-[#1f1f1f]/70 border border-[white/[0.12]]/60">
+                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
                     <div className="text-xs text-[#a3a3a3] font-mono">Flesch Reading Ease</div>
-                    <div className="text-2xl font-bold font-serif text-[#ffffff] mt-1">
+                    <div className="text-2xl font-bold font-serif text-white mt-1">
                       {grammarReport.metrics.flesch_reading_ease}
                     </div>
                     <div className="text-[11px] text-[#f2572b] mt-0.5">{grammarReport.metrics.reading_level}</div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#1f1f1f]/70 border border-[white/[0.12]]/60">
+                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
                     <div className="text-xs text-[#a3a3a3] font-mono">Grade Level (FKGL)</div>
-                    <div className="text-2xl font-bold font-serif text-[#ffffff] mt-1">
+                    <div className="text-2xl font-bold font-serif text-white mt-1">
                       Grade {grammarReport.metrics.flesch_kincaid_grade}
                     </div>
                     <div className="text-[11px] text-[#a3a3a3] mt-0.5">Gunning Fog: {grammarReport.metrics.gunning_fog}</div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#1f1f1f]/70 border border-[white/[0.12]]/60">
+                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
                     <div className="text-xs text-[#a3a3a3] font-mono">Complex Words</div>
-                    <div className="text-2xl font-bold font-serif text-[#ffffff] mt-1">
+                    <div className="text-2xl font-bold font-serif text-white mt-1">
                       {grammarReport.metrics.complex_word_count}
                     </div>
                     <div className="text-[11px] text-[#a3a3a3] mt-0.5">{grammarReport.metrics.syllables_per_word} syll/word</div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#1f1f1f]/70 border border-[white/[0.12]]/60">
+                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
                     <div className="text-xs text-[#a3a3a3] font-mono">Reading Time</div>
-                    <div className="text-2xl font-bold font-serif text-[#ffffff] mt-1">
+                    <div className="text-2xl font-bold font-serif text-white mt-1">
                       {grammarReport.metrics.reading_time_seconds}s
                     </div>
                     <div className="text-[11px] text-[#a3a3a3] mt-0.5">Speaking: {grammarReport.metrics.speaking_time_seconds}s</div>
@@ -396,16 +388,16 @@ export default function WritingStudioPage() {
 
             {/* Suggestions & Issues Column */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-[white/[0.08]]">
+              <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl">
+                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-[#ffffff]">Linguistic Issues</h3>
+                    <h3 className="font-serif text-base font-bold text-white">Linguistic Issues</h3>
                     <p className="text-xs text-[#a3a3a3]">
                       Found {grammarReport?.total_issues || 0} issues • Clarity Score:{" "}
                       <span className="font-bold text-[#f2572b]">{grammarReport?.clarity_score || 100}/100</span>
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-full border-2 border-[#f2572b] flex items-center justify-center font-bold text-sm text-[#ffffff] bg-[#262626]">
+                  <div className="w-10 h-10 rounded-xl border border-[#f2572b]/60 flex items-center justify-center font-bold text-sm text-white bg-[#262626]">
                     {grammarReport?.clarity_score || 100}
                   </div>
                 </div>
@@ -425,7 +417,7 @@ export default function WritingStudioPage() {
                       return (
                         <div
                           key={issue.id}
-                          className="p-3.5 rounded-xl bg-[#100905] border border-[white/[0.08]] hover:border-[#f2572b]/60 transition-all space-y-2"
+                          className="p-3.5 rounded-xl bg-[#141414] border border-white/10 hover:border-[#f2572b]/60 transition-all space-y-2"
                         >
                           <div className="flex items-center justify-between text-xs">
                             <span
@@ -455,7 +447,7 @@ export default function WritingStudioPage() {
                           <div className="pt-1 flex justify-end">
                             <button
                               onClick={() => applyGrammarFix(issue)}
-                              className="px-3 py-1 rounded-[60px] bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/50 text-xs text-[#ffffff] font-semibold transition-all"
+                              className="h-7 px-3 rounded-lg bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/50 text-xs text-white font-semibold transition-all"
                             >
                               Apply Fix
                             </button>
@@ -472,9 +464,9 @@ export default function WritingStudioPage() {
 
         {/* ================= TAB 2: REWRITE STUDIO ================= */}
         {activeTab === "rewrite" && (
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* Mode Selectors */}
-            <div className="p-4 rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 backdrop-blur-xl">
+            <div className="glass-card rounded-3xl p-5 border border-white/[0.08] bg-[#1a1a1a]/90 backdrop-blur-xl">
               <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block mb-3">
                 Select Rewriting Register (9 Specialized Modes)
               </span>
@@ -491,10 +483,10 @@ export default function WritingStudioPage() {
                       className={`p-3 rounded-xl text-left border transition-all ${
                         isSel
                           ? "bg-[#29170e] border-[#f2572b] shadow-lg shadow-black/30"
-                          : "bg-[#100905]/60 border-[white/[0.08]] hover:border-[white/[0.12]] text-[#a3a3a3]"
+                          : "bg-[#141414] border-white/10 hover:border-white/20 text-[#a3a3a3]"
                       }`}
                     >
-                      <div className={`text-xs font-bold ${isSel ? "text-[#ffffff]" : "text-[#e5e5e5]"}`}>
+                      <div className={`text-xs font-bold ${isSel ? "text-white" : "text-[#e5e5e5]"}`}>
                         {mode.name}
                       </div>
                       <div className="text-[11px] text-[#737373] line-clamp-1 mt-0.5">{mode.desc}</div>
@@ -505,10 +497,10 @@ export default function WritingStudioPage() {
             </div>
 
             {/* Side-by-Side Diff Comparison */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {/* Left: Input Text */}
-              <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-[white/[0.08]]">
+              <div className="glass-panel rounded-3xl border border-white/[0.08] bg-[#1a1a1a]/90 p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
                   <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
                     Original Source Text
                   </span>
@@ -517,20 +509,20 @@ export default function WritingStudioPage() {
                   <button
                     onClick={handleRunHumanize}
                     disabled={loading || !inputText.trim()}
-                    className="flex-1 py-2 px-3 rounded-[60px] bg-gradient-to-r from-purple-900/90 to-indigo-900/90 hover:from-purple-800 hover:to-indigo-800 border border-purple-500/50 text-xs font-bold text-purple-200 hover:text-white shadow-md flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
+                    className="flex-1 h-9 px-3 rounded-xl bg-purple-950/60 hover:bg-purple-900/60 border border-purple-500/40 text-xs font-semibold text-purple-200 hover:text-white shadow-sm flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
                     title="Deeply humanize text to reduce AI detection scores"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-purple-300" />
-                    Deep AI Humanizer (Gateway LLM)
+                    <span>Deep AI Humanizer (Gateway LLM)</span>
                   </button>
                   <button
                     onClick={handleRunPlagiarismRemoval}
                     disabled={loading || !inputText.trim()}
-                    className="flex-1 py-2 px-3 rounded-[60px] bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 border border-emerald-500/50 text-xs font-bold text-emerald-300 hover:text-white shadow-md flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
+                    className="flex-1 h-9 px-3 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-xs font-semibold text-emerald-300 hover:text-white shadow-sm flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
                     title="Smart paraphrase to drop similarity below 15%"
                   >
                     <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
-                    Remove Plagiarism (&lt; 15% Sim)
+                    <span>Remove Plagiarism (&lt; 15% Sim)</span>
                   </button>
                 </div>
 
@@ -538,22 +530,22 @@ export default function WritingStudioPage() {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   rows={8}
-                  className="w-full p-4 rounded-xl bg-[#171717]/70 border border-[white/[0.08]] text-sm text-[#ffffff] font-sans focus:outline-none focus:border-[#f2572b] transition-all resize-y"
+                  className="w-full p-4 rounded-xl bg-[#141414] border border-white/10 text-sm text-white font-sans focus:outline-none focus:border-[#f2572b] transition-all resize-y placeholder:text-[#737373]"
                   placeholder="Paste text to rewrite..."
                 />
                 <button
                   onClick={() => handleRunRewrite(rewriteMode, inputText)}
                   disabled={loading}
-                  className="w-full py-2.5 rounded-[60px] btn-juicy text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 border border-transparent"
+                  className="w-full h-10 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 border border-transparent"
                 >
                   {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
-                  Execute Scholarly Rewrite ({REWRITE_MODES.find((m) => m.id === rewriteMode)?.name})
+                  <span>Execute Scholarly Rewrite ({REWRITE_MODES.find((m) => m.id === rewriteMode)?.name})</span>
                 </button>
               </div>
 
               {/* Right: Rewritten Output */}
-              <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-[white/[0.08]]">
+              <div className="glass-panel rounded-3xl border border-white/[0.08] bg-[#1a1a1a]/90 p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono font-bold tracking-wider text-[#f2572b] uppercase">
                       Rewritten Output
@@ -567,15 +559,15 @@ export default function WritingStudioPage() {
                   {rewriteResult && (
                     <button
                       onClick={() => handleCopy(rewriteResult.rewritten_text)}
-                      className="text-xs text-[#f2572b] hover:text-[#ffffff] flex items-center gap-1 font-semibold"
+                      className="text-xs text-[#f2572b] hover:text-white flex items-center gap-1 font-semibold"
                     >
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      Copy Rewritten
+                      <span>Copy Rewritten</span>
                     </button>
                   )}
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#171717]/90 border border-[white/[0.08]] min-h-[200px] text-sm text-[#ffffff] leading-relaxed font-sans overflow-y-auto max-h-[350px]">
+                <div className="p-4 rounded-xl bg-[#141414] border border-white/10 min-h-[200px] text-sm text-white leading-relaxed font-sans overflow-y-auto max-h-[350px]">
                   {loading ? (
                     <div className="flex items-center justify-center h-40 text-xs text-[#a3a3a3] gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin text-[#f2572b]" />
@@ -629,10 +621,10 @@ export default function WritingStudioPage() {
             </div>
 
             {/* Ethics & Integrity Disclaimer */}
-            <div className="p-4 rounded-xl bg-[#140b06] border border-[white/[0.12]]/60 text-xs text-[#a3a3a3] flex items-start gap-3">
+            <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 text-xs text-[#a3a3a3] flex items-start gap-3">
               <ShieldAlert className="w-4 h-4 text-[#f2572b] shrink-0 mt-0.5" />
               <div>
-                <span className="font-bold text-[#ffffff]">Academic Ethics Notice: </span>
+                <span className="font-bold text-white">Academic Ethics Notice: </span>
                 Veritas Rewrite Studio is engineered for linguistic clarity, non-native English cadence, and rhetorical conciseness. It preserves underlying academic truth and factual citations without attempting to conceal AI generation.
               </div>
             </div>
@@ -643,25 +635,25 @@ export default function WritingStudioPage() {
         {activeTab === "citations" && (
           <div className="space-y-6">
             {/* OpenAlex 250M Live Search Bar */}
-            <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[white/[0.08]]">
+            <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-[#ffffff]">
-                    OpenAlex 250M Academic Catalog & Citation Generator
+                  <h3 className="font-serif text-base font-bold text-white">
+                    OpenAlex 250M Academic Catalog &amp; Citation Generator
                   </h3>
                   <p className="text-xs text-[#a3a3a3]">
                     Search 250M+ open publications, retrieve DOIs, and generate instant peer-reviewed citations.
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 bg-[#141414] p-1 rounded-xl border border-white/10">
                   {(["apa7", "mla9", "ieee", "bibtex"] as const).map((style) => (
                     <button
                       key={style}
                       onClick={() => setSelectedCitationStyle(style)}
-                      className={`px-3 py-1 rounded-[60px] text-xs font-mono font-bold uppercase transition-all ${
+                      className={`px-3 py-1 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
                         selectedCitationStyle === style
-                          ? "bg-[#f2572b] text-[#ffffff]"
-                          : "bg-[#262626] text-[#a3a3a3] border border-[white/[0.08]] hover:text-[#ffffff]"
+                          ? "bg-[#f2572b] text-white shadow-sm"
+                          : "text-[#a3a3a3] hover:text-white"
                       }`}
                     >
                       {style}
@@ -678,17 +670,17 @@ export default function WritingStudioPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearchSources()}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#171717]/70 border border-[white/[0.08]] text-sm text-[#ffffff] focus:outline-none focus:border-[#f2572b] transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#141414] border border-white/10 text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#f2572b] transition-all"
                     placeholder="Search papers by title, author, or research field (e.g. Attention Is All You Need, CRISPR gene editing)..."
                   />
                 </div>
                 <button
                   onClick={handleSearchSources}
                   disabled={searching}
-                  className="px-6 py-2.5 rounded-[60px] btn-juicy text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
+                  className="h-10 px-5 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
                 >
                   {searching ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                  Search
+                  <span>Search</span>
                 </button>
               </div>
 
@@ -697,10 +689,10 @@ export default function WritingStudioPage() {
                 {searchResults.map((paper: any, idx: number) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl bg-[#100905] border border-[white/[0.08]] hover:border-[#f2572b]/70 transition-all space-y-2.5"
+                    className="p-4 rounded-2xl bg-[#141414] border border-white/10 hover:border-[#f2572b]/70 transition-all space-y-2.5"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <h4 className="text-sm font-serif font-bold text-[#ffffff] leading-tight line-clamp-2">
+                      <h4 className="text-sm font-serif font-bold text-white leading-tight line-clamp-2">
                         {paper.title}
                       </h4>
                       {paper.doi && (
@@ -708,7 +700,7 @@ export default function WritingStudioPage() {
                           href={`https://doi.org/${paper.doi.replace('https://doi.org/','')}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[#f2572b] hover:text-[#ffffff] shrink-0"
+                          className="text-[#f2572b] hover:text-white shrink-0"
                           title="Open DOI URL"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -725,7 +717,7 @@ export default function WritingStudioPage() {
                     </div>
 
                     {/* Pre-formatted citation in selected style */}
-                    <div className="p-2.5 rounded-lg bg-[#0a0503] border border-[#262626] text-xs font-mono text-[#e5e5e5] select-all flex items-center justify-between gap-2">
+                    <div className="p-2.5 rounded-xl bg-[#0d0d0d] border border-white/10 text-xs font-mono text-[#e5e5e5] select-all flex items-center justify-between gap-2">
                       <div className="truncate">{paper.citations?.[selectedCitationStyle] || paper.title}</div>
                       <button
                         onClick={() => handleCopy(paper.citations?.[selectedCitationStyle] || paper.title)}
@@ -741,11 +733,11 @@ export default function WritingStudioPage() {
             </div>
 
             {/* Phantom / Hallucinated Citation Checker */}
-            <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[white/[0.08]]">
+            <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-[#ffffff]">
-                    Phantom & Hallucinated Citation Audit
+                  <h3 className="font-serif text-base font-bold text-white">
+                    Phantom &amp; Hallucinated Citation Audit
                   </h3>
                   <p className="text-xs text-[#a3a3a3]">
                     Cross-checks in-text citations against the bibliography and queries Crossref to uncover fabricated LLM citations.
@@ -754,10 +746,10 @@ export default function WritingStudioPage() {
                 <button
                   onClick={() => handleRunCitationAudit(inputText)}
                   disabled={loading}
-                  className="px-4 py-1.5 rounded-[60px] bg-[#262626] border border-[#f2572b]/60 text-xs font-bold text-[#ffffff] hover:bg-[#382419] transition-all flex items-center gap-1.5"
+                  className="h-8 px-3 rounded-lg bg-[#262626] border border-[#f2572b]/60 text-xs font-bold text-white hover:bg-[#382419] transition-all flex items-center gap-1.5"
                 >
                   {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                  Audit Document Citations
+                  <span>Audit Citations</span>
                 </button>
               </div>
 
@@ -765,7 +757,7 @@ export default function WritingStudioPage() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 rows={6}
-                className="w-full p-4 rounded-xl bg-[#171717]/70 border border-[white/[0.08]] text-xs text-[#ffffff] font-mono focus:outline-none focus:border-[#f2572b] transition-all"
+                className="w-full p-4 rounded-xl bg-[#141414] border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-[#f2572b] transition-all placeholder:text-[#737373]"
                 placeholder="Paste document with in-text citations and reference list..."
               />
 
@@ -792,11 +784,11 @@ export default function WritingStudioPage() {
                               ? "bg-emerald-950/20 border-emerald-800/40"
                               : isPhantom
                               ? "bg-rose-950/30 border-rose-800/60"
-                              : "bg-[#100905] border-[white/[0.08]]"
+                              : "bg-[#141414] border-white/10"
                           }`}
                         >
                           <div className="flex items-center justify-between gap-2 text-xs">
-                            <span className="font-mono font-bold text-[#ffffff]">{ref.id}</span>
+                            <span className="font-mono font-bold text-white">{ref.id}</span>
                             <span
                               className={`px-2 py-0.5 rounded-full font-mono text-[10px] uppercase font-bold ${
                                 isReal
@@ -826,10 +818,10 @@ export default function WritingStudioPage() {
         {/* ================= TAB 4: FORENSICS & ANTI-BYPASS ================= */}
         {activeTab === "forensics" && (
           <div className="space-y-6">
-            <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="pb-2 border-b border-[white/[0.08]]">
-                <h3 className="font-serif text-lg font-bold text-[#ffffff]">
-                  Document Forensics & Adversarial Evasion Auditor
+            <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl space-y-4">
+              <div className="pb-3 border-b border-white/[0.08]">
+                <h3 className="font-serif text-base font-bold text-white">
+                  Document Forensics &amp; Adversarial Evasion Auditor
                 </h3>
                 <p className="text-xs text-[#a3a3a3]">
                   Detects student evasion tricks: Zero-width space injections (\u200B), Cyrillic/Greek homoglyph substitutions, and token-breaking characters.
@@ -840,7 +832,7 @@ export default function WritingStudioPage() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 rows={6}
-                className="w-full p-4 rounded-xl bg-[#171717]/70 border border-[white/[0.08]] text-xs text-[#ffffff] font-mono focus:outline-none focus:border-[#f2572b] transition-all"
+                className="w-full p-4 rounded-xl bg-[#141414] border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-[#f2572b] transition-all placeholder:text-[#737373]"
                 placeholder="Paste document to inspect for adversarial unicode evasion tricks..."
               />
 
@@ -848,19 +840,19 @@ export default function WritingStudioPage() {
                 <button
                   onClick={() => handleRunForensics(inputText)}
                   disabled={loading}
-                  className="px-6 py-2.5 rounded-[60px] btn-juicy text-white text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
+                  className="h-10 px-5 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
                 >
                   {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
-                  Audit Adversarial Manipulation
+                  <span>Audit Adversarial Manipulation</span>
                 </button>
               </div>
             </div>
 
             {/* Forensics Report View */}
             {forensicsReport && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 {/* Score & Summary Card */}
-                <div className="lg:col-span-5 p-5 rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 space-y-4 backdrop-blur-xl">
+                <div className="lg:col-span-5 p-5 sm:p-6 rounded-3xl glass-card bg-[#1a1a1a]/90 border border-white/[0.08] space-y-4 backdrop-blur-xl shadow-2xl">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
                       Evasion Threat Status
@@ -878,7 +870,7 @@ export default function WritingStudioPage() {
                     </span>
                   </div>
 
-                  <div className="text-4xl font-serif font-bold text-[#ffffff]">
+                  <div className="text-4xl font-serif font-bold text-white">
                     {forensicsReport.evasion_score}
                     <span className="text-sm font-sans text-[#a3a3a3] font-normal"> / 100 Threat Index</span>
                   </div>
@@ -886,15 +878,15 @@ export default function WritingStudioPage() {
                   <p className="text-xs text-[#a3a3a3] leading-relaxed">{forensicsReport.summary}</p>
 
                   <div className="grid grid-cols-2 gap-3 pt-2">
-                    <div className="p-3 rounded-xl bg-[#100905] border border-[white/[0.08]]">
+                    <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10">
                       <div className="text-[11px] text-[#a3a3a3]">Zero-Width Injections</div>
-                      <div className="text-xl font-bold font-mono text-[#ffffff] mt-1">
+                      <div className="text-xl font-bold font-mono text-white mt-1">
                         {forensicsReport.zero_width_count}
                       </div>
                     </div>
-                    <div className="p-3 rounded-xl bg-[#100905] border border-[white/[0.08]]">
+                    <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10">
                       <div className="text-[11px] text-[#a3a3a3]">Homoglyph Swaps</div>
-                      <div className="text-xl font-bold font-mono text-[#ffffff] mt-1">
+                      <div className="text-xl font-bold font-mono text-white mt-1">
                         {forensicsReport.homoglyph_count}
                       </div>
                     </div>
@@ -908,18 +900,18 @@ export default function WritingStudioPage() {
                           setInputText(forensicsReport.sanitized_text);
                           handleCopy(forensicsReport.sanitized_text);
                         }}
-                        className="w-full py-2 rounded-[60px] bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/60 text-xs text-[#ffffff] font-semibold transition-all flex items-center justify-center gap-1.5"
+                        className="w-full h-8 px-3 rounded-lg bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/60 text-xs text-white font-semibold transition-all flex items-center justify-center gap-1.5"
                       >
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        Replace With Clean Sanitized Text
+                        <span>Replace With Clean Sanitized Text</span>
                       </button>
                     </div>
                   )}
                 </div>
 
                 {/* Anomalies Inspector */}
-                <div className="lg:col-span-7 p-5 rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 space-y-3 backdrop-blur-xl">
-                  <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-[white/[0.08]]">
+                <div className="lg:col-span-7 p-5 sm:p-6 rounded-3xl glass-card bg-[#1a1a1a]/90 border border-white/[0.08] space-y-3 backdrop-blur-xl shadow-2xl">
+                  <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-white/[0.08]">
                     Detected Forensic Anomalies ({forensicsReport.anomalies?.length || 0})
                   </span>
 
@@ -933,13 +925,13 @@ export default function WritingStudioPage() {
                       forensicsReport.anomalies?.map((ano: any, idx: number) => (
                         <div
                           key={idx}
-                          className="p-3 rounded-xl bg-[#100905] border border-[white/[0.08]] text-xs space-y-1"
+                          className="p-3.5 rounded-xl bg-[#141414] border border-white/10 text-xs space-y-1"
                         >
                           <div className="flex items-center justify-between font-mono">
                             <span className="text-[#f2572b] font-bold">{ano.codepoint}</span>
                             <span className="text-[#737373]">{ano.char_name}</span>
                           </div>
-                          <div className="text-[#ffffff] font-mono text-[11px] bg-[#080402] px-2 py-1 rounded">
+                          <div className="text-white font-mono text-[11px] bg-[#080402] px-2.5 py-1 rounded-lg">
                             Context: &ldquo;{ano.context}&rdquo;
                           </div>
                           <p className="text-[#a3a3a3] text-[11px]">{ano.description}</p>

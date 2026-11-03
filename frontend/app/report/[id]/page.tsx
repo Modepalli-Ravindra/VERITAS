@@ -85,9 +85,9 @@ export default function ReportPage() {
   if (!report) {
     return (
       <div className="py-20 text-center space-y-4">
-        <h2 className="font-serif text-2xl font-bold text-[#ffffff]">Audit Dossier Not Found</h2>
-        <p className="text-xs text-[#a3a3a3]">No record found matching submission key: <code className="font-mono text-[#ffffff]">{scanId}</code></p>
-        <Link href="/dashboard" className="inline-block px-4 py-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] text-xs font-mono text-[#ffffff] hover:bg-[#262626]">
+        <h2 className="font-serif text-2xl font-bold text-white">Audit Dossier Not Found</h2>
+        <p className="text-xs text-[#a3a3a3]">No record found matching submission key: <code className="font-mono text-white">{scanId}</code></p>
+        <Link href="/dashboard" className="inline-block px-4 py-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08] text-xs font-mono text-white hover:bg-[#262626]">
           Return to Studio
         </Link>
       </div>
@@ -108,21 +108,21 @@ export default function ReportPage() {
     <div className="w-full space-y-7 py-2">
       
       {/* Top Header & Breadcrumb with Glassmorphism */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[white/[0.08]]/60 pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/[0.08]/60 pb-5">
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="p-2.5 rounded-xl border border-[white/[0.08]] glass-card hover:bg-white/[0.06] text-[#a3a3a3] hover:text-[#ffffff] transition-colors"
+            className="p-2.5 rounded-xl border border-white/[0.08] glass-card hover:bg-white/[0.06] text-[#a3a3a3] hover:text-white transition-colors"
             title="Return to Studio"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2.5">
-              <h1 className="font-serif text-xl sm:text-2xl font-bold text-[#ffffff] tracking-tight">
+              <h1 className="font-serif text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {report.title}
               </h1>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#1f1f1f]/80 border border-[white/[0.08]] text-[#f2572b]">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#1f1f1f]/80 border border-white/[0.08] text-[#f2572b]">
                 {report.content_type}
               </span>
             </div>
@@ -139,7 +139,7 @@ export default function ReportPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopyText}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[white/[0.08]] glass-card hover:bg-white/[0.06] text-xs text-[#ffffff] transition-colors font-mono"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/[0.08] glass-card hover:bg-white/[0.06] text-xs text-white transition-colors font-mono"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-[#a3a3a3]" />}
             <span>{copied ? "Copied" : "Copy Source"}</span>
@@ -180,8 +180,8 @@ export default function ReportPage() {
         {/* Left Pane: Manuscript Document Viewer (7 cols) - Glassmorphism */}
         <div className="lg:col-span-7 glass-panel rounded-3xl overflow-hidden flex flex-col min-h-[580px] shadow-2xl">
           
-          <div className="px-5 py-3.5 border-b border-[white/[0.08]]/60 bg-[#1f1f1f]/80 backdrop-blur-md flex items-center justify-between">
-            <span className="text-xs font-mono font-medium text-[#ffffff] uppercase tracking-wider">
+          <div className="px-5 py-3.5 border-b border-white/[0.08]/60 bg-[#1f1f1f]/80 backdrop-blur-md flex items-center justify-between">
+            <span className="text-xs font-mono font-medium text-white uppercase tracking-wider">
               Document Manuscript Text
             </span>
             <div className="flex items-center gap-4 text-xs font-mono">
@@ -189,7 +189,7 @@ export default function ReportPage() {
                 <span className="w-2 h-2 rounded-full bg-rose-500"></span>
                 <span>Attributed Source</span>
               </span>
-              <span className="flex items-center gap-1.5 text-[#ffffff]">
+              <span className="flex items-center gap-1.5 text-white">
                 <span className="w-2 h-2 rounded-full bg-[#f2572b]"></span>
                 <span>Robotic Writing Rhythm</span>
               </span>
@@ -198,11 +198,11 @@ export default function ReportPage() {
 
           <div className="p-6 flex-1 overflow-y-auto max-h-[660px]">
             {report.content_type === "code" ? (
-              <pre className="font-mono text-xs leading-relaxed text-[#ffffff] whitespace-pre-wrap bg-[#1f1f1f]/80 backdrop-blur-md p-4 rounded-xl border border-[white/[0.08]]/60 overflow-x-auto">
+              <pre className="font-mono text-xs leading-relaxed text-white whitespace-pre-wrap bg-[#1f1f1f]/80 backdrop-blur-md p-4 rounded-xl border border-white/[0.08]/60 overflow-x-auto">
                 {report.raw_content}
               </pre>
             ) : (
-              <div className="prose prose-sm max-w-none text-[#ffffff] leading-relaxed font-sans space-y-3">
+              <div className="prose prose-sm max-w-none text-white leading-relaxed font-sans space-y-3">
                 {sentenceBreakdown.length > 0 ? (
                   sentenceBreakdown.map((item: any, idx: number) => {
                     const isAi = item.is_likely_ai;
@@ -218,7 +218,7 @@ export default function ReportPage() {
                             ? "highlight-ribbon-plag"
                             : isAi
                             ? "highlight-ribbon-ai"
-                            : "text-[#ffffff]"
+                            : "text-white"
                         }`}
                         onClick={() => {
                           if (matchedSource) {
@@ -235,7 +235,7 @@ export default function ReportPage() {
                     );
                   })
                 ) : (
-                  <p className="whitespace-pre-wrap text-xs font-sans leading-relaxed text-[#ffffff]">
+                  <p className="whitespace-pre-wrap text-xs font-sans leading-relaxed text-white">
                     {report.raw_content}
                   </p>
                 )}
@@ -247,13 +247,13 @@ export default function ReportPage() {
         {/* Right Pane: Attribution & Rhythm Inspector (5 cols) - Glassmorphism */}
         <div className="lg:col-span-5 glass-panel rounded-3xl overflow-hidden flex flex-col min-h-[580px] shadow-2xl">
           
-          <div className="flex border-b border-[white/[0.08]]/60 bg-[#1f1f1f]/80 backdrop-blur-md px-4 pt-2.5 gap-1 text-xs font-mono">
+          <div className="flex border-b border-white/[0.08]/60 bg-[#1f1f1f]/80 backdrop-blur-md px-4 pt-2.5 gap-1 text-xs font-mono">
             <button
               onClick={() => setActiveInspectorTab("sources")}
               className={`flex items-center gap-1.5 pb-2.5 px-3 border-b-2 transition-colors ${
                 activeInspectorTab === "sources"
-                  ? "border-[#f2572b] text-[#ffffff] font-semibold"
-                  : "border-transparent text-[#a3a3a3] hover:text-[#ffffff]"
+                  ? "border-[#f2572b] text-white font-semibold"
+                  : "border-transparent text-[#a3a3a3] hover:text-white"
               }`}
             >
               <BookOpen className="w-3.5 h-3.5 text-[#f2572b]" />
@@ -264,8 +264,8 @@ export default function ReportPage() {
               onClick={() => setActiveInspectorTab("ai")}
               className={`flex items-center gap-1.5 pb-2.5 px-3 border-b-2 transition-colors ${
                 activeInspectorTab === "ai"
-                  ? "border-[#f2572b] text-[#ffffff] font-semibold"
-                  : "border-transparent text-[#a3a3a3] hover:text-[#ffffff]"
+                  ? "border-[#f2572b] text-white font-semibold"
+                  : "border-transparent text-[#a3a3a3] hover:text-white"
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-[#f2572b]" />
@@ -278,8 +278,8 @@ export default function ReportPage() {
                   onClick={() => setActiveInspectorTab("facts")}
                   className={`flex items-center gap-1.5 pb-2.5 px-3 border-b-2 transition-colors ${
                     activeInspectorTab === "facts"
-                      ? "border-[#f2572b] text-[#ffffff] font-semibold"
-                      : "border-transparent text-[#a3a3a3] hover:text-[#ffffff]"
+                      ? "border-[#f2572b] text-white font-semibold"
+                      : "border-transparent text-[#a3a3a3] hover:text-white"
                   }`}
                 >
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#f2572b]" />
@@ -290,8 +290,8 @@ export default function ReportPage() {
                   onClick={() => setActiveInspectorTab("writing")}
                   className={`flex items-center gap-1.5 pb-2.5 px-3 border-b-2 transition-colors ${
                     activeInspectorTab === "writing"
-                      ? "border-[#f2572b] text-[#ffffff] font-semibold"
-                      : "border-transparent text-[#a3a3a3] hover:text-[#ffffff]"
+                      ? "border-[#f2572b] text-white font-semibold"
+                      : "border-transparent text-[#a3a3a3] hover:text-white"
                   }`}
                 >
                   <PenTool className="w-3.5 h-3.5 text-[#f2572b]" />
@@ -302,8 +302,8 @@ export default function ReportPage() {
                   onClick={() => setActiveInspectorTab("forensics")}
                   className={`flex items-center gap-1.5 pb-2.5 px-3 border-b-2 transition-colors ${
                     activeInspectorTab === "forensics"
-                      ? "border-[#f2572b] text-[#ffffff] font-semibold"
-                      : "border-transparent text-[#a3a3a3] hover:text-[#ffffff]"
+                      ? "border-[#f2572b] text-white font-semibold"
+                      : "border-transparent text-[#a3a3a3] hover:text-white"
                   }`}
                 >
                   <ShieldAlert className="w-3.5 h-3.5 text-[#f2572b]" />
@@ -318,7 +318,7 @@ export default function ReportPage() {
               <div className="space-y-3">
                 {/* Attribution or Code Clone Summary */}
                 {report.content_type === "code" ? (
-                  <div className="p-3 bg-[#100b07]/80 rounded-2xl border border-[white/[0.08]]/60 space-y-1.5 text-xs font-mono">
+                  <div className="p-3 bg-[#100b07]/80 rounded-2xl border border-white/[0.08]/60 space-y-1.5 text-xs font-mono">
                     <div className="flex items-center justify-between">
                       <span className="text-[#a3a3a3]">Clone Classification:</span>
                       <span className="text-[#E4BD78] font-bold">
@@ -332,7 +332,7 @@ export default function ReportPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap items-center gap-2 p-3 bg-[#100b07]/80 rounded-2xl border border-[white/[0.08]]/60 text-[11px] font-mono">
+                  <div className="flex flex-wrap items-center gap-2 p-3 bg-[#100b07]/80 rounded-2xl border border-white/[0.08]/60 text-[11px] font-mono">
                     <span className="text-[#a3a3a3]">Attribution Breakdown:</span>
                     <span className="px-2 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-800/80 text-emerald-300">
                       Cited Quotes: {report.metrics?.cited_quotations_percentage ?? 0}%
@@ -346,7 +346,7 @@ export default function ReportPage() {
                 {report.matches.length === 0 ? (
                   <div className="py-16 text-center text-[#a3a3a3] space-y-2">
                     <CheckCircle2 className="w-6 h-6 mx-auto text-emerald-400" />
-                    <p className="text-sm text-[#ffffff] font-medium">No External Matches Found</p>
+                    <p className="text-sm text-white font-medium">No External Matches Found</p>
                     <p className="text-xs">The manuscript shows zero substantial overlap with indexed databases (OpenAlex, Semantic Scholar, arXiv, Crossref).</p>
                   </div>
                 ) : (
@@ -363,13 +363,13 @@ export default function ReportPage() {
                         className={`p-4 rounded-2xl border transition-all cursor-pointer ${
                           isSelected
                             ? "border-[#f2572b] bg-[#1a110a] shadow-lg shadow-[#f2572b]/10"
-                            : "border-[white/[0.08]] hover:border-[#a3a3a3] bg-[#1f1f1f]"
+                            : "border-white/[0.08] hover:border-[#a3a3a3] bg-[#1f1f1f]"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="space-y-1">
                             <div className="flex flex-wrap items-center gap-1.5">
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1f1f1f] border border-[white/[0.08]] text-[#f2572b]">
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1f1f1f] border border-white/[0.08] text-[#f2572b]">
                                 {match.provider || "Academic Index"}
                               </span>
                               {match.year && match.year !== "N/A" && (
@@ -390,7 +390,7 @@ export default function ReportPage() {
                                 </a>
                               )}
                             </div>
-                            <h4 className="font-serif text-xs font-semibold text-[#ffffff] leading-snug">
+                            <h4 className="font-serif text-xs font-semibold text-white leading-snug">
                               {match.source_title}
                             </h4>
                           </div>
@@ -419,7 +419,7 @@ export default function ReportPage() {
                         </div>
 
                         {firstSpan.matched_text && (
-                          <div className="mt-2.5 p-2.5 bg-[#1f1f1f]/90 border border-[white/[0.08]] rounded-xl text-xs font-sans text-[#EADDC2] leading-relaxed">
+                          <div className="mt-2.5 p-2.5 bg-[#1f1f1f]/90 border border-white/[0.08] rounded-xl text-xs font-sans text-[#EADDC2] leading-relaxed">
                             &ldquo;{firstSpan.matched_text}&rdquo;
                           </div>
                         )}
@@ -433,25 +433,25 @@ export default function ReportPage() {
             {activeInspectorTab === "ai" && (
               <div className="space-y-4">
                 {/* AI & Human Percentages */}
-                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-[white/[0.08]] space-y-2">
+                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-white/[0.08] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono text-[#f2572b] uppercase block">Ensemble Verdict</span>
                     <span className="text-[10px] font-mono text-[#a3a3a3]">
                       Confidence: {aiAnalysis.confidence_score || "96.8%"}
                     </span>
                   </div>
-                  <p className="text-sm font-serif font-bold text-[#ffffff]">
+                  <p className="text-sm font-serif font-bold text-white">
                     {aiAnalysis.verdict || "Analysis Concluded"}
                   </p>
 
                   <div className="grid grid-cols-2 gap-2 pt-1">
-                    <div className="p-2.5 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] text-center">
+                    <div className="p-2.5 rounded-xl bg-[#1f1f1f] border border-white/[0.08] text-center">
                       <span className="text-[10px] font-mono text-[#a3a3a3] block">AI Generated</span>
                       <span className="font-mono text-base font-bold text-rose-400">
                         {aiAnalysis.ai_probability ?? report.ai_score}%
                       </span>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] text-center">
+                    <div className="p-2.5 rounded-xl bg-[#1f1f1f] border border-white/[0.08] text-center">
                       <span className="text-[10px] font-mono text-[#a3a3a3] block">Human Authored</span>
                       <span className="font-mono text-base font-bold text-emerald-400">
                         {aiAnalysis.human_probability ?? (100 - report.ai_score)}%
@@ -488,49 +488,49 @@ export default function ReportPage() {
 
                 {/* 4 Multi-Signal Diagnostic Gauges */}
                 <div className="grid grid-cols-2 gap-3 text-xs font-sans">
-                  <div className="p-3.5 bg-[#1f1f1f] border border-[white/[0.08]] rounded-2xl space-y-1">
+                  <div className="p-3.5 bg-[#1f1f1f] border border-white/[0.08] rounded-2xl space-y-1">
                     <span className="text-[#f2572b] block text-xs font-medium">Sentence Rhythm (Cv)</span>
-                    <div className="text-[#ffffff] font-bold text-sm">
+                    <div className="text-white font-bold text-sm">
                       {Number(aiAnalysis.metrics?.burstiness_cv ?? 0) < 0.38 ? "Low / Homogeneous (AI)" : "High / Varied (Human)"}
                     </div>
                     <p className="text-[11px] text-[#a3a3a3] leading-snug">
-                      Variation index: <code className="font-mono text-[#ffffff]">{aiAnalysis.metrics?.burstiness_cv ?? "N/A"}</code>
+                      Variation index: <code className="font-mono text-white">{aiAnalysis.metrics?.burstiness_cv ?? "N/A"}</code>
                     </p>
                   </div>
 
-                  <div className="p-3.5 bg-[#1f1f1f] border border-[white/[0.08]] rounded-2xl space-y-1">
+                  <div className="p-3.5 bg-[#1f1f1f] border border-white/[0.08] rounded-2xl space-y-1">
                     <span className="text-[#f2572b] block text-xs font-medium">Shannon Entropy</span>
-                    <div className="text-[#ffffff] font-bold text-sm">
+                    <div className="text-white font-bold text-sm">
                       {Number(aiAnalysis.metrics?.entropy ?? 0) < 3.8 ? "Low Entropy (Predictable)" : "Rich Entropy (Human)"}
                     </div>
                     <p className="text-[11px] text-[#a3a3a3] leading-snug">
-                      Entropy score: <code className="font-mono text-[#ffffff]">{aiAnalysis.metrics?.entropy ?? "N/A"}</code>
+                      Entropy score: <code className="font-mono text-white">{aiAnalysis.metrics?.entropy ?? "N/A"}</code>
                     </p>
                   </div>
 
-                  <div className="p-3.5 bg-[#1f1f1f] border border-[white/[0.08]] rounded-2xl space-y-1">
+                  <div className="p-3.5 bg-[#1f1f1f] border border-white/[0.08] rounded-2xl space-y-1">
                     <span className="text-[#f2572b] block text-xs font-medium">Vocabulary Diversity (TTR)</span>
-                    <div className="text-[#ffffff] font-bold text-sm">
+                    <div className="text-white font-bold text-sm">
                       {Number(aiAnalysis.metrics?.lexical_diversity_ttr ?? 0) > 0.45 ? "Rich Vocabulary" : "Repetitive Phrasing"}
                     </div>
                     <p className="text-[11px] text-[#a3a3a3] leading-snug">
-                      TTR index: <code className="font-mono text-[#ffffff]">{aiAnalysis.metrics?.lexical_diversity_ttr ?? "N/A"}</code>
+                      TTR index: <code className="font-mono text-white">{aiAnalysis.metrics?.lexical_diversity_ttr ?? "N/A"}</code>
                     </p>
                   </div>
 
-                  <div className="p-3.5 bg-[#1f1f1f] border border-[white/[0.08]] rounded-2xl space-y-1">
+                  <div className="p-3.5 bg-[#1f1f1f] border border-white/[0.08] rounded-2xl space-y-1">
                     <span className="text-[#f2572b] block text-xs font-medium">Punctuation Diversity</span>
-                    <div className="text-[#ffffff] font-bold text-sm">
+                    <div className="text-white font-bold text-sm">
                       {Number(aiAnalysis.metrics?.punctuation_entropy ?? 1.5) > 1.8 ? "Organic Human Cadence" : "Standardized LLM Flow"}
                     </div>
                     <p className="text-[11px] text-[#a3a3a3] leading-snug">
-                      Entropy: <code className="font-mono text-[#ffffff]">{aiAnalysis.metrics?.punctuation_entropy ?? "1.5"}</code>
+                      Entropy: <code className="font-mono text-white">{aiAnalysis.metrics?.punctuation_entropy ?? "1.5"}</code>
                     </p>
                   </div>
                 </div>
 
                 {detectedMarkers.length > 0 && (
-                  <div className="space-y-2 pt-2 border-t border-[white/[0.08]]">
+                  <div className="space-y-2 pt-2 border-t border-white/[0.08]">
                     <span className="text-xs font-mono text-[#f2572b] uppercase block">
                       Hallmark AI Transition Markers Detected:
                     </span>
@@ -538,7 +538,7 @@ export default function ReportPage() {
                       {detectedMarkers.map((m: any, i: number) => (
                         <span
                           key={i}
-                          className="px-2.5 py-0.5 rounded-full bg-[#1f1f1f] border border-[white/[0.08]] text-[#ffffff] font-mono text-[11px]"
+                          className="px-2.5 py-0.5 rounded-full bg-[#1f1f1f] border border-white/[0.08] text-white font-mono text-[11px]"
                         >
                           {m.marker} <span className="text-[#f2572b]">({m.count})</span>
                         </span>
@@ -552,7 +552,7 @@ export default function ReportPage() {
             {activeInspectorTab === "facts" && (
               <div className="space-y-4">
                 {/* Fact Fidelity Gauge */}
-                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-[white/[0.08]] space-y-2">
+                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-white/[0.08] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono text-[#f2572b] uppercase block">Factual Fidelity Index</span>
                     <span className="text-[10px] font-mono text-[#a3a3a3]">
@@ -560,7 +560,7 @@ export default function ReportPage() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between pt-1">
-                    <p className="text-sm font-serif font-bold text-[#ffffff]">
+                    <p className="text-sm font-serif font-bold text-white">
                       Empirical Evidence Alignment
                     </p>
                     <span className="font-mono text-lg font-bold text-emerald-400">
@@ -588,7 +588,7 @@ export default function ReportPage() {
                       </span>
                       <span className="text-[#a3a3a3]">Insufficient</span>
                     </div>
-                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
+                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08]">
                       <span className="block text-[#f2572b] font-bold text-sm">
                         {report.metrics?.fact_analysis?.opinion_claims ?? 0}
                       </span>
@@ -602,12 +602,12 @@ export default function ReportPage() {
                   {(report.metrics?.fact_analysis?.claims || []).length === 0 ? (
                     <div className="py-12 text-center text-[#a3a3a3] space-y-1">
                       <CheckCircle2 className="w-5 h-5 mx-auto text-[#f2572b]" />
-                      <p className="text-xs text-[#ffffff]">No specific factual assertions isolated for claim checks.</p>
+                      <p className="text-xs text-white">No specific factual assertions isolated for claim checks.</p>
                     </div>
                   ) : (
                     (report.metrics?.fact_analysis?.claims || []).map((cl: any, i: number) => {
                       return (
-                        <div key={i} className="p-3.5 rounded-2xl bg-[#1f1f1f] border border-[white/[0.08]] space-y-2">
+                        <div key={i} className="p-3.5 rounded-2xl bg-[#1f1f1f] border border-white/[0.08] space-y-2">
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-[10px] font-mono text-[#a3a3a3]">
                               {cl.claim_type}
@@ -625,12 +625,12 @@ export default function ReportPage() {
                             </span>
                           </div>
 
-                          <p className="text-xs font-serif font-medium text-[#ffffff] leading-relaxed">
+                          <p className="text-xs font-serif font-medium text-white leading-relaxed">
                             &ldquo;{cl.claim_text}&rdquo;
                           </p>
 
                           {cl.evidence_snippet && (
-                            <div className="p-2.5 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] text-[11px] font-sans space-y-1">
+                            <div className="p-2.5 rounded-xl bg-[#1f1f1f] border border-white/[0.08] text-[11px] font-sans space-y-1">
                               <div className="flex items-center justify-between text-[#f2572b] font-mono text-[10px]">
                                 <span className="truncate max-w-[240px]">{cl.evidence_title}</span>
                                 {cl.evidence_url && (
@@ -665,13 +665,13 @@ export default function ReportPage() {
             {/* TAB 4: WRITING QUALITY & READABILITY */}
             {activeInspectorTab === "writing" && (
               <div className="space-y-4">
-                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-[white/[0.08]] space-y-3">
+                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-white/[0.08] space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-mono text-[#a3a3a3] uppercase block">
                         Clarity &amp; Readability Score
                       </span>
-                      <div className="text-2xl font-serif font-bold text-[#ffffff]">
+                      <div className="text-2xl font-serif font-bold text-white">
                         {report.metrics?.grammar_report?.clarity_score ?? 95} / 100
                       </div>
                     </div>
@@ -681,20 +681,20 @@ export default function ReportPage() {
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
-                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
-                      <span className="block text-[#ffffff] font-bold">
+                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08]">
+                      <span className="block text-white font-bold">
                         {report.metrics?.grammar_report?.metrics?.flesch_reading_ease ?? 45.0}
                       </span>
                       <span className="text-[#a3a3a3]">Flesch Ease</span>
                     </div>
-                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
-                      <span className="block text-[#ffffff] font-bold">
+                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08]">
+                      <span className="block text-white font-bold">
                         Grade {report.metrics?.grammar_report?.metrics?.flesch_kincaid_grade ?? 12.0}
                       </span>
                       <span className="text-[#a3a3a3]">FKGL Level</span>
                     </div>
-                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
-                      <span className="block text-[#ffffff] font-bold">
+                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08]">
+                      <span className="block text-white font-bold">
                         {report.metrics?.grammar_report?.metrics?.complex_word_count ?? 14}
                       </span>
                       <span className="text-[#a3a3a3]">Complex Words</span>
@@ -710,11 +710,11 @@ export default function ReportPage() {
                   {(report.metrics?.grammar_report?.issues || []).length === 0 ? (
                     <div className="py-10 text-center text-[#a3a3a3] space-y-1">
                       <CheckCircle2 className="w-5 h-5 mx-auto text-emerald-400" />
-                      <p className="text-xs text-[#ffffff]">Clean manuscript! No critical grammar, punctuation, or redundancy flaws detected.</p>
+                      <p className="text-xs text-white">Clean manuscript! No critical grammar, punctuation, or redundancy flaws detected.</p>
                     </div>
                   ) : (
                     (report.metrics?.grammar_report?.issues || []).map((iss: any, idx: number) => (
-                      <div key={idx} className="p-3 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] space-y-1.5 text-xs">
+                      <div key={idx} className="p-3 rounded-xl bg-[#1f1f1f] border border-white/[0.08] space-y-1.5 text-xs">
                         <div className="flex items-center justify-between text-[10px] font-mono uppercase">
                           <span className="text-[#f2572b] font-bold">{iss.category.replace("_", " ")}</span>
                           <span className="text-[#8c745d]">{iss.severity}</span>
@@ -735,13 +735,13 @@ export default function ReportPage() {
             {/* TAB 5: DOCUMENT FORENSICS & EVASION DEFENSE */}
             {activeInspectorTab === "forensics" && (
               <div className="space-y-4">
-                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-[white/[0.08]] space-y-3">
+                <div className="p-4 rounded-2xl bg-[#1f1f1f] border border-white/[0.08] space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xs font-mono text-[#a3a3a3] uppercase block">
                         Adversarial Evasion Threat Level
                       </span>
-                      <div className="text-2xl font-serif font-bold text-[#ffffff]">
+                      <div className="text-2xl font-serif font-bold text-white">
                         {report.metrics?.forensics?.threat_level?.replace("_", " ") || "CLEAN"}
                       </div>
                     </div>
@@ -759,14 +759,14 @@ export default function ReportPage() {
                   </p>
 
                   <div className="grid grid-cols-2 gap-2 text-center text-[11px] font-mono">
-                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
-                      <span className="block text-[#ffffff] font-bold">
+                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08]">
+                      <span className="block text-white font-bold">
                         {report.metrics?.forensics?.zero_width_count ?? 0}
                       </span>
                       <span className="text-[#a3a3a3]">Zero-Width Injections</span>
                     </div>
-                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
-                      <span className="block text-[#ffffff] font-bold">
+                    <div className="p-2 rounded-xl bg-[#1f1f1f] border border-white/[0.08]">
+                      <span className="block text-white font-bold">
                         {report.metrics?.forensics?.homoglyph_count ?? 0}
                       </span>
                       <span className="text-[#a3a3a3]">Homoglyph Swaps</span>
@@ -782,16 +782,16 @@ export default function ReportPage() {
                   {(report.metrics?.forensics?.anomalies || []).length === 0 ? (
                     <div className="py-8 text-center text-[#a3a3a3] space-y-1">
                       <ShieldCheck className="w-5 h-5 mx-auto text-emerald-400" />
-                      <p className="text-xs text-[#ffffff]">Document verified clean. Authentic Unicode typography.</p>
+                      <p className="text-xs text-white">Document verified clean. Authentic Unicode typography.</p>
                     </div>
                   ) : (
                     (report.metrics?.forensics?.anomalies || []).map((ano: any, idx: number) => (
-                      <div key={idx} className="p-2.5 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] text-xs space-y-1">
+                      <div key={idx} className="p-2.5 rounded-xl bg-[#1f1f1f] border border-white/[0.08] text-xs space-y-1">
                         <div className="flex items-center justify-between font-mono text-[10px]">
                           <span className="text-[#f2572b] font-bold">{ano.codepoint}</span>
                           <span className="text-[#8c745d]">{ano.char_name}</span>
                         </div>
-                        <div className="text-[#ffffff] font-mono text-[10px] bg-[#0c0704] px-1.5 py-0.5 rounded truncate">
+                        <div className="text-white font-mono text-[10px] bg-[#0c0704] px-1.5 py-0.5 rounded truncate">
                           Context: &ldquo;{ano.context}&rdquo;
                         </div>
                         <p className="text-[#a3a3a3] text-[10px]">{ano.description}</p>
@@ -807,7 +807,7 @@ export default function ReportPage() {
       </div>
 
       {/* Scientific Validation & Transparent Limitations Footer */}
-      <div className="p-4 rounded-2xl bg-[#1a1a1a]/80 border border-[white/[0.08]]/70 text-xs text-[#a3a3a3] space-y-1">
+      <div className="p-4 rounded-2xl bg-[#1a1a1a]/80 border border-white/[0.08]/70 text-xs text-[#a3a3a3] space-y-1">
         <span className="font-mono font-semibold text-[#f2572b] uppercase block text-[11px]">
           Academic Integrity &amp; Scientific Limitations Notice:
         </span>
