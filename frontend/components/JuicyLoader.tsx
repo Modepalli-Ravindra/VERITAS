@@ -39,3 +39,4 @@ export default function JuicyLoader({ size = "md", label, className = "" }: Juic
     </div>
   );
 }
+

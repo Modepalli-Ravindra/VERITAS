@@ -159,44 +159,6 @@ export default function DashboardPage() {
 
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
-      
-      {/* Session Metadata Toolbar - Glassmorphic Panel */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 glass-panel rounded-2xl text-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 flex items-center justify-center text-[#f2572b] font-serif font-bold text-sm shadow-sm">
-            {currentUser?.name ? currentUser.name.charAt(0) : "V"}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm text-white">
-                {currentUser?.name || "Auditor"}
-              </span>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[#f2572b]">
-                {currentUser?.role || "Researcher"}
-              </span>
-            </div>
-            <span className="text-[11px] text-[#a3a3a3]">
-              {currentUser?.institution || "Institutional Seat"}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#a3a3a3]">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
-            <span>Local Vault: Ready</span>
-          </div>
-          <span>•</span>
-          <button
-            onClick={handleLogout}
-            className="text-[#a3a3a3] hover:text-[#f2572b] transition-colors flex items-center gap-1.5 font-sans"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out</span>
-          </button>
-        </div>
-      </div>
-
       {/* SMART BENTO GRID FOR WORKBENCH */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
@@ -204,17 +166,17 @@ export default function DashboardPage() {
         <div className="lg:col-span-8 glass-panel rounded-3xl overflow-hidden shadow-2xl space-y-4 p-6 sm:p-7">
           
           {/* Workspace Mode Switcher */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#4E3424]/60 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setActiveTab("text")}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   activeTab === "text"
-                    ? "bg-[#140E0A]/90 backdrop-blur-md text-[#F5EFE1] border border-[#A88462]/60 shadow-sm"
-                    : "text-[#A88462] hover:text-[#F5EFE1] hover:bg-white/[0.04]"
+                    ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 shadow-sm font-semibold"
+                    : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
-                <FileText className="w-3.5 h-3.5 text-[#B08D57]" />
+                <FileText className="w-3.5 h-3.5" />
                 <span>Academic Paper &amp; Text</span>
               </button>
 
@@ -222,22 +184,22 @@ export default function DashboardPage() {
                 onClick={() => setActiveTab("code")}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   activeTab === "code"
-                    ? "bg-[#140E0A]/90 backdrop-blur-md text-[#F5EFE1] border border-[#A88462]/60 shadow-sm"
-                    : "text-[#A88462] hover:text-[#F5EFE1] hover:bg-white/[0.04]"
+                    ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 shadow-sm font-semibold"
+                    : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
-                <Code2 className="w-3.5 h-3.5 text-[#B08D57]" />
+                <Code2 className="w-3.5 h-3.5" />
                 <span>Source Code Logic</span>
               </button>
             </div>
 
             {activeTab === "code" && (
               <div className="flex items-center gap-2 text-xs font-mono">
-                <span className="text-[#A88462]">Language:</span>
+                <span className="text-[#a3a3a3]">Language:</span>
                 <select
                   value={codeLanguage}
                   onChange={(e) => setCodeLanguage(e.target.value)}
-                  className="bg-[#140E0A]/80 border border-[#4E3424] rounded-lg px-2.5 py-1 text-xs text-[#F5EFE1] outline-none"
+                  className="bg-[#1f1f1f] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white outline-none focus:border-[#f2572b]"
                 >
                   <option value="python">Python 3.x</option>
                   <option value="javascript">JavaScript / TypeScript</option>
@@ -256,11 +218,11 @@ export default function DashboardPage() {
               placeholder={activeTab === "text" ? "Document Title / Manuscript Header" : "Source Code Unit Name (e.g. quicksort.py)"}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="flex-1 glass-input rounded-xl px-4 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6E6359] focus:outline-none font-sans"
+              className="flex-1 glass-input rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#f2572b] font-sans"
             />
 
-            <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#4E3424]/70 glass-card hover:bg-white/[0.06] text-xs font-medium text-[#A88462] hover:text-[#F5EFE1] cursor-pointer transition-colors shrink-0">
-              <Upload className="w-3.5 h-3.5 text-[#B08D57]" />
+            <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 glass-card hover:bg-white/[0.06] text-xs font-medium text-[#a3a3a3] hover:text-white cursor-pointer transition-colors shrink-0">
+              <Upload className="w-3.5 h-3.5 text-[#f2572b]" />
               <span>Import (.pdf, .docx, .py)</span>
               <input
                 type="file"
@@ -272,7 +234,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Text Editor Container with Frosted Glassmorphism */}
-          <div className="relative border border-[#4E3424]/70 rounded-2xl glass-input overflow-hidden">
+          <div className="relative border border-white/10 rounded-2xl glass-input overflow-hidden focus-within:border-[#f2572b]">
             <textarea
               rows={14}
               value={content}
@@ -282,17 +244,17 @@ export default function DashboardPage() {
                   ? "Paste manuscript, article text, student essay, or research excerpt to begin verification..."
                   : "Paste source code to detect identical functions, structure copies, and renamed variables..."
               }
-              className={`w-full bg-transparent p-4 text-xs text-[#F5EFE1] placeholder:text-[#6E6359] focus:outline-none resize-y ${
+              className={`w-full bg-transparent p-4 text-xs text-white placeholder:text-[#737373] focus:outline-none resize-y ${
                 activeTab === "code" ? "font-mono leading-relaxed" : "font-sans leading-relaxed"
               }`}
             />
 
             {/* Editor Telemetry Bar */}
-            <div className="border-t border-[#4E3424]/50 bg-[#1e130c]/70 px-4 py-2.5 flex items-center justify-between text-[11px] font-mono text-[#A88462]">
+            <div className="border-t border-white/[0.08] bg-[#1a1a1a]/80 px-4 py-2.5 flex items-center justify-between text-[11px] font-mono text-[#a3a3a3]">
               <div className="flex items-center gap-4">
-                <span>Words: <strong className="text-[#F5EFE1] tabular-nums">{wordCount}</strong></span>
-                <span>Lines: <strong className="text-[#F5EFE1] tabular-nums">{lineCount}</strong></span>
-                <span>Characters: <strong className="text-[#F5EFE1] tabular-nums">{charCount}</strong></span>
+                <span>Words: <strong className="text-white tabular-nums">{wordCount}</strong></span>
+                <span>Lines: <strong className="text-white tabular-nums">{lineCount}</strong></span>
+                <span>Characters: <strong className="text-white tabular-nums">{charCount}</strong></span>
               </div>
               <span>UTF-8 Document</span>
             </div>
@@ -300,8 +262,8 @@ export default function DashboardPage() {
 
           {/* Action Trigger */}
           <div className="pt-2 flex items-center justify-between">
-            <div className="text-xs text-[#A88462]">
-              Full confidentiality: Audit runs locally on machine.
+            <div className="text-xs text-[#a3a3a3]">
+              100% Confidential: Local verification.
             </div>
 
             <button
@@ -336,13 +298,13 @@ export default function DashboardPage() {
         <div className="lg:col-span-4 space-y-5">
           
           {/* Bento Tile 2: Cross-Check Repositories */}
-          <div className="glass-card rounded-3xl p-6 space-y-4 shadow-xl">
-            <div className="flex items-center gap-2 text-xs font-mono text-[#B08D57]">
+          <div className="glass-card rounded-3xl p-6 space-y-4 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">
+            <div className="flex items-center gap-2 text-xs font-mono text-[#f2572b]">
               <ShieldCheck className="w-4 h-4" />
               <span>CROSS-CHECK CONFIGURATION</span>
             </div>
 
-            <div className="space-y-3 text-xs font-sans text-[#F5EFE1]">
+            <div className="space-y-3 text-xs font-sans text-white">
               {activeTab === "text" ? (
                 <>
                   <label className="flex items-center gap-2.5 cursor-pointer select-none">
@@ -350,7 +312,7 @@ export default function DashboardPage() {
                       type="checkbox"
                       checked={searchAcademic}
                       onChange={(e) => setSearchAcademic(e.target.checked)}
-                      className="accent-[#B08D57] rounded"
+                      className="accent-[#f2572b] rounded"
                     />
                     <span>Scientific Papers &amp; Journals</span>
                   </label>
@@ -360,7 +322,7 @@ export default function DashboardPage() {
                       type="checkbox"
                       checked={searchWeb}
                       onChange={(e) => setSearchWeb(e.target.checked)}
-                      className="accent-[#B08D57] rounded"
+                      className="accent-[#f2572b] rounded"
                     />
                     <span>Published Articles &amp; Books</span>
                   </label>
@@ -370,39 +332,39 @@ export default function DashboardPage() {
                       type="checkbox"
                       checked={searchRepository}
                       onChange={(e) => setSearchRepository(e.target.checked)}
-                      className="accent-[#B08D57] rounded"
+                      className="accent-[#f2572b] rounded"
                     />
                     <span>Past Institutional Submissions</span>
                   </label>
 
-                  <div className="pt-2 border-t border-[#4E3424]/60 space-y-2">
-                    <span className="text-[10px] font-mono text-[#B08D57] uppercase block tracking-wider font-semibold">
+                  <div className="pt-2 border-t border-white/[0.08] space-y-2">
+                    <span className="text-[10px] font-mono text-[#f2572b] uppercase block tracking-wider font-semibold">
                       DrillBit Exclusion Filters:
                     </span>
-                    <label className="flex items-center gap-2.5 cursor-pointer select-none text-[11px] text-[#D9C7A3]">
+                    <label className="flex items-center gap-2.5 cursor-pointer select-none text-[11px] text-[#a3a3a3]">
                       <input
                         type="checkbox"
                         checked={excludeBibliography}
                         onChange={(e) => setExcludeBibliography(e.target.checked)}
-                        className="accent-[#B08D57] rounded"
+                        className="accent-[#f2572b] rounded"
                       />
                       <span>Exclude Bibliography / References</span>
                     </label>
-                    <label className="flex items-center gap-2.5 cursor-pointer select-none text-[11px] text-[#D9C7A3]">
+                    <label className="flex items-center gap-2.5 cursor-pointer select-none text-[11px] text-[#a3a3a3]">
                       <input
                         type="checkbox"
                         checked={excludeQuotes}
                         onChange={(e) => setExcludeQuotes(e.target.checked)}
-                        className="accent-[#B08D57] rounded"
+                        className="accent-[#f2572b] rounded"
                       />
                       <span>Exclude Quoted Expressions (&quot;...&quot;)</span>
                     </label>
-                    <label className="flex items-center gap-2.5 cursor-pointer select-none text-[11px] text-[#D9C7A3]">
+                    <label className="flex items-center gap-2.5 cursor-pointer select-none text-[11px] text-[#a3a3a3]">
                       <input
                         type="checkbox"
                         checked={excludeSmallMatches}
                         onChange={(e) => setExcludeSmallMatches(e.target.checked)}
-                        className="accent-[#B08D57] rounded"
+                        className="accent-[#f2572b] rounded"
                       />
                       <span>Exclude Small Matches (&lt; 8 Words)</span>
                     </label>
@@ -415,7 +377,7 @@ export default function DashboardPage() {
                       type="checkbox"
                       checked={searchGithub}
                       onChange={(e) => setSearchGithub(e.target.checked)}
-                      className="accent-[#B08D57] rounded"
+                      className="accent-[#f2572b] rounded"
                     />
                     <span>Renamed Variable &amp; Logic Match</span>
                   </label>
@@ -425,7 +387,7 @@ export default function DashboardPage() {
                       type="checkbox"
                       checked={searchRepository}
                       onChange={(e) => setSearchRepository(e.target.checked)}
-                      className="accent-[#B08D57] rounded"
+                      className="accent-[#f2572b] rounded"
                     />
                     <span>Class Assignment Archive</span>
                   </label>
@@ -435,24 +397,24 @@ export default function DashboardPage() {
           </div>
 
           {/* Bento Tile 3: Sample Presets */}
-          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl">
-            <span className="text-xs font-mono text-[#B08D57] block">QUICK LOAD SAMPLE:</span>
+          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">
+            <span className="text-xs font-mono text-[#f2572b] block">QUICK LOAD SAMPLE:</span>
             <div className="flex flex-col gap-2 text-xs">
               <button
                 onClick={() => loadSample("academic")}
-                className="w-full text-left p-2.5 rounded-xl bg-[#140E0A]/70 backdrop-blur-md border border-[#4E3424]/60 hover:border-[#B08D57] text-[#F5EFE1] transition-colors"
+                className="w-full text-left p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] hover:border-[#f2572b] text-white transition-colors"
               >
                 1. Vaswani et al. Academic Excerpt
               </button>
               <button
                 onClick={() => loadSample("ai_essay")}
-                className="w-full text-left p-2.5 rounded-xl bg-[#140E0A]/70 backdrop-blur-md border border-[#4E3424]/60 hover:border-[#B08D57] text-[#F5EFE1] transition-colors"
+                className="w-full text-left p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] hover:border-[#f2572b] text-white transition-colors"
               >
                 2. AI Cadence Essay Excerpt
               </button>
               <button
                 onClick={() => loadSample("code_clone")}
-                className="w-full text-left p-2.5 rounded-xl bg-[#140E0A]/70 backdrop-blur-md border border-[#4E3424]/60 hover:border-[#B08D57] text-[#F5EFE1] transition-colors"
+                className="w-full text-left p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] hover:border-[#f2572b] text-white transition-colors"
               >
                 3. Quicksort Code Clone
               </button>
@@ -460,21 +422,21 @@ export default function DashboardPage() {
           </div>
 
           {/* Bento Tile 4: Archive Shortcuts */}
-          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl">
-            <span className="text-xs font-mono text-[#B08D57] block">QUICK NAVIGATION:</span>
+          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">
+            <span className="text-xs font-mono text-[#f2572b] block">QUICK NAVIGATION:</span>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <Link
                 href="/repository"
-                className="p-3 bg-[#140E0A]/70 backdrop-blur-md border border-[#4E3424]/60 rounded-xl hover:border-[#B08D57] text-[#F5EFE1] flex flex-col gap-1 transition-colors"
+                className="p-3 bg-white/[0.03] backdrop-blur-md border border-white/[0.08] rounded-xl hover:border-[#f2572b] text-white flex flex-col gap-1 transition-colors"
               >
-                <Database className="w-4 h-4 text-[#B08D57]" />
+                <Database className="w-4 h-4 text-[#f2572b]" />
                 <span className="font-medium">Vault Archive</span>
               </Link>
               <Link
                 href="/history"
-                className="p-3 bg-[#140E0A]/70 backdrop-blur-md border border-[#4E3424]/60 rounded-xl hover:border-[#B08D57] text-[#F5EFE1] flex flex-col gap-1 transition-colors"
+                className="p-3 bg-white/[0.03] backdrop-blur-md border border-white/[0.08] rounded-xl hover:border-[#f2572b] text-white flex flex-col gap-1 transition-colors"
               >
-                <Clock className="w-4 h-4 text-[#B08D57]" />
+                <Clock className="w-4 h-4 text-[#f2572b]" />
                 <span className="font-medium">Audit History</span>
               </Link>
             </div>

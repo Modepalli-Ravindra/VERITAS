@@ -93,7 +93,7 @@ export default function AppLayoutClient({
               <span>•</span>
               <span className="hover:text-[#f2572b] transition-colors">IEEE Standards</span>
               <span>•</span>
-              <span className="hover:text-[#f2572b] transition-colors">Local CPU Engine</span>
+              <span className="hover:text-[#f2572b] transition-colors">100% Privacy</span>
             </div>
           </div>
         </footer>
@@ -153,17 +153,19 @@ export default function AppLayoutClient({
           </span>
         </div>
 
-        {/* Right: Current User / Auditor Status (NO duplicate sign-in/register buttons) */}
+        {/* Right: User Profile or Sign In Link (No session/engine badges) */}
         <div className="flex items-center gap-3">
           {currentUser ? (
             <div className="flex items-center gap-3 pl-3 border-l border-white/[0.08]">
               <div className="text-right hidden sm:block">
                 <div className="text-xs font-semibold text-white leading-none">
-                  {currentUser.name}
+                  {currentUser.name || currentUser.email}
                 </div>
-                <div className="text-[10px] text-[#a3a3a3] font-mono leading-tight mt-0.5">
-                  {currentUser.institution || "Auditor"}
-                </div>
+                {currentUser.institution && (
+                  <div className="text-[10px] text-[#a3a3a3] font-mono leading-tight mt-0.5">
+                    {currentUser.institution}
+                  </div>
+                )}
               </div>
               <button
                 onClick={handleLogout}
@@ -173,12 +175,7 @@ export default function AppLayoutClient({
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
-          ) : (
-            <div className="flex items-center gap-2 text-xs font-mono text-[#a3a3a3] px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>Local Session</span>
-            </div>
-          )}
+          ) : null}
         </div>
       </header>
 
@@ -191,7 +188,7 @@ export default function AppLayoutClient({
           } shrink-0 h-full overflow-hidden transition-all duration-300 ease-in-out border-r border-white/[0.08] bg-[#1a1a1a]/95 backdrop-blur-2xl flex flex-col justify-between z-20`}
         >
           {/* Nav List */}
-          <div className="p-3 space-y-1.5 overflow-y-auto w-64">
+          <div className="p-3 space-y-1.5 overflow-y-auto w-64 flex-1">
             <div className="px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-[#737373]">
               Workspace Navigation
             </div>
@@ -226,14 +223,11 @@ export default function AppLayoutClient({
             })}
           </div>
 
-          {/* Sidebar Footer: System Status */}
-          <div className="p-3 border-t border-white/[0.08] space-y-2 w-64">
-            <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-[#a3a3a3]">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                Local CPU Engine
-              </span>
-              <span className="text-emerald-400 font-bold">Active</span>
+          {/* Clean Minimalist Sidebar Footer */}
+          <div className="p-3 border-t border-white/[0.08] w-64">
+            <div className="flex items-center justify-between px-2 text-[11px] font-mono text-[#737373]">
+              <span>VERITAS</span>
+              <span>v3.0</span>
             </div>
           </div>
         </aside>

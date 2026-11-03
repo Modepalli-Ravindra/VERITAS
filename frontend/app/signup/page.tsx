@@ -86,21 +86,21 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#090604] relative overflow-hidden py-10">
       
       {/* Ambient Gradient Lights in Background */}
-      <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-[#C49A58]/20 blur-[90px] pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-[#f2572b]/20 blur-[90px] pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] rounded-full bg-[#D62920]/20 blur-[90px] pointer-events-none" />
 
-      <div className="max-w-md w-full glass-panel rounded-3xl p-8 sm:p-10 shadow-2xl space-y-6 relative z-10 border border-[#53351F]/70">
+      <div className="max-w-md w-full glass-panel rounded-3xl p-8 sm:p-10 shadow-2xl space-y-6 relative z-10 border border-[white/[0.08]]/70">
         
         {/* Back to Home Navigation with Rounded Border */}
         <div className="flex items-center justify-between pb-1">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#53351F]/70 glass-card hover:border-[#C49A58]/80 hover:bg-white/[0.06] text-xs font-mono text-[#EADDC2] hover:text-white transition-all group shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[white/[0.08]]/70 glass-card hover:border-[#f2572b]/80 hover:bg-white/[0.06] text-xs font-mono text-[#e5e5e5] hover:text-white transition-all group shadow-sm"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#C49A58] group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#f2572b] group-hover:-translate-x-1 transition-transform" />
             <span>Back to Home</span>
           </Link>
-          <span className="text-[11px] font-mono text-[#C49A58] px-3.5 py-1 rounded-full glass-card border border-[#53351F]/70">
+          <span className="text-[11px] font-mono text-[#f2572b] px-3.5 py-1 rounded-full glass-card border border-[white/[0.08]]/70">
             Register
           </span>
         </div>
@@ -109,17 +109,17 @@ export default function SignupPage() {
         <div className="flex justify-center pt-1">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl glass-card border border-[#53351F]/70 hover:border-[#C49A58]/80 shadow-md group transition-all"
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl glass-card border border-[white/[0.08]]/70 hover:border-[#f2572b]/80 shadow-md group transition-all"
             title="VERITAS Home"
           >
-            <div className="w-10 h-10 rounded-xl overflow-hidden border border-[#C49A58]/50 shadow-sm shrink-0">
+            <div className="w-10 h-10 rounded-xl overflow-hidden border border-[#f2572b]/50 shadow-sm shrink-0">
               <img src="/veritas_emblem.jpg" alt="VERITAS" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
             </div>
             <div className="text-left">
-              <span className="font-serif font-bold text-xl tracking-wider text-[#F5EFE1] group-hover:text-[#E4BD78] transition-colors block leading-tight">
+              <span className="font-serif font-bold text-xl tracking-wider text-[#ffffff] group-hover:text-[#f2572b] transition-colors block leading-tight">
                 VERITAS
               </span>
-              <span className="text-[10px] font-mono text-[#C49A58] uppercase tracking-wider block">
+              <span className="text-[10px] font-mono text-[#f2572b] uppercase tracking-wider block">
                 Verification Suite
               </span>
             </div>
@@ -128,18 +128,18 @@ export default function SignupPage() {
 
         {/* Separator Divider Line with Label */}
         <div className="relative flex items-center justify-center my-1">
-          <div className="w-full border-t border-[#53351F]/60" />
-          <div className="absolute px-3 bg-[#170e09] text-[10px] font-mono text-[#A88462] uppercase tracking-widest rounded-full border border-[#53351F]/50">
+          <div className="w-full border-t border-[white/[0.08]]/60" />
+          <div className="absolute px-3 bg-[#171717] text-[10px] font-mono text-[#a3a3a3] uppercase tracking-widest rounded-full border border-[white/[0.08]]/50">
             Registration
           </div>
         </div>
 
         {/* Create an Account Heading & Description */}
         <div className="space-y-1 text-center">
-          <h1 className="font-serif text-2xl font-bold tracking-tight text-[#F5EFE1]">
+          <h1 className="font-serif text-2xl font-bold tracking-tight text-[#ffffff]">
             Create an Account
           </h1>
-          <p className="text-xs text-[#A88462]">
+          <p className="text-xs text-[#a3a3a3]">
             Register to access the local originality suite and submission audit archive.
           </p>
         </div>
@@ -155,41 +155,41 @@ export default function SignupPage() {
           
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-[#B08D57] block font-medium">Full Name</label>
+            <label className="text-xs font-mono text-[#f2572b] block font-medium">Full Name</label>
             <div className="relative">
-              <User className="w-4 h-4 text-[#A88462] absolute left-3.5 top-3" />
+              <User className="w-4 h-4 text-[#a3a3a3] absolute left-3.5 top-3" />
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Dr. Alexander Wright"
-                className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6D6780] focus:outline-none font-sans"
+                className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] focus:outline-none font-sans"
               />
             </div>
           </div>
 
           {/* Email Address */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-[#B08D57] block font-medium">Email Address</label>
+            <label className="text-xs font-mono text-[#f2572b] block font-medium">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-[#A88462] absolute left-3.5 top-3" />
+              <Mail className="w-4 h-4 text-[#a3a3a3] absolute left-3.5 top-3" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="alexander@institute.edu"
-                className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6D6780] focus:outline-none font-sans"
+                className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] focus:outline-none font-sans"
               />
             </div>
           </div>
 
           {/* Password with Eye Toggle */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-[#B08D57] block font-medium">Password</label>
+            <label className="text-xs font-mono text-[#f2572b] block font-medium">Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#A88462] absolute left-3.5 top-3" />
+              <Lock className="w-4 h-4 text-[#a3a3a3] absolute left-3.5 top-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 required
@@ -200,13 +200,13 @@ export default function SignupPage() {
                 }}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Create strong password"
-                className="w-full glass-input rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6D6780] focus:outline-none font-sans"
+                className="w-full glass-input rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] focus:outline-none font-sans"
               />
               <button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-[#A88462] hover:text-[#F5EFE1] transition-colors p-0.5 cursor-pointer"
+                className="absolute right-3 top-2.5 text-[#a3a3a3] hover:text-[#ffffff] transition-colors p-0.5 cursor-pointer"
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -216,22 +216,22 @@ export default function SignupPage() {
 
           {/* Confirm Password with Eye Toggle */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-[#B08D57] block font-medium">Confirm Password</label>
+            <label className="text-xs font-mono text-[#f2572b] block font-medium">Confirm Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#A88462] absolute left-3.5 top-3" />
+              <Lock className="w-4 h-4 text-[#a3a3a3] absolute left-3.5 top-3" />
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter password"
-                className="w-full glass-input rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6D6780] focus:outline-none font-sans"
+                className="w-full glass-input rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] focus:outline-none font-sans"
               />
               <button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-2.5 text-[#A88462] hover:text-[#F5EFE1] transition-colors p-0.5 cursor-pointer"
+                className="absolute right-3 top-2.5 text-[#a3a3a3] hover:text-[#ffffff] transition-colors p-0.5 cursor-pointer"
                 aria-label="Toggle confirm password visibility"
               >
                 {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -255,45 +255,45 @@ export default function SignupPage() {
           {/* Interactive Password Strength Criteria Checklist (Only appears when entering password) */}
           {(isPasswordFocused || password.length > 0) && (
             <div className="p-3.5 glass-card rounded-xl space-y-2 text-[11px] font-sans transition-all animate-fadeIn">
-              <span className="text-xs font-mono text-[#B08D57] block font-semibold">Security Requirements:</span>
+              <span className="text-xs font-mono text-[#f2572b] block font-semibold">Security Requirements:</span>
               <div className="grid grid-cols-2 gap-2">
-                <div className={`flex items-center gap-2 ${hasMinLength ? "text-emerald-400" : "text-[#A88462]"}`}>
+                <div className={`flex items-center gap-2 ${hasMinLength ? "text-emerald-400" : "text-[#a3a3a3]"}`}>
                   {hasMinLength ? (
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   ) : (
-                    <span className="w-3 h-3 rounded-full border border-[#4E3424] bg-[#261A13] inline-block shrink-0" />
+                    <span className="w-3 h-3 rounded-full border border-[white/[0.08]] bg-[#1f1f1f] inline-block shrink-0" />
                   )}
                   <span>8+ characters</span>
                 </div>
-                <div className={`flex items-center gap-2 ${hasUppercase ? "text-emerald-400" : "text-[#A88462]"}`}>
+                <div className={`flex items-center gap-2 ${hasUppercase ? "text-emerald-400" : "text-[#a3a3a3]"}`}>
                   {hasUppercase ? (
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   ) : (
-                    <span className="w-3 h-3 rounded-full border border-[#4E3424] bg-[#261A13] inline-block shrink-0" />
+                    <span className="w-3 h-3 rounded-full border border-[white/[0.08]] bg-[#1f1f1f] inline-block shrink-0" />
                   )}
                   <span>1 uppercase letter</span>
                 </div>
-                <div className={`flex items-center gap-2 ${hasLowercase ? "text-emerald-400" : "text-[#A88462]"}`}>
+                <div className={`flex items-center gap-2 ${hasLowercase ? "text-emerald-400" : "text-[#a3a3a3]"}`}>
                   {hasLowercase ? (
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   ) : (
-                    <span className="w-3 h-3 rounded-full border border-[#4E3424] bg-[#261A13] inline-block shrink-0" />
+                    <span className="w-3 h-3 rounded-full border border-[white/[0.08]] bg-[#1f1f1f] inline-block shrink-0" />
                   )}
                   <span>1 lowercase letter</span>
                 </div>
-                <div className={`flex items-center gap-2 ${hasNumber ? "text-emerald-400" : "text-[#A88462]"}`}>
+                <div className={`flex items-center gap-2 ${hasNumber ? "text-emerald-400" : "text-[#a3a3a3]"}`}>
                   {hasNumber ? (
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   ) : (
-                    <span className="w-3 h-3 rounded-full border border-[#4E3424] bg-[#261A13] inline-block shrink-0" />
+                    <span className="w-3 h-3 rounded-full border border-[white/[0.08]] bg-[#1f1f1f] inline-block shrink-0" />
                   )}
                   <span>1 number</span>
                 </div>
-                <div className={`flex items-center gap-2 col-span-2 ${hasSpecial ? "text-emerald-400" : "text-[#A88462]"}`}>
+                <div className={`flex items-center gap-2 col-span-2 ${hasSpecial ? "text-emerald-400" : "text-[#a3a3a3]"}`}>
                   {hasSpecial ? (
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   ) : (
-                    <span className="w-3 h-3 rounded-full border border-[#4E3424] bg-[#261A13] inline-block shrink-0" />
+                    <span className="w-3 h-3 rounded-full border border-[white/[0.08]] bg-[#1f1f1f] inline-block shrink-0" />
                   )}
                   <span>1 special character (!@#$%^&amp;*)</span>
                 </div>
@@ -321,9 +321,9 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <div className="pt-3 border-t border-[#4E3424] text-center text-xs text-[#A88462] flex items-center justify-between">
+        <div className="pt-3 border-t border-[white/[0.08]] text-center text-xs text-[#a3a3a3] flex items-center justify-between">
           <span>Already have an account?</span>
-          <Link href="/login" className="text-[#B08D57] hover:text-[#A88462] font-medium hover:underline">
+          <Link href="/login" className="text-[#f2572b] hover:text-[#a3a3a3] font-medium hover:underline">
             Sign In &rarr;
           </Link>
         </div>

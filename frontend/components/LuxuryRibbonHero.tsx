@@ -171,23 +171,23 @@ export default function LuxuryRibbonHero() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-card border border-[#C49A58]/35 shadow-lg shadow-[#C49A58]/10 hover:border-[#E4BD78]/70 transition-all select-none group cursor-default"
+          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-card border border-[#f2572b]/35 shadow-lg shadow-[#f2572b]/10 hover:border-[#f2572b]/70 transition-all select-none group cursor-default"
         >
-          <div className="w-5 h-5 rounded-md overflow-hidden border border-[#C49A58]/40 shadow-sm shrink-0">
+          <div className="w-5 h-5 rounded-md overflow-hidden border border-[#f2572b]/40 shadow-sm shrink-0">
             <img 
               src="/veritas_emblem.jpg" 
               alt="VERITAS Insignia" 
               className="w-full h-full object-cover group-hover:scale-115 transition-transform duration-300" 
             />
           </div>
-          <span className="font-mono text-xs font-bold tracking-wider text-[#E4BD78] uppercase">
+          <span className="font-mono text-xs font-bold tracking-wider text-[#f2572b] uppercase">
             VERITAS
           </span>
-          <span className="w-[1px] h-3.5 bg-[#C49A58]/60 inline-block" />
+          <span className="w-[1px] h-3.5 bg-[#f2572b]/60 inline-block" />
           <span className="font-mono text-[11px] font-medium tracking-wider text-[#EADDC2] uppercase">
-            Autonomous Originality Engine
+            Academic Intelligence Platform
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E4BD78] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#f2572b] animate-pulse" />
         </motion.div>
 
         {/* Headline: Editorial serif typography, strictly 2 lines */}
@@ -198,9 +198,9 @@ export default function LuxuryRibbonHero() {
           className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[80px] font-bold tracking-tight text-[#F5EFE3] leading-[1.12] max-w-5xl mx-auto flex flex-col items-center select-none text-center min-h-[2.3em]"
         >
           <span className="block whitespace-nowrap">Verify originality and</span>
-          <span className="text-[#C49A58] block h-[1.3em] min-h-[1.3em] whitespace-nowrap overflow-visible">
+          <span className="text-[#f2572b] block h-[1.3em] min-h-[1.3em] whitespace-nowrap overflow-visible">
             {currentText}
-            <span className="inline-block w-1.5 h-8 sm:h-12 lg:h-14 bg-[#E4BD78] ml-2 align-middle animate-cursor" />
+            <span className="inline-block w-1.5 h-8 sm:h-12 lg:h-14 bg-[#f2572b] ml-2 align-middle animate-cursor" />
           </span>
         </motion.h1>
 

@@ -17,9 +17,9 @@ export function ScoreGauge({ score, label, type, subtitle }: GaugeProps) {
   const isMediumRisk = rounded >= 15 && rounded < 45;
 
   let riskLabel = "Low Similarity";
-  let statusBadgeColor = "text-[#D9C7A3] bg-[#261A13] border-[#4E3424]";
-  let barColor = "bg-[#B08D57]";
-  let textColor = "text-[#D9C7A3]";
+  let statusBadgeColor = "text-[#e5e5e5] bg-[#1f1f1f] border-[white/[0.08]]";
+  let barColor = "bg-[#f2572b]";
+  let textColor = "text-[#e5e5e5]";
 
   if (type === "plagiarism") {
     if (isHighRisk) {
@@ -29,9 +29,9 @@ export function ScoreGauge({ score, label, type, subtitle }: GaugeProps) {
       textColor = "text-rose-400";
     } else if (isMediumRisk) {
       riskLabel = "Moderate Overlap (Common Citations)";
-      statusBadgeColor = "text-[#B08D57] bg-[#4E3424]/60 border-[#B08D57]/60";
-      barColor = "bg-[#B08D57]";
-      textColor = "text-[#F5EFE1]";
+      statusBadgeColor = "text-[#f2572b] bg-[white/[0.08]]/60 border-[#f2572b]/60";
+      barColor = "bg-[#f2572b]";
+      textColor = "text-[#ffffff]";
     }
   } else {
     if (isHighRisk) {
@@ -41,25 +41,25 @@ export function ScoreGauge({ score, label, type, subtitle }: GaugeProps) {
       textColor = "text-amber-400";
     } else if (isMediumRisk) {
       riskLabel = "Mixed Human & AI Characteristics";
-      statusBadgeColor = "text-[#F5EFE1] bg-[#4E3424]/60 border-[#B08D57]/60";
-      barColor = "bg-[#B08D57]";
-      textColor = "text-[#F5EFE1]";
+      statusBadgeColor = "text-[#ffffff] bg-[white/[0.08]]/60 border-[#f2572b]/60";
+      barColor = "bg-[#f2572b]";
+      textColor = "text-[#ffffff]";
     } else {
       riskLabel = "Natural Human Writing Rhythm";
     }
   }
 
   return (
-    <div className="glass-card rounded-2xl p-6 space-y-4 shadow-xl border border-[#53351F]/70">
+    <div className="glass-card rounded-2xl p-6 space-y-4 shadow-xl border border-[white/[0.08]]/70">
       {/* Metric Label & Type */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {type === "plagiarism" ? (
-            <FileText className="w-4 h-4 text-[#B08D57]" />
+            <FileText className="w-4 h-4 text-[#f2572b]" />
           ) : (
-            <Bot className="w-4 h-4 text-[#B08D57]" />
+            <Bot className="w-4 h-4 text-[#f2572b]" />
           )}
-          <span className="text-xs font-mono uppercase tracking-wider text-[#B08D57]">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#f2572b]">
             {label}
           </span>
         </div>
@@ -76,15 +76,15 @@ export function ScoreGauge({ score, label, type, subtitle }: GaugeProps) {
             <span className={`font-serif text-3xl font-bold tracking-tight tabular-nums ${textColor}`}>
               {rounded}%
             </span>
-            <span className="text-xs font-mono text-[#A88462]">/ 100 Index</span>
+            <span className="text-xs font-mono text-[#a3a3a3]">/ 100 Index</span>
           </div>
-          <span className="text-xs font-mono text-[#A88462]">
+          <span className="text-xs font-mono text-[#a3a3a3]">
             Threshold: &gt;15% Review
           </span>
         </div>
 
         {/* Precision Progress Track with Glass Inset */}
-        <div className="relative w-full h-2.5 bg-[#140E0A]/80 backdrop-blur-md rounded-full overflow-hidden border border-[#4E3424]/60">
+        <div className="relative w-full h-2.5 bg-[#1f1f1f]/80 backdrop-blur-md rounded-full overflow-hidden border border-[white/[0.08]]/60">
           <div
             className={`h-full ${barColor} transition-all duration-500 rounded-full shadow-sm`}
             style={{ width: `${Math.min(100, Math.max(0, rounded))}%` }}
@@ -94,7 +94,7 @@ export function ScoreGauge({ score, label, type, subtitle }: GaugeProps) {
 
       {/* Subtitle / Diagnostic Details */}
       {subtitle && (
-        <p className="text-xs text-[#A88462] leading-relaxed pt-2 border-t border-[#4E3424]/60 font-sans">
+        <p className="text-xs text-[#a3a3a3] leading-relaxed pt-2 border-t border-[white/[0.08]]/60 font-sans">
           {subtitle}
         </p>
       )}

@@ -54,13 +54,13 @@ export default function HeroVerificationScanner() {
         
         {/* Mode Toggle Header */}
         <div className="flex items-center justify-between mb-3 px-1">
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#140E0A] border border-[#4E3424]">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]]">
             <button
               onClick={() => setMode("manuscript")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
                 mode === "manuscript"
-                  ? "bg-[#B08D57] text-[#140E0A] font-bold shadow-sm"
-                  : "text-[#A88462] hover:text-[#F5EFE1]"
+                  ? "bg-[#f2572b] text-[#1f1f1f] font-bold shadow-sm"
+                  : "text-[#a3a3a3] hover:text-[#ffffff]"
               }`}
             >
               <FileSearch className="w-3.5 h-3.5" />
@@ -70,8 +70,8 @@ export default function HeroVerificationScanner() {
               onClick={() => setMode("code")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
                 mode === "code"
-                  ? "bg-[#B08D57] text-[#140E0A] font-bold shadow-sm"
-                  : "text-[#A88462] hover:text-[#F5EFE1]"
+                  ? "bg-[#f2572b] text-[#1f1f1f] font-bold shadow-sm"
+                  : "text-[#a3a3a3] hover:text-[#ffffff]"
               }`}
             >
               <Code2 className="w-3.5 h-3.5" />
@@ -79,34 +79,34 @@ export default function HeroVerificationScanner() {
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#B08D57]">
-            <span className="w-2 h-2 rounded-full bg-[#B08D57] animate-ping" />
-            <span className="hidden sm:inline">LIVE ENGINE 2.4</span>
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#f2572b]">
+            <span className="w-2 h-2 rounded-full bg-[#f2572b] animate-ping" />
+            <span className="hidden sm:inline">VERITAS SCANNER</span>
           </div>
         </div>
 
         {/* Main Terminal Window Card */}
-        <div className="relative rounded-2xl bg-[#261A13] border border-[#4E3424] shadow-2xl overflow-hidden p-5 space-y-4">
+        <div className="relative rounded-2xl bg-[#1f1f1f] border border-[white/[0.08]] shadow-2xl overflow-hidden p-5 space-y-4">
           
           {/* Top Titlebar */}
-          <div className="flex items-center justify-between pb-3 border-b border-[#4E3424]/80">
+          <div className="flex items-center justify-between pb-3 border-b border-[white/[0.08]]/80">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#4E3424]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#B08D57]/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#B08D57]" />
-              <span className="text-xs font-mono text-[#D9C7A3] ml-2 font-medium">
+              <div className="w-2.5 h-2.5 rounded-full bg-[white/[0.08]]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#f2572b]/60" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#f2572b]" />
+              <span className="text-xs font-mono text-[#e5e5e5] ml-2 font-medium">
                 {mode === "manuscript" ? "quantum_attention_audit.pdf" : "tree_partition_clone.py"}
               </span>
             </div>
 
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#140E0A] border border-[#4E3424] text-[#A88462]">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1f1f1f] border border-[white/[0.08]] text-[#a3a3a3]">
               UTF-8 Verified
             </span>
           </div>
 
           {/* Sweeping Laser Audit Beam */}
           <div 
-            className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#B08D57] to-transparent shadow-[0_0_12px_#B08D57] pointer-events-none transition-all duration-1000 ease-in-out z-20"
+            className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#f2572b] to-transparent shadow-[0_0_12px_#f2572b] pointer-events-none transition-all duration-1000 ease-in-out z-20"
             style={{
               top: `${28 + scanStep * 20}%`,
             }}
@@ -120,11 +120,11 @@ export default function HeroVerificationScanner() {
                 {/* Line 1: Authentic Human */}
                 <div className={`p-2.5 rounded-xl border transition-all duration-300 ${
                   scanStep === 0
-                    ? "bg-[#382419] border-[#B08D57] shadow-md"
-                    : "bg-[#140E0A]/60 border-[#4E3424]"
+                    ? "bg-[#262626] border-[#f2572b] shadow-md"
+                    : "bg-[#1f1f1f]/60 border-[white/[0.08]]"
                 }`}>
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-[#F5EFE1] font-sans text-xs leading-relaxed">
+                    <p className="text-[#ffffff] font-sans text-xs leading-relaxed">
                       &ldquo;Recent advances in autoregressive sparse attention have significantly reduced quadratic matrix memory bounds.&rdquo;
                     </p>
                     <span className="shrink-0 flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-900/60 px-2 py-0.5 rounded-full">
@@ -132,21 +132,21 @@ export default function HeroVerificationScanner() {
                       <span>Original</span>
                     </span>
                   </div>
-                  <div className="mt-1.5 flex items-center gap-3 text-[10px] text-[#A88462]">
+                  <div className="mt-1.5 flex items-center gap-3 text-[10px] text-[#a3a3a3]">
                     <span>Sentence 01</span>
                     <span>•</span>
-                    <span className="text-[#D9C7A3]">Perplexity Score: 48.2 (Human Writing Cadence)</span>
+                    <span className="text-[#e5e5e5]">Perplexity Score: 48.2 (Human Writing Cadence)</span>
                   </div>
                 </div>
 
                 {/* Line 2: Literature Citation Match */}
                 <div className={`p-2.5 rounded-xl border transition-all duration-300 ${
                   scanStep === 1
-                    ? "bg-[#382419] border-[#B08D57] shadow-md"
-                    : "bg-[#140E0A]/60 border-[#4E3424]"
+                    ? "bg-[#262626] border-[#f2572b] shadow-md"
+                    : "bg-[#1f1f1f]/60 border-[white/[0.08]]"
                 }`}>
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-[#F5EFE1] font-sans text-xs leading-relaxed">
+                    <p className="text-[#ffffff] font-sans text-xs leading-relaxed">
                       &ldquo;The scaled dot-product attention computes query-key matrix multiplication divided by square root dimension d_k.&rdquo;
                     </p>
                     <span className="shrink-0 flex items-center gap-1 text-[10px] text-rose-300 bg-rose-950/50 border border-rose-900/60 px-2 py-0.5 rounded-full">
@@ -162,11 +162,11 @@ export default function HeroVerificationScanner() {
                 {/* Line 3: AI Formulaic Cadence Flagged */}
                 <div className={`p-2.5 rounded-xl border transition-all duration-300 ${
                   scanStep === 2
-                    ? "bg-[#382419] border-[#B08D57] shadow-md"
-                    : "bg-[#140E0A]/60 border-[#4E3424]"
+                    ? "bg-[#262626] border-[#f2572b] shadow-md"
+                    : "bg-[#1f1f1f]/60 border-[white/[0.08]]"
                 }`}>
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-[#F5EFE1] font-sans text-xs leading-relaxed">
+                    <p className="text-[#ffffff] font-sans text-xs leading-relaxed">
                       &ldquo;It is crucial to remember that moreover, furthermore, comprehensive analysis highlights pivotal paradigms in modern research.&rdquo;
                     </p>
                     <span className="shrink-0 flex items-center gap-1 text-[10px] text-amber-300 bg-amber-950/50 border border-amber-900/60 px-2 py-0.5 rounded-full">
@@ -184,19 +184,19 @@ export default function HeroVerificationScanner() {
                 {/* Code Line 1 */}
                 <div className={`p-2.5 rounded-xl border transition-all duration-300 ${
                   scanStep === 0
-                    ? "bg-[#382419] border-[#B08D57] shadow-md"
-                    : "bg-[#140E0A]/60 border-[#4E3424]"
+                    ? "bg-[#262626] border-[#f2572b] shadow-md"
+                    : "bg-[#1f1f1f]/60 border-[white/[0.08]]"
                 }`}>
                   <div className="flex items-start justify-between gap-2">
-                    <code className="text-[#D9C7A3] font-mono text-xs">
-                      <span className="text-[#B08D57]">def</span> partition_tree(arr, low, high):
+                    <code className="text-[#e5e5e5] font-mono text-xs">
+                      <span className="text-[#f2572b]">def</span> partition_tree(arr, low, high):
                     </code>
                     <span className="shrink-0 flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-900/60 px-2 py-0.5 rounded-full">
                       <CheckCircle2 className="w-3 h-3" />
                       <span>Clean AST</span>
                     </span>
                   </div>
-                  <div className="mt-1 text-[10px] text-[#A88462]">
+                  <div className="mt-1 text-[10px] text-[#a3a3a3]">
                     <span>Structure Tree: Validated signature</span>
                   </div>
                 </div>
@@ -204,12 +204,12 @@ export default function HeroVerificationScanner() {
                 {/* Code Line 2: Renamed Variable Clone */}
                 <div className={`p-2.5 rounded-xl border transition-all duration-300 ${
                   scanStep === 1
-                    ? "bg-[#382419] border-[#B08D57] shadow-md"
-                    : "bg-[#140E0A]/60 border-[#4E3424]"
+                    ? "bg-[#262626] border-[#f2572b] shadow-md"
+                    : "bg-[#1f1f1f]/60 border-[white/[0.08]]"
                 }`}>
                   <div className="flex items-start justify-between gap-2">
-                    <code className="text-[#F5EFE1] font-mono text-xs">
-                      &nbsp;&nbsp;pivot_val = arr[high] <span className="text-[#A88462]"># var renamed</span>
+                    <code className="text-[#ffffff] font-mono text-xs">
+                      &nbsp;&nbsp;pivot_val = arr[high] <span className="text-[#a3a3a3]"># var renamed</span>
                     </code>
                     <span className="shrink-0 flex items-center gap-1 text-[10px] text-rose-300 bg-rose-950/50 border border-rose-900/60 px-2 py-0.5 rounded-full">
                       <AlertTriangle className="w-3 h-3" />
@@ -224,18 +224,18 @@ export default function HeroVerificationScanner() {
                 {/* Code Line 3 */}
                 <div className={`p-2.5 rounded-xl border transition-all duration-300 ${
                   scanStep === 2
-                    ? "bg-[#382419] border-[#B08D57] shadow-md"
-                    : "bg-[#140E0A]/60 border-[#4E3424]"
+                    ? "bg-[#262626] border-[#f2572b] shadow-md"
+                    : "bg-[#1f1f1f]/60 border-[white/[0.08]]"
                 }`}>
                   <div className="flex items-start justify-between gap-2">
-                    <code className="text-[#D9C7A3] font-mono text-xs">
+                    <code className="text-[#e5e5e5] font-mono text-xs">
                       &nbsp;&nbsp;idx = low - 1
                     </code>
                     <span className="shrink-0 flex items-center gap-1 text-[10px] text-amber-300 bg-amber-950/50 border border-amber-900/60 px-2 py-0.5 rounded-full">
                       <span>Normalized Token</span>
                     </span>
                   </div>
-                  <div className="mt-1 text-[10px] text-[#A88462]">
+                  <div className="mt-1 text-[10px] text-[#a3a3a3]">
                     <span>Logic preserved across variable name obfuscation</span>
                   </div>
                 </div>
@@ -245,12 +245,12 @@ export default function HeroVerificationScanner() {
           </div>
 
           {/* Bottom Telemetry HUD */}
-          <div className="pt-3 border-t border-[#4E3424]/80 flex items-center justify-between text-xs font-mono">
+          <div className="pt-3 border-t border-[white/[0.08]]/80 flex items-center justify-between text-xs font-mono">
             <div className="flex items-center gap-3">
-              <span className="text-[#A88462]">Integrity Index:</span>
+              <span className="text-[#a3a3a3]">Integrity Index:</span>
               <span className="text-emerald-400 font-bold">94.8% Verified</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-[#B08D57]">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#f2572b]">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Zero Cloud Uploads</span>
             </div>
@@ -260,16 +260,16 @@ export default function HeroVerificationScanner() {
 
         {/* Floating Holographic Telemetry Pill Top Right */}
         <div 
-          className="absolute -top-3 -right-3 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#140E0A] border border-[#B08D57]/70 shadow-xl text-xs font-mono text-[#F5EFE1]"
+          className="absolute -top-3 -right-3 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1f1f1f] border border-[#f2572b]/70 shadow-xl text-xs font-mono text-[#ffffff]"
           style={{ transform: "translateZ(30px)" }}
         >
-          <ShieldCheck className="w-4 h-4 text-[#B08D57]" />
+          <ShieldCheck className="w-4 h-4 text-[#f2572b]" />
           <span>Cross-Student Collusion: <strong>0%</strong></span>
         </div>
 
         {/* Floating Telemetry Pill Bottom Left */}
         <div 
-          className="absolute -bottom-3 -left-3 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#140E0A] border border-[#4E3424] shadow-xl text-[11px] font-mono text-[#A88462]"
+          className="absolute -bottom-3 -left-3 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1f1f1f] border border-[white/[0.08]] shadow-xl text-[11px] font-mono text-[#a3a3a3]"
           style={{ transform: "translateZ(25px)" }}
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400" />

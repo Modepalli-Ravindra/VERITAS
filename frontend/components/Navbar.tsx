@@ -118,9 +118,11 @@ export default function Navbar() {
                 <div className="text-sm font-medium text-white leading-none">
                   {currentUser.name}
                 </div>
-                <div className="text-xs text-[#a3a3a3] font-mono leading-tight mt-0.5">
-                  {currentUser.institution || "Auditor"}
-                </div>
+                {currentUser.institution && (
+                  <div className="text-xs text-[#a3a3a3] font-mono leading-tight mt-0.5">
+                    {currentUser.institution}
+                  </div>
+                )}
               </div>
               <button
                 onClick={handleLogout}
@@ -134,14 +136,14 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="h-[38px] px-5 rounded-full btn-3d-signin-gold text-xs font-semibold flex items-center justify-center transition-all"
+                className="h-[38px] px-5 rounded-full bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white text-xs font-semibold flex items-center justify-center transition-all"
               >
                 Sign In
               </Link>
               
               <Link
                 href="/signup"
-                className="h-[38px] px-5 rounded-full btn-3d-gold text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                className="h-[38px] px-5 rounded-full btn-juicy text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-[#f2572b]/25"
               >
                 <span>Register</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
@@ -154,7 +156,7 @@ export default function Navbar() {
         <div className="flex sm:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 text-[#A88462] hover:text-[#F5EFE1] rounded-lg hover:bg-white/[0.06]"
+            className="p-1.5 text-[#a3a3a3] hover:text-white rounded-lg hover:bg-white/[0.06]"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -165,8 +167,8 @@ export default function Navbar() {
 
         {/* Mobile Drawer with Frosted Glassmorphism */}
         {mobileMenuOpen && (
-          <div className="sm:hidden w-full px-4 py-3 border-t-2 border-[#53351F]/70 bg-[#1e130c]/90 backdrop-blur-2xl rounded-b-2xl space-y-2">
-            <div className="space-y-1.5 pb-2 border-b border-[#4E3424]">
+          <div className="sm:hidden w-full px-4 py-3 border-t border-white/[0.08] bg-[#171717]/95 backdrop-blur-2xl rounded-b-2xl space-y-2">
+            <div className="space-y-1.5 pb-2 border-b border-white/[0.08]">
               {activeNavList.map((item) => {
                 const Icon = item.icon;
                 const isActive = !isLanding && pathname === item.href;
@@ -176,10 +178,10 @@ export default function Navbar() {
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
-                      isActive ? "bg-[#382419] text-[#F5EFE1] font-semibold" : "text-[#D9C7A3] hover:text-[#F5EFE1]"
+                      isActive ? "bg-[#f2572b]/15 text-[#f2572b] font-semibold" : "text-[#a3a3a3] hover:text-white"
                     }`}
                   >
-                    <Icon className="w-4 h-4 text-[#B08D57]" />
+                    <Icon className="w-4 h-4 text-[#f2572b]" />
                     <span>{item.name}</span>
                   </Link>
                 );
@@ -190,8 +192,8 @@ export default function Navbar() {
               {currentUser ? (
                 <div className="w-full flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-medium text-[#F5EFE1]">{currentUser.name}</div>
-                    <div className="text-xs text-[#A88462] font-mono">{currentUser.email}</div>
+                    <div className="text-sm font-medium text-white">{currentUser.name}</div>
+                    <div className="text-xs text-[#a3a3a3] font-mono">{currentUser.email}</div>
                   </div>
                   <button
                     onClick={handleLogout}
@@ -205,14 +207,14 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex-1 py-2 text-center rounded-lg text-sm font-medium bg-[#382419] border border-[#4E3424] text-[#D9C7A3]"
+                    className="flex-1 py-2 text-center rounded-lg text-sm font-medium bg-white/[0.05] border border-white/10 text-white"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/signup"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex-1 py-2 text-center rounded-lg text-sm font-semibold bg-[#B08D57] text-[#140E0A]"
+                    className="flex-1 py-2 text-center rounded-lg text-sm font-semibold btn-juicy"
                   >
                     Register
                   </Link>

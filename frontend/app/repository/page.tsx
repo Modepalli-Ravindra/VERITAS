@@ -142,8 +142,8 @@ export default function RepositoryPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#4E3424] bg-[#261A13] hover:bg-[#382419] text-xs font-medium text-[#F5EFE1] cursor-pointer transition-colors shadow-sm">
-            <UploadCloud className="w-4 h-4 text-[#B08D57]" />
+          <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[white/[0.08]] bg-[#1f1f1f] hover:bg-[#262626] text-xs font-medium text-[#ffffff] cursor-pointer transition-colors shadow-sm">
+            <UploadCloud className="w-4 h-4 text-[#f2572b]" />
             <span>Import Document</span>
             <input
               type="file"
@@ -155,7 +155,7 @@ export default function RepositoryPage() {
 
           <button
             onClick={() => setIsAdding(!isAdding)}
-            className="flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-[#B08D57] hover:bg-[#C5A065] text-[#140E0A] text-xs font-semibold transition-all shadow-md shadow-[#B08D57]/20"
+            className="flex items-center gap-2 px-4.5 py-2.5 rounded-xl btn-juicy text-white text-xs font-semibold transition-all shadow-md shadow-[#f2572b]/20"
           >
             <Plus className="w-4 h-4" />
             <span>Add Entry</span>
@@ -166,15 +166,15 @@ export default function RepositoryPage() {
       {/* Manual Entry Form - Glassmorphism */}
       {isAdding && (
         <form onSubmit={handleCreateDoc} className="glass-panel rounded-3xl p-6 sm:p-8 space-y-4 shadow-2xl">
-          <div className="flex items-center justify-between border-b border-[#4E3424]/60 pb-3">
-            <h3 className="font-serif text-base font-semibold text-[#F5EFE1]">
+          <div className="flex items-center justify-between border-b border-[white/[0.08]]/60 pb-3">
+            <h3 className="font-serif text-base font-semibold text-[#ffffff]">
               Index New Reference Document
             </h3>
             <div className="flex items-center gap-2">
               <select
                 value={newType}
                 onChange={(e) => setNewType(e.target.value as any)}
-                className="text-xs bg-[#140E0A]/80 border border-[#4E3424] rounded-lg px-3 py-1.5 text-[#F5EFE1] font-mono outline-none"
+                className="text-xs bg-[#1f1f1f]/80 border border-[white/[0.08]] rounded-lg px-3 py-1.5 text-[#ffffff] font-mono outline-none"
               >
                 <option value="text">Academic Manuscript / Text</option>
                 <option value="code">Source Code Unit</option>
@@ -184,7 +184,7 @@ export default function RepositoryPage() {
                 <select
                   value={newLang}
                   onChange={(e) => setNewLang(e.target.value)}
-                  className="text-xs bg-[#140E0A]/80 border border-[#4E3424] rounded-lg px-3 py-1.5 text-[#F5EFE1] font-mono outline-none"
+                  className="text-xs bg-[#1f1f1f]/80 border border-[white/[0.08]] rounded-lg px-3 py-1.5 text-[#ffffff] font-mono outline-none"
                 >
                   <option value="python">Python</option>
                   <option value="javascript">JavaScript</option>
@@ -200,7 +200,7 @@ export default function RepositoryPage() {
             placeholder="Document Identifier / Title (e.g. CS240 Spring 2024 Final Project Solutions)"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full glass-input rounded-xl px-4 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6E6359] outline-none font-sans"
+            className="w-full glass-input rounded-xl px-4 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] outline-none font-sans"
           />
 
           <textarea
@@ -208,20 +208,20 @@ export default function RepositoryPage() {
             placeholder="Paste complete manuscript text or source code..."
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            className="w-full glass-input rounded-xl p-4 text-xs text-[#F5EFE1] placeholder:text-[#6E6359] outline-none font-mono"
+            className="w-full glass-input rounded-xl p-4 text-xs text-[#ffffff] placeholder:text-[#737373] outline-none font-mono"
           />
 
           <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="px-4 py-2 rounded-xl text-xs text-[#A88462] hover:text-[#F5EFE1]"
+              className="px-4 py-2 rounded-xl text-xs text-[#a3a3a3] hover:text-[#ffffff]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-[#B08D57] hover:bg-[#C5A065] text-[#140E0A] text-xs font-semibold shadow-md shadow-[#B08D57]/20"
+              className="px-5 py-2 rounded-xl btn-juicy text-white text-xs font-semibold shadow-md shadow-[#f2572b]/20"
             >
               Save &amp; Index Document
             </button>
@@ -232,31 +232,31 @@ export default function RepositoryPage() {
       {/* Filter and Search Bar in Glassmorphic Style */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div className="relative max-w-sm w-full">
-          <Search className="w-4 h-4 text-[#A88462] absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-[#a3a3a3] absolute left-3.5 top-3" />
           <input
             type="text"
             placeholder="Search indexed manuscripts or key..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#F5EFE1] placeholder:text-[#6E6359] outline-none font-sans"
+            className="w-full glass-input rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#ffffff] placeholder:text-[#737373] outline-none font-sans"
           />
         </div>
 
-        <div className="text-xs font-mono text-[#A88462]">
-          Indexed Records: <strong className="text-[#F5EFE1] tabular-nums">{docs.length}</strong>
+        <div className="text-xs font-mono text-[#a3a3a3]">
+          Indexed Records: <strong className="text-[#ffffff] tabular-nums">{docs.length}</strong>
         </div>
       </div>
 
       {/* Glassmorphic Grid of Indexed Documents */}
       {loading ? (
-        <div className="py-20 text-center text-xs font-mono text-[#A88462]">
+        <div className="py-20 text-center text-xs font-mono text-[#a3a3a3]">
           Loading vault repository...
         </div>
       ) : filteredDocs.length === 0 ? (
         <div className="glass-panel rounded-3xl p-12 text-center space-y-3">
-          <Database className="w-8 h-8 mx-auto text-[#B08D57]" />
-          <p className="text-sm font-semibold text-[#F5EFE1]">No Indexed Documents Found</p>
-          <p className="text-xs text-[#A88462] max-w-md mx-auto">
+          <Database className="w-8 h-8 mx-auto text-[#f2572b]" />
+          <p className="text-sm font-semibold text-[#ffffff]">No Indexed Documents Found</p>
+          <p className="text-xs text-[#a3a3a3] max-w-md mx-auto">
             Add sample student assignments, publications, or code repositories to enable localized cross-check comparisons.
           </p>
         </div>
@@ -269,24 +269,24 @@ export default function RepositoryPage() {
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-[#140E0A]/80 border border-[#4E3424] text-[#B08D57]">
+                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-[#1f1f1f]/80 border border-[white/[0.08]] text-[#f2572b]">
                     {doc.content_type}
                   </span>
                   <button
                     onClick={() => handleDelete(doc.id)}
-                    className="p-1.5 text-[#A88462] hover:text-rose-400 rounded-lg transition-colors"
+                    className="p-1.5 text-[#a3a3a3] hover:text-rose-400 rounded-lg transition-colors"
                     title="Remove from index"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <h3 className="font-serif text-base font-bold text-[#F5EFE1] leading-snug line-clamp-2">
+                <h3 className="font-serif text-base font-bold text-[#ffffff] leading-snug line-clamp-2">
                   {doc.title}
                 </h3>
               </div>
 
-              <div className="pt-3 border-t border-[#4E3424]/60 flex items-center justify-between text-[11px] font-mono text-[#A88462]">
+              <div className="pt-3 border-t border-[white/[0.08]]/60 flex items-center justify-between text-[11px] font-mono text-[#a3a3a3]">
                 <span>{new Date(doc.uploaded_at).toLocaleDateString()}</span>
                 <span>{doc.content_length} chars</span>
               </div>
