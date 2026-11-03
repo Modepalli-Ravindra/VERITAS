@@ -56,6 +56,8 @@ export default function ResearchStudioPage() {
   // Active Section for Drafting (Stage 8)
   const [selectedSection, setSelectedSection] = useState("Abstract");
   const [sectionDrafts, setSectionDrafts] = useState<Record<string, string>>({});
+  const [draftLoading, setDraftLoading] = useState(false);
+  const [draftProvider, setDraftProvider] = useState("");
 
   // SciSpace Matrix State (Stage 4)
   const [literatureMatrix, setLiteratureMatrix] = useState<any[]>([]);
@@ -265,6 +267,33 @@ export default function ResearchStudioPage() {
       document.body.removeChild(link);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleDraftSectionWithGateway = async () => {
+    if (!currentProject || !selectedSection) return;
+    setDraftLoading(true);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/draft-section`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section_name: selectedSection,
+          notes: sectionDrafts[selectedSection] || ""
+        })
+      });
+      const data = await res.json();
+      if (data.success && data.draft) {
+        setSectionDrafts((prev) => ({
+          ...prev,
+          [selectedSection]: data.draft
+        }));
+        setDraftProvider(data.provider);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setDraftLoading(false);
     }
   };
 
@@ -724,16 +753,32 @@ export default function ResearchStudioPage() {
 
             {/* Right: Section Editor */}
             <div className="lg:col-span-8 p-5 rounded-2xl bg-[#170e08]/90 border border-[#53351F]/70 backdrop-blur-xl space-y-3 shadow-xl">
-              <div className="flex items-center justify-between pb-2 border-b border-[#3b2314]">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 border-b border-[#3b2314] gap-2">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-[#F5EFE1]">
-                    Drafting: {selectedSection}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-serif text-lg font-bold text-[#F5EFE1]">
+                      Drafting: {selectedSection}
+                    </h3>
+                    {draftProvider && (
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#24150c] border border-emerald-500/60 font-mono text-[10px] text-emerald-400">
+                        ⚡ {draftProvider}
+                      </span>
+                    )}
+                  </div>
                   <span className="text-xs text-[#A89279]">
                     {(sectionDrafts[selectedSection] || "").split(/\s+/).filter(Boolean).length} words
                   </span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleDraftSectionWithGateway}
+                    disabled={draftLoading}
+                    className="px-3.5 py-1.5 rounded-[60px] bg-gradient-to-r from-purple-900 to-indigo-900 hover:from-purple-800 hover:to-indigo-800 border border-purple-500/50 text-xs font-bold text-purple-200 hover:text-white shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
+                    title="Draft section with multi-provider LLM Gateway"
+                  >
+                    {draftLoading ? <RefreshCw className="w-3 h-3 animate-spin text-purple-300" /> : <Sparkles className="w-3 h-3 text-purple-300" />}
+                    <span>{draftLoading ? "Drafting..." : "⚡ Draft with LLM Gateway"}</span>
+                  </button>
                   <button
                     onClick={() => handleAutosaveProject()}
                     className="px-3.5 py-1.5 rounded-[60px] bg-[#24150c] border border-[#B08D57]/60 text-xs font-bold text-[#F5EFE1] hover:bg-[#382419] transition-all flex items-center gap-1"

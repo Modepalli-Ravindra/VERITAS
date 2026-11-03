@@ -70,6 +70,10 @@ class ComparePaperRequest(BaseModel):
 class ExportMatrixCSVRequest(BaseModel):
     matrix_rows: List[Dict[str, Any]]
 
+class DraftSectionRequest(BaseModel):
+    section_name: str = Field(..., description="Section name to draft, e.g. Introduction")
+    notes: Optional[str] = Field(None, description="Optional researcher notes or specific requirements")
+
 
 # --- Endpoints ---
 
@@ -227,6 +231,47 @@ def update_research_project(project_id: str, payload: UpdateProjectRequest):
 
     conn.close()
     return {"success": True, "project_id": project_id}
+
+
+@router.post("/projects/{project_id}/draft-section")
+def draft_project_section_with_gateway(project_id: str, payload: DraftSectionRequest):
+    """
+    Leverages the multi-provider LLM gateway (Groq/Gemini/OpenRouter/NIM) to generate
+    authoritative, IEEE-standard academic prose for any selected section.
+    Automatically saves the generated draft into the project's sections_json!
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Research project not found")
+
+    p = dict(row)
+    sections = json.loads(p["sections_json"] or "{}")
+
+    from app.core.llm_gateway import GATEWAY
+    draft_res = GATEWAY.draft_manuscript_section(
+        project_title=p["title"],
+        topic=p["topic"],
+        section_name=payload.section_name,
+        existing_notes=payload.notes or sections.get(payload.section_name, "")
+    )
+
+    sections[payload.section_name] = draft_res["draft"]
+    cursor.execute("UPDATE research_projects SET sections_json = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                   (json.dumps(sections), project_id))
+    conn.commit()
+    conn.close()
+
+    return {
+        "success": True,
+        "section_name": payload.section_name,
+        "draft": draft_res["draft"],
+        "provider": draft_res["provider"]
+    }
 
 
 @router.post("/projects/{project_id}/export")

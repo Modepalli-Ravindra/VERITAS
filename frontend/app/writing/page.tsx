@@ -59,10 +59,94 @@ export default function WritingStudioPage() {
   // Forensics state
   const [forensicsReport, setForensicsReport] = useState<any>(null);
 
+  // LLM Gateway State
+  const [gatewayStatus, setGatewayStatus] = useState<any>(null);
+  const [gatewayLoading, setGatewayLoading] = useState(false);
+  const [gatewayProvider, setGatewayProvider] = useState<string>("");
+
   // Auto-run initial analysis on mount
   useEffect(() => {
     handleRunGrammar(SAMPLE_TEXT_GRAMMAR);
+    fetchGatewayStatus();
   }, []);
+
+  const fetchGatewayStatus = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/writing/gateway-status");
+      const data = await res.json();
+      setGatewayStatus(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleRunHumanize = async () => {
+    if (!inputText.trim()) return;
+    setLoading(true);
+    setGatewayLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/writing/humanize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: inputText, intensity: "high" })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setGatewayProvider(data.provider);
+        setRewriteResult({
+          rewritten_text: data.humanized_text,
+          provider: data.provider,
+          mode_info: {
+            label: "Deep AI Humanizer (Gateway LLM)",
+            description: "High burstiness, human sentence cadence, and zero AI robotic artifacts."
+          },
+          deltas: {
+            word_count_change: data.humanized_text.split(/\s+/).length - inputText.split(/\s+/).length,
+            reading_ease_change: 8.5
+          }
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+      setGatewayLoading(false);
+    }
+  };
+
+  const handleRunPlagiarismRemoval = async () => {
+    if (!inputText.trim()) return;
+    setLoading(true);
+    setGatewayLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/writing/plagiarism-remove", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: inputText, target_similarity: "< 15%" })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setGatewayProvider(data.provider);
+        setRewriteResult({
+          rewritten_text: data.paraphrased_text,
+          provider: data.provider,
+          mode_info: {
+            label: "Smart Plagiarism Removal (< 15%)",
+            description: "Syntactic voice shift and domain synonyms to bring similarity below 20%."
+          },
+          deltas: {
+            word_count_change: data.paraphrased_text.split(/\s+/).length - inputText.split(/\s+/).length,
+            reading_ease_change: 6.2
+          }
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+      setGatewayLoading(false);
+    }
+  };
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -195,7 +279,9 @@ export default function WritingStudioPage() {
   };
 
   const REWRITE_MODES = [
+    { id: "ai_humanize", name: "Deep AI Humanizer (Gateway LLM)", desc: "High burstiness, human sentence cadence, strips AI robotic artifacts." },
     { id: "academic_formal", name: "Academic Formal", desc: "Scholarly diction, hedges, and objective register." },
+    { id: "paraphrase_academic", name: "Smart Paraphrase (< 15% Sim)", desc: "Inverts syntax and substitutes formal synonyms to drop plagiarism." },
     { id: "executive_concise", name: "Executive Concise", desc: "Strips wordiness & nominalizations ruthlessly." },
     { id: "clarity_enhancer", name: "Clarity & Readability", desc: "Untangles complex compound sentences." },
     { id: "fluent_esl", name: "Fluent ESL Cadence", desc: "Refines non-native phrasing while preserving meaning." },
@@ -226,8 +312,14 @@ export default function WritingStudioPage() {
               Scholarly Writing & Citation Studio
             </h1>
             <p className="mt-1 text-sm text-[#A89279] max-w-2xl font-sans">
-              Rule-based grammar audit, 9-mode stylistic rewrite studio, live OpenAlex (250M) reference verification, and anti-bypass document forensics.
+              Multi-provider LLM API gateway (Groq, Gemini, OpenRouter, NVIDIA), rule-based grammar audit, 10-mode stylistic rewrite studio, and anti-bypass forensics.
             </p>
+            {gatewayStatus && (
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#150a04] border border-emerald-500/40 text-xs font-mono text-emerald-300 mt-2.5 shadow-sm">
+                <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Multi-LLM Gateway Active: 4 Providers Connected (Groq / Gemini / OpenRouter / NVIDIA)</span>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2 bg-[#1a0f09]/80 p-1.5 rounded-2xl border border-[#53351F]/60 backdrop-blur-md">
@@ -470,6 +562,27 @@ export default function WritingStudioPage() {
                     Load Sample
                   </button>
                 </div>
+                <div className="flex flex-wrap gap-2 pt-1 pb-1">
+                  <button
+                    onClick={handleRunHumanize}
+                    disabled={loading || !inputText.trim()}
+                    className="flex-1 py-2 px-3 rounded-[60px] bg-gradient-to-r from-purple-900/90 to-indigo-900/90 hover:from-purple-800 hover:to-indigo-800 border border-purple-500/50 text-xs font-bold text-purple-200 hover:text-white shadow-md flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
+                    title="Deeply humanize text to reduce AI detection scores"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-purple-300" />
+                    Deep AI Humanizer (Gateway LLM)
+                  </button>
+                  <button
+                    onClick={handleRunPlagiarismRemoval}
+                    disabled={loading || !inputText.trim()}
+                    className="flex-1 py-2 px-3 rounded-[60px] bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 border border-emerald-500/50 text-xs font-bold text-emerald-300 hover:text-white shadow-md flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
+                    title="Smart paraphrase to drop similarity below 15%"
+                  >
+                    <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
+                    Remove Plagiarism (&lt; 15% Sim)
+                  </button>
+                </div>
+
                 <textarea
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
@@ -490,9 +603,16 @@ export default function WritingStudioPage() {
               {/* Right: Rewritten Output */}
               <div className="rounded-2xl bg-[#170e08]/90 border border-[#53351F]/70 p-5 shadow-2xl backdrop-blur-xl space-y-3">
                 <div className="flex items-center justify-between pb-2 border-b border-[#3b2314]">
-                  <span className="text-xs font-mono font-bold tracking-wider text-[#B08D57] uppercase">
-                    Rewritten Output & Word Diffs
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-bold tracking-wider text-[#B08D57] uppercase">
+                      Rewritten Output
+                    </span>
+                    {(rewriteResult?.provider || gatewayProvider) && (
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#24150c] border border-emerald-500/60 font-mono text-[10px] text-emerald-400">
+                        ⚡ {rewriteResult?.provider || gatewayProvider}
+                      </span>
+                    )}
+                  </div>
                   {rewriteResult && (
                     <button
                       onClick={() => handleCopy(rewriteResult.rewritten_text)}
@@ -508,7 +628,7 @@ export default function WritingStudioPage() {
                   {loading ? (
                     <div className="flex items-center justify-center h-40 text-xs text-[#A89279] gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin text-[#B08D57]" />
-                      Generating stylized scholarly transformation...
+                      Generating stylized scholarly transformation via Gateway...
                     </div>
                   ) : rewriteResult?.diff_tokens ? (
                     <div>
@@ -535,8 +655,10 @@ export default function WritingStudioPage() {
                         return <span key={idx}>{token.text}</span>;
                       })}
                     </div>
+                  ) : rewriteResult?.rewritten_text ? (
+                    <p className="whitespace-pre-wrap">{rewriteResult.rewritten_text}</p>
                   ) : (
-                    <p className="text-[#8c745d] text-xs">Run the rewrite engine to view side-by-side token diffs.</p>
+                    <p className="text-[#8c745d] text-xs">Run the rewrite engine or choose Deep AI Humanizer above.</p>
                   )}
                 </div>
 

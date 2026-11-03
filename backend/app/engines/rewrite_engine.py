@@ -209,6 +209,12 @@ def transform_text_mode(text: str, mode: str) -> str:
         for pattern, replacement in CASUAL_REPLACEMENTS:
             transformed = re.sub(pattern, replacement, transformed, flags=re.IGNORECASE)
 
+    # 10. Deep AI Humanize via Gateway
+    elif mode == "ai_humanize":
+        from app.core.llm_gateway import GATEWAY
+        res = GATEWAY.humanize_ai_text(text)
+        return res["humanized_text"]
+
     # Clean whitespace
     transformed = re.sub(r'\s+', ' ', transformed).strip()
     return transformed
@@ -299,6 +305,10 @@ MODE_METADATA = {
     "casual_accessible": {
         "label": "Casual & Accessible",
         "description": "Translates dense academic terminology into plain language for broader public communication."
+    },
+    "ai_humanize": {
+        "label": "Deep AI Humanizer (Gateway LLM)",
+        "description": "Multi-provider LLM gateway rewriting with high burstiness, human sentence cadence, and zero AI robotic artifacts."
     }
 }
 

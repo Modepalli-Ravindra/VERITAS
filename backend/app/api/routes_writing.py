@@ -17,6 +17,7 @@ from app.engines.citation_engine import (
 )
 from app.engines.forensics_engine import analyze_document_forensics
 from app.engines.search_engine import search_openalex_catalog
+from app.core.llm_gateway import GATEWAY
 
 router = APIRouter(prefix="/api/writing", tags=["Writing Studio"])
 
@@ -29,6 +30,14 @@ class TextPayload(BaseModel):
 class RewritePayload(BaseModel):
     text: str = Field(..., min_length=1, description="Text to rewrite")
     mode: str = Field(default="academic_formal", description="Rewriting mode")
+
+class HumanizePayload(BaseModel):
+    text: str = Field(..., min_length=1, description="AI-generated text to humanize")
+    intensity: Optional[str] = Field(default="high", description="Burstiness and variation intensity")
+
+class PlagiarismRemovePayload(BaseModel):
+    text: str = Field(..., min_length=1, description="Text with similarity to paraphrase")
+    target_similarity: Optional[str] = Field(default="< 15%", description="Target similarity threshold")
 
 class CitationFormatPayload(BaseModel):
     metadata: Dict[str, Any] = Field(..., description="Publication metadata")
@@ -53,12 +62,78 @@ def run_grammar_audit(payload: TextPayload):
         raise HTTPException(status_code=500, detail=f"Grammar analysis failed: {str(e)}")
 
 
+@router.get("/gateway-status")
+def get_llm_gateway_status():
+    """
+    Returns connection status and active priority cascade for configured LLM API keys:
+    Groq (Qwen/GPT-OSS), Google Gemini, OpenRouter, and NVIDIA NIM.
+    """
+    return GATEWAY.get_status()
+
+
+@router.post("/humanize")
+def run_ai_humanize(payload: HumanizePayload):
+    """
+    Deeply humanizes text to drastically reduce AI detection probability (GPTZero, Turnitin, Copyleaks).
+    Uses high-burstiness sentence variance, scholarly vocabulary, and eliminates repetitive robotic patterns.
+    """
+    try:
+        result = GATEWAY.humanize_ai_text(payload.text, intensity=payload.intensity or "high")
+        return {
+            "success": True,
+            "original_text": payload.text,
+            "humanized_text": result["humanized_text"],
+            "provider": result["provider"],
+            "burstiness_enhanced": result["burstiness_enhanced"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Humanize engine error: {str(e)}")
+
+
+@router.post("/plagiarism-remove")
+def run_smart_plagiarism_removal(payload: PlagiarismRemovePayload):
+    """
+    Paraphrases and restructures scientific passages to drop plagiarism similarity below 20%.
+    Inverts syntactic voice and uses domain-specific scholarly synonyms without altering meaning.
+    """
+    try:
+        result = GATEWAY.remove_plagiarism_smart(payload.text, target_similarity=payload.target_similarity or "< 15%")
+        return {
+            "success": True,
+            "original_text": payload.text,
+            "paraphrased_text": result["paraphrased_text"],
+            "provider": result["provider"],
+            "target_similarity": payload.target_similarity
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Plagiarism removal error: {str(e)}")
+
+
 @router.post("/rewrite")
 def run_intelligent_rewrite(payload: RewritePayload):
     """
     Transforms text using one of 9 academic/professional modes with word diffs and readability shifts.
     """
     try:
+        if payload.mode == "ai_humanize":
+            humanize_res = GATEWAY.humanize_ai_text(payload.text)
+            from app.engines.rewrite_engine import compute_word_diff, assess_text_readability
+            before_stat = assess_text_readability(payload.text)
+            after_stat = assess_text_readability(humanize_res["humanized_text"])
+            diff_words = compute_word_diff(payload.text, humanize_res["humanized_text"])
+            return {
+                "success": True,
+                "result": {
+                    "original_text": payload.text,
+                    "rewritten_text": humanize_res["humanized_text"],
+                    "mode": "ai_humanize",
+                    "provider": humanize_res["provider"],
+                    "word_diff": diff_words,
+                    "before_stats": before_stat,
+                    "after_stats": after_stat
+                }
+            }
+
         result = execute_rewrite(payload.text, payload.mode)
         return {"success": True, "result": result}
     except Exception as e:
