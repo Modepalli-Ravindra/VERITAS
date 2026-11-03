@@ -1,0 +1,252 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #090604;
+    --bg-surface: #120B08;
+    --bg-elevated: #25150E;
+    --border-subtle: #53351F;
+    --border-strong: #6B4731;
+    --text-primary: #F5EFE3;
+    --text-secondary: #EADDC2;
+    --text-tertiary: #C49A58;
+    --accent-primary: #C49A58;
+    --accent-secondary: #E4BD78;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  body {
+    background-color: #090604;
+    color: #F5EFE3;
+    font-feature-settings: "rlig" 1, "calt" 1, "tnum" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Professional tabular numbers for data & metrics */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ========================================================
+   VERITAS LUXURY GLASSMORPHISM SYSTEM
+   Frosted dark mocha acrylic surfaces with specular highlights
+   ======================================================== */
+.glass-card {
+  background: rgba(38, 26, 19, 0.52);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(83, 53, 31, 0.45);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card-hover:hover {
+  background: rgba(48, 32, 23, 0.65);
+  border-color: rgba(196, 154, 88, 0.55);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45), 0 0 20px 0 rgba(196, 154, 88, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.glass-panel {
+  background: rgba(26, 17, 11, 0.68);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(83, 53, 31, 0.42);
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-input {
+  background: rgba(18, 11, 7, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(83, 53, 31, 0.5);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.glass-input:focus {
+  background: rgba(26, 16, 10, 0.85);
+  border-color: rgba(196, 154, 88, 0.8);
+  box-shadow: 0 0 15px rgba(196, 154, 88, 0.2);
+}
+
+.glass-button-secondary {
+  background: rgba(37, 21, 14, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(83, 53, 31, 0.7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
+}
+.glass-button-secondary:hover {
+  background: rgba(83, 53, 31, 0.75);
+  border-color: rgba(196, 154, 88, 0.85);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 16px rgba(196, 154, 88, 0.2);
+}
+
+.glass-pill {
+  background: rgba(18, 11, 7, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(83, 53, 31, 0.45);
+}
+
+/* ========================================================
+   TACTILE 3D LUXURY BUTTONS (Corner Radius 60% / Pill)
+   Theme Palette: Pure Espresso, Champagne & Antique Gold
+   ======================================================== */
+
+/* Primary 3D Gold Action Button */
+.btn-3d-gold {
+  background: linear-gradient(180deg, #E8C37D 0%, #C49A58 52%, #9B7032 100%);
+  border-radius: 9999px; /* 60%+ pill radius */
+  border: 1.5px solid rgba(255, 235, 180, 0.75);
+  box-shadow: 
+    0 4px 14px 0 rgba(0, 0, 0, 0.45),
+    0 1px 3px 0 rgba(0, 0, 0, 0.35),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -2.5px 0 0 rgba(105, 70, 22, 0.7),
+    0 0 20px 0 rgba(196, 154, 88, 0.28);
+  color: #120B07 !important;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-3d-gold:hover {
+  background: linear-gradient(180deg, #F3D392 0%, #D4A860 52%, #A87937 100%);
+  border-color: rgba(255, 248, 220, 0.95);
+  box-shadow: 
+    0 8px 24px 0 rgba(0, 0, 0, 0.55),
+    0 2px 5px 0 rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -2.5px 0 0 rgba(105, 70, 22, 0.75),
+    0 0 30px 0 rgba(228, 189, 120, 0.45);
+  transform: translateY(-2px);
+  color: #0B0604 !important;
+}
+
+.btn-3d-gold:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 6px 0 rgba(0, 0, 0, 0.6),
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.35),
+    inset 0 -1px 0 0 rgba(105, 70, 22, 0.5);
+}
+
+/* Secondary 3D Sign In Button with Golden Layer Outline */
+.btn-3d-signin-gold {
+  background: linear-gradient(180deg, rgba(38, 23, 15, 0.88) 0%, rgba(20, 12, 8, 0.96) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 9999px; /* 60%+ pill radius */
+  border: 1.5px solid #C49A58; /* Luminous Golden Layer Outline */
+  box-shadow: 
+    0 4px 16px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(196, 154, 88, 0.35), /* Concentric Golden Layer Rim */
+    inset 0 1px 1.5px 0 rgba(255, 235, 185, 0.4), /* Top 3D reflection */
+    inset 0 -2.5px 0 0 rgba(16, 9, 5, 0.85), /* Bottom depth bevel */
+    0 0 20px 0 rgba(196, 154, 88, 0.22); /* Ambient Golden Halo */
+  color: #F5EFE3 !important;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.btn-3d-signin-gold:hover {
+  background: linear-gradient(180deg, rgba(56, 35, 23, 0.92) 0%, rgba(29, 17, 11, 0.98) 100%);
+  border-color: #E4BD78; /* Brighter Golden Outline */
+  box-shadow: 
+    0 8px 24px 0 rgba(0, 0, 0, 0.6),
+    0 0 0 1.5px rgba(228, 189, 120, 0.55),
+    inset 0 1px 2px 0 rgba(255, 245, 215, 0.65),
+    inset 0 -2.5px 0 0 rgba(16, 9, 5, 0.9),
+    0 0 30px 0 rgba(228, 189, 120, 0.4);
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+}
+
+.btn-3d-signin-gold:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 6px 0 rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(196, 154, 88, 0.4),
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Precision Deep Espresso & Antique Gold Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #140E0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4E3424;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B08D57;
+}
+
+/* Document Attribution Highlights in Palette */
+.highlight-ribbon-plag {
+  background-color: rgba(239, 68, 68, 0.22);
+  border-bottom: 1.5px solid rgba(239, 68, 68, 0.85);
+  color: #FCA5A5;
+  padding: 1px 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.highlight-ribbon-plag:hover {
+  background-color: rgba(239, 68, 68, 0.38);
+}
+
+.highlight-ribbon-ai {
+  background-color: rgba(176, 141, 87, 0.22);
+  border-bottom: 1.5px solid #B08D57;
+  color: #D9C7A3;
+  padding: 1px 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.highlight-ribbon-ai:hover {
+  background-color: rgba(176, 141, 87, 0.38);
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-cursor {
+  animation: blinkCursor 0.9s infinite;
+}

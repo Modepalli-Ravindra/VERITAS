@@ -1,0 +1,363 @@
+"""
+VERITAS // Research Paper Workspace & SciSpace Intelligence API Routes
+Handles the 19-stage academic research lifecycle, interactive PDF chat with local RAG,
+comparative literature review matrix, and manuscript drafting.
+"""
+
+import uuid
+import json
+import time
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query
+from pydantic import BaseModel, Field
+from typing import List, Dict, Any, Optional
+
+from app.core.database import get_db
+from app.engines.research_studio_engine import (
+    generate_research_scaffolding,
+    synthesize_literature_matrix,
+    discover_research_gaps,
+    export_research_manuscript
+)
+from app.engines.pdf_chat_engine import extract_and_index_pdf, answer_paper_query, PaperRAGIndex
+from app.engines.search_engine import search_openalex_catalog
+
+router = APIRouter(prefix="/api/research", tags=["Research Studio"])
+
+# In-memory index cache for active PDF chat sessions
+ACTIVE_PDF_INDICES: Dict[str, PaperRAGIndex] = {}
+
+# --- Request Models ---
+
+class CreateProjectRequest(BaseModel):
+    title: str = Field(..., min_length=3, description="Working manuscript title")
+    topic: str = Field(..., min_length=3, description="Core research topic / domain")
+
+class UpdateProjectRequest(BaseModel):
+    title: Optional[str] = None
+    topic: Optional[str] = None
+    problem_statement: Optional[str] = None
+    research_questions: Optional[List[str]] = None
+    objectives: Optional[List[str]] = None
+    hypotheses: Optional[List[str]] = None
+    methodology_plan: Optional[str] = None
+    sections: Optional[Dict[str, str]] = None
+    literature_matrix: Optional[List[Dict[str, Any]]] = None
+    research_gaps: Optional[List[Dict[str, Any]]] = None
+    current_stage: Optional[int] = None
+
+class MatrixGenerateRequest(BaseModel):
+    topic: str = Field(..., min_length=3, description="Topic to search and synthesize matrix for")
+    limit: Optional[int] = 5
+
+class ChatPaperRequest(BaseModel):
+    paper_id: str = Field(..., description="ID of uploaded paper")
+    query: str = Field(..., min_length=2, description="Question about paper")
+
+
+# --- Endpoints ---
+
+@router.post("/projects")
+def create_research_project(payload: CreateProjectRequest):
+    """
+    Initializes a new research workspace project and synthesizes stages 1-5
+    (Problem Statement, Research Questions, Objectives, Hypotheses, Outline).
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    proj_id = str(uuid.uuid4())
+
+    scaffolding = generate_research_scaffolding(payload.topic)
+
+    cursor.execute("""
+        INSERT INTO research_projects (
+            id, user_id, title, topic, problem_statement, research_questions_json,
+            objectives_json, hypotheses_json, methodology_plan, outline_json,
+            sections_json, current_stage
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        proj_id,
+        "demo-user-1",
+        payload.title,
+        payload.topic,
+        scaffolding["problem_statement"],
+        json.dumps(scaffolding["research_questions"]),
+        json.dumps(scaffolding["objectives"]),
+        json.dumps(scaffolding["hypotheses"]),
+        scaffolding["methodology_plan"],
+        json.dumps(scaffolding["outline"]),
+        json.dumps({}),
+        1
+    ))
+    conn.commit()
+    conn.close()
+
+    return {
+        "success": True,
+        "project_id": proj_id,
+        "title": payload.title,
+        "scaffolding": scaffolding
+    }
+
+
+@router.get("/projects")
+def list_research_projects():
+    """
+    Returns all existing research projects for the user.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, title, topic, current_stage, created_at, updated_at
+        FROM research_projects
+        ORDER BY updated_at DESC
+    """)
+    rows = cursor.fetchall()
+    projects = [dict(r) for r in rows]
+    conn.close()
+    return {"projects": projects}
+
+
+@router.get("/projects/{project_id}")
+def get_research_project(project_id: str):
+    """
+    Retrieves full research project workspace state with all 19 stages.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="Research project not found")
+
+    p = dict(row)
+    return {
+        "id": p["id"],
+        "title": p["title"],
+        "topic": p["topic"],
+        "problem_statement": p["problem_statement"],
+        "research_questions": json.loads(p["research_questions_json"] or "[]"),
+        "objectives": json.loads(p["objectives_json"] or "[]"),
+        "hypotheses": json.loads(p["hypotheses_json"] or "[]"),
+        "methodology_plan": p["methodology_plan"],
+        "outline": json.loads(p["outline_json"] or "[]"),
+        "sections": json.loads(p["sections_json"] or "{}"),
+        "literature_matrix": json.loads(p["literature_matrix_json"] or "[]"),
+        "research_gaps": json.loads(p["research_gaps_json"] or "[]"),
+        "current_stage": p["current_stage"],
+        "created_at": p["created_at"],
+        "updated_at": p["updated_at"]
+    }
+
+
+@router.put("/projects/{project_id}")
+def update_research_project(project_id: str, payload: UpdateProjectRequest):
+    """
+    Autosaves or updates the project's drafting sections, stage, or matrix.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    updates = []
+    values = []
+
+    if payload.title is not None:
+        updates.append("title = ?")
+        values.append(payload.title)
+    if payload.topic is not None:
+        updates.append("topic = ?")
+        values.append(payload.topic)
+    if payload.problem_statement is not None:
+        updates.append("problem_statement = ?")
+        values.append(payload.problem_statement)
+    if payload.research_questions is not None:
+        updates.append("research_questions_json = ?")
+        values.append(json.dumps(payload.research_questions))
+    if payload.objectives is not None:
+        updates.append("objectives_json = ?")
+        values.append(json.dumps(payload.objectives))
+    if payload.hypotheses is not None:
+        updates.append("hypotheses_json = ?")
+        values.append(json.dumps(payload.hypotheses))
+    if payload.methodology_plan is not None:
+        updates.append("methodology_plan = ?")
+        values.append(payload.methodology_plan)
+    if payload.sections is not None:
+        updates.append("sections_json = ?")
+        values.append(json.dumps(payload.sections))
+    if payload.literature_matrix is not None:
+        updates.append("literature_matrix_json = ?")
+        values.append(json.dumps(payload.literature_matrix))
+    if payload.research_gaps is not None:
+        updates.append("research_gaps_json = ?")
+        values.append(json.dumps(payload.research_gaps))
+    if payload.current_stage is not None:
+        updates.append("current_stage = ?")
+        values.append(payload.current_stage)
+
+    updates.append("updated_at = CURRENT_TIMESTAMP")
+
+    if updates:
+        values.append(project_id)
+        cursor.execute(f"UPDATE research_projects SET {', '.join(updates)} WHERE id = ?", tuple(values))
+        conn.commit()
+
+    conn.close()
+    return {"success": True, "project_id": project_id}
+
+
+@router.post("/projects/{project_id}/export")
+def export_project(project_id: str, format_type: str = Query("markdown")):
+    """
+    Exports drafted research paper into publication-ready Markdown or text.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    content = export_research_manuscript(dict(row), format_type)
+    return {
+        "success": True,
+        "format": format_type,
+        "title": row["title"],
+        "content": content
+    }
+
+
+# --- SciSpace Literature Matrix & Gap Analysis ---
+
+@router.post("/matrix/generate")
+def generate_matrix(payload: MatrixGenerateRequest):
+    """
+    Searches 250M OpenAlex publications and generates a structured 8-column comparative matrix.
+    """
+    papers = search_openalex_catalog(payload.topic, limit=payload.limit)
+    matrix = synthesize_literature_matrix(papers)
+    gaps = discover_research_gaps(matrix)
+
+    return {
+        "success": True,
+        "topic": payload.topic,
+        "matrix": matrix,
+        "research_gaps": gaps
+    }
+
+
+# --- Interactive PDF Assistant & Local RAG Chat ---
+
+@router.post("/pdf/upload")
+async def upload_research_pdf(file: UploadFile = File(...), project_id: Optional[str] = Form(None)):
+    """
+    Uploads a research paper PDF, segments by page, builds a local in-memory vector index.
+    """
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    content = await file.read()
+    paper_id = str(uuid.uuid4())
+    paper_title = file.filename.replace(".pdf", "").replace("_", " ").title()
+
+    # Index PDF locally
+    index, chunks = extract_and_index_pdf(content, paper_id=paper_id, title=paper_title)
+    ACTIVE_PDF_INDICES[paper_id] = index
+
+    # Save to SQLite library
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO research_library_papers (
+            id, project_id, title, pdf_filename, extracted_text, chunks_json
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    """, (
+        paper_id,
+        project_id,
+        paper_title,
+        file.filename,
+        f"Indexed {len(chunks)} passages across {len(index.chunks)} sections.",
+        json.dumps(chunks[:30])
+    ))
+    conn.commit()
+    conn.close()
+
+    return {
+        "success": True,
+        "paper_id": paper_id,
+        "title": paper_title,
+        "total_chunks": len(index.chunks),
+        "total_pages": max([c.get("page", 1) for c in chunks] or [1])
+    }
+
+
+@router.post("/pdf/chat")
+def chat_with_pdf(payload: ChatPaperRequest):
+    """
+    Submits a query to the indexed PDF and returns grounded answer with page numbers and excerpts.
+    """
+    index = ACTIVE_PDF_INDICES.get(payload.paper_id)
+    if not index:
+        # Attempt to reconstruct index from database
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT title, chunks_json FROM research_library_papers WHERE id = ?", (payload.paper_id,))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Paper not found or session expired. Please re-upload PDF.")
+
+        index = PaperRAGIndex(paper_id=payload.paper_id, title=row["title"])
+        stored_chunks = json.loads(row["chunks_json"] or "[]")
+        for ch in stored_chunks:
+            index.add_chunk(page_num=ch.get("page", 1), text=ch.get("text", ""))
+        ACTIVE_PDF_INDICES[payload.paper_id] = index
+
+    answer_data = answer_paper_query(index, payload.query)
+
+    # Save conversation log
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO paper_chat_history (id, paper_id, user_query, answer, citations_json)
+        VALUES (?, ?, ?, ?, ?)
+    """, (
+        str(uuid.uuid4()),
+        payload.paper_id,
+        payload.query,
+        answer_data["answer"],
+        json.dumps(answer_data["citations"])
+    ))
+    conn.commit()
+    conn.close()
+
+    return {
+        "success": True,
+        "paper_id": payload.paper_id,
+        "query": payload.query,
+        "answer": answer_data["answer"],
+        "citations": answer_data["citations"],
+        "grounded": answer_data["grounded"]
+    }
+
+
+@router.get("/library")
+def get_library_papers():
+    """
+    Lists all saved research papers in the workspace library.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, project_id, title, pdf_filename, created_at FROM research_library_papers ORDER BY created_at DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return {"papers": [dict(r) for r in rows]}
