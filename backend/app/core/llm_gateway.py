@@ -361,3 +361,4 @@ class LLMGateway:
 
 # Singleton Gateway Instance
 GATEWAY = LLMGateway()
+

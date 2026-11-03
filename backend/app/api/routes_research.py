@@ -21,7 +21,9 @@ from app.engines.research_studio_engine import (
     export_research_manuscript,
     export_matrix_csv,
     export_research_manuscript_latex,
-    export_research_manuscript_docx
+    export_research_manuscript_docx,
+    IEEE_SECTION_BLUEPRINTS,
+    generate_autonomous_ieee_paper
 )
 from app.engines.pdf_chat_engine import (
     extract_and_index_pdf,
@@ -73,6 +75,9 @@ class ExportMatrixCSVRequest(BaseModel):
 class DraftSectionRequest(BaseModel):
     section_name: str = Field(..., description="Section name to draft, e.g. Introduction")
     notes: Optional[str] = Field(None, description="Optional researcher notes or specific requirements")
+
+class AutonomousPaperRequest(BaseModel):
+    instructions: Optional[str] = Field(None, description="Optional focus instructions for autonomous paper generation")
 
 
 # --- Endpoints ---
@@ -271,6 +276,74 @@ def draft_project_section_with_gateway(project_id: str, payload: DraftSectionReq
         "section_name": payload.section_name,
         "draft": draft_res["draft"],
         "provider": draft_res["provider"]
+    }
+
+
+@router.get("/ieee-blueprints")
+def get_ieee_blueprints():
+    """
+    Returns exact structural requirements, mandatory contents, and alignment rules
+    for each section of an IEEE standard research publication.
+    """
+    return {"success": True, "blueprints": IEEE_SECTION_BLUEPRINTS}
+
+
+@router.post("/projects/{project_id}/generate-autonomous-paper")
+def generate_autonomous_paper_endpoint(project_id: str, payload: Optional[AutonomousPaperRequest] = None):
+    """
+    End-to-End Autonomous AI Researcher:
+    Synthesizes the entire research manuscript section-by-section using the Multi-Provider LLM Gateway.
+    Generates Abstract, Keywords, Introduction, Literature Survey, Proposed Model, Comparative Tables,
+    Formulas, Results, Conclusion, and References. Saves directly to database and returns Overleaf-ready LaTeX code.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    project_dict = dict(row)
+    instructions = payload.instructions if payload else None
+
+    result = generate_autonomous_ieee_paper(project_dict, instructions)
+
+    # Persist generated sections into project
+    cursor.execute(
+        "UPDATE research_projects SET sections_json = ?, current_stage = 9, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        (json.dumps(result["sections"]), project_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return result
+
+
+@router.get("/projects/{project_id}/overleaf-payload")
+def get_overleaf_payload(project_id: str):
+    """
+    Returns the complete LaTeX source code and target Overleaf API endpoint
+    for instant 1-click project initialization on Overleaf.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    project_dict = dict(row)
+    latex_code = export_research_manuscript_latex(project_dict)
+
+    return {
+        "success": True,
+        "title": project_dict["title"],
+        "latex_code": latex_code,
+        "overleaf_endpoint": "https://www.overleaf.com/docs"
     }
 
 

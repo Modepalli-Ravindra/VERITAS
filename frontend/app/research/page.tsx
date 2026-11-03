@@ -23,7 +23,8 @@ import {
   Send,
   Eye,
   Sliders,
-  Database
+  Database,
+  ExternalLink
 } from "lucide-react";
 
 const STAGES = [
@@ -58,6 +59,12 @@ export default function ResearchStudioPage() {
   const [sectionDrafts, setSectionDrafts] = useState<Record<string, string>>({});
   const [draftLoading, setDraftLoading] = useState(false);
   const [draftProvider, setDraftProvider] = useState("");
+
+  // Autonomous Full-Paper Generation & Overleaf Integration
+  const [autoGenLoading, setAutoGenLoading] = useState(false);
+  const [showBlueprintModal, setShowBlueprintModal] = useState(false);
+  const [blueprints, setBlueprints] = useState<any>(null);
+  const [overleafLoading, setOverleafLoading] = useState(false);
 
   // SciSpace Matrix State (Stage 4)
   const [literatureMatrix, setLiteratureMatrix] = useState<any[]>([]);
@@ -297,6 +304,68 @@ export default function ResearchStudioPage() {
     }
   };
 
+  const fetchBlueprints = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/research/ieee-blueprints");
+      const data = await res.json();
+      if (data.blueprints) setBlueprints(data.blueprints);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleAutoGenerateFullPaper = async () => {
+    if (!currentProject) return;
+    setAutoGenLoading(true);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/generate-autonomous-paper`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ instructions: "Write complete IEEE publication manuscript matching IEEE two-column conference layout with previous works table and formulas." })
+      });
+      const data = await res.json();
+      if (data.success && data.sections) {
+        setSectionDrafts(data.sections);
+        setDraftProvider(data.provider);
+        setCurrentStage(9);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAutoGenLoading(false);
+    }
+  };
+
+  const handleOpenInOverleaf = async () => {
+    if (!currentProject) return;
+    setOverleafLoading(true);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/overleaf-payload`);
+      const data = await res.json();
+      if (data.success && data.latex_code) {
+        // Create dynamic form and POST to Overleaf
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "https://www.overleaf.com/docs";
+        form.target = "_blank";
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "snip";
+        input.value = data.latex_code;
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setOverleafLoading(false);
+    }
+  };
+
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -328,7 +397,27 @@ export default function ResearchStudioPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => {
+                fetchBlueprints();
+                setShowBlueprintModal(true);
+              }}
+              className="px-4 py-2 rounded-[60px] bg-[#1a0e08] hover:bg-[#2e190f] border border-[#B08D57]/60 text-xs font-bold text-[#E6C687] transition-all flex items-center gap-1.5 shadow-sm"
+              title="View mandatory content and formatting rules for each section"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-[#B08D57]" />
+              IEEE Blueprint Guide
+            </button>
+            <button
+              onClick={handleAutoGenerateFullPaper}
+              disabled={autoGenLoading}
+              className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-purple-900 to-indigo-900 hover:from-purple-800 hover:to-indigo-800 border border-purple-400/50 text-xs font-bold text-purple-200 hover:text-white transition-all flex items-center gap-1.5 shadow-md disabled:opacity-50"
+              title="Autonomously research and draft the complete IEEE paper section-by-section"
+            >
+              {autoGenLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-300" /> : <Sparkles className="w-3.5 h-3.5 text-purple-300" />}
+              <span>{autoGenLoading ? "Synthesizing Full Paper..." : "⚡ Auto-Generate Full Paper"}</span>
+            </button>
             <button
               onClick={() => setShowNewModal(true)}
               className="px-4 py-2 rounded-[60px] bg-[#24150c] hover:bg-[#382419] border border-[#B08D57]/60 text-xs font-bold text-[#F5EFE1] transition-all flex items-center gap-1.5 shadow-md"
@@ -343,13 +432,6 @@ export default function ResearchStudioPage() {
             >
               {saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
               {saving ? "Autosaving..." : "Save Project"}
-            </button>
-            <button
-              onClick={() => handleExportManuscript("markdown")}
-              className="px-4 py-2 rounded-[60px] bg-[#1a0f09] hover:bg-[#2b180d] border border-[#53351F] text-xs font-bold text-[#D9C7A3] hover:text-[#F5EFE1] transition-all flex items-center gap-1.5"
-            >
-              <Download className="w-3.5 h-3.5 text-[#B08D57]" />
-              Export
             </button>
           </div>
         </div>
@@ -824,6 +906,15 @@ export default function ResearchStudioPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
+                  onClick={handleOpenInOverleaf}
+                  disabled={overleafLoading}
+                  className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-500 hover:to-green-600 text-white text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 border border-emerald-400/40"
+                  title="Instant 1-click project initialization on Overleaf"
+                >
+                  {overleafLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <ExternalLink className="w-3.5 h-3.5" />}
+                  <span>Open in Overleaf (1-Click)</span>
+                </button>
+                <button
                   onClick={() => handleExportManuscript("docx")}
                   className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-blue-700 to-indigo-800 text-white text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 border border-blue-400/30"
                   title="Export styled Microsoft Word (.docx) publication document"
@@ -883,7 +974,126 @@ export default function ResearchStudioPage() {
           </div>
         )}
 
+        {/* ================= IEEE SECTION BLUEPRINT GUIDE MODAL ================= */}
+        {showBlueprintModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div className="w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-2xl bg-[#120a05] border border-[#B08D57]/70 p-6 shadow-2xl space-y-6">
+              <div className="flex items-center justify-between pb-3 border-b border-[#3b2314]">
+                <div className="flex items-center gap-2.5">
+                  <BookOpen className="w-5 h-5 text-[#B08D57]" />
+                  <div>
+                    <h3 className="font-serif text-lg font-bold text-[#F5EFE1]">
+                      IEEE Standard Research Publication Blueprint Guide
+                    </h3>
+                    <p className="text-xs text-[#A89279]">
+                      Mandatory contents, structural alignments, and mathematical formatting required for peer-reviewed conference publications.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowBlueprintModal(false)}
+                  className="px-3 py-1 rounded-full bg-[#1e1008] border border-[#3b2314] text-xs font-bold text-[#A89279] hover:text-[#F5EFE1]"
+                >
+                  ✕ Close
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {blueprints &&
+                  Object.entries(blueprints).map(([secKey, secVal]: [string, any], idx: number) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-2 hover:border-[#B08D57]/50 transition-all"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-serif font-bold text-[#F5EFE1]">{secVal.title}</h4>
+                        <span className="text-[10px] font-mono text-[#B08D57] bg-[#24150c] px-2 py-0.5 rounded-full border border-[#B08D57]/40">
+                          {secVal.alignment_rule?.slice(0, 24)}...
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#A89279] leading-relaxed">{secVal.description}</p>
+                      <div className="space-y-1 pt-1 border-t border-[#24130a]">
+                        <span className="text-[10px] font-mono text-[#B08D57] uppercase font-bold block">
+                          Mandatory Contents:
+                        </span>
+                        <ul className="space-y-1 text-xs text-[#D9C7A3]">
+                          {secVal.must_contain?.map((item: string, iIdx: number) => (
+                            <li key={iIdx} className="list-disc list-inside leading-relaxed text-[11px]">
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+
+              <div className="pt-4 border-t border-[#3b2314] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span className="text-xs text-[#A89279]">
+                  Ready to draft? The Autonomous AI Researcher generates all these sections automatically!
+                </span>
+                <button
+                  onClick={() => {
+                    setShowBlueprintModal(false);
+                    handleAutoGenerateFullPaper();
+                  }}
+                  className="px-5 py-2.5 rounded-[60px] bg-gradient-to-r from-purple-900 to-indigo-900 hover:from-purple-800 hover:to-indigo-800 border border-purple-400/50 text-xs font-bold text-white shadow-lg flex items-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-purple-300" />
+                  Auto-Generate This Entire Paper Now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= NEW PROJECT MODAL ================= */}
+        {showNewModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div className="w-full max-w-lg rounded-2xl bg-[#120a05] border border-[#B08D57]/70 p-6 shadow-2xl space-y-4">
+              <h3 className="font-serif text-lg font-bold text-[#F5EFE1]">
+                Initialize New Research Workspace Project
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div>
+                  <label className="block text-[#A89279] mb-1 font-semibold">Manuscript Working Title:</label>
+                  <input
+                    type="text"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-[#080402] border border-[#3b2314] text-[#F5EFE1] focus:border-[#B08D57] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#A89279] mb-1 font-semibold">Core Research Topic &amp; Domain:</label>
+                  <textarea
+                    value={newTopic}
+                    onChange={(e) => setNewTopic(e.target.value)}
+                    rows={3}
+                    className="w-full p-2.5 rounded-xl bg-[#080402] border border-[#3b2314] text-[#F5EFE1] focus:border-[#B08D57] outline-none resize-none"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-2 border-t border-[#3b2314]">
+                <button
+                  onClick={() => setShowNewModal(false)}
+                  className="px-4 py-2 rounded-[60px] bg-[#1e1008] text-xs font-bold text-[#A89279] hover:text-[#F5EFE1]"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateNewProject}
+                  className="px-5 py-2 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold hover:brightness-110"
+                >
+                  Create &amp; Synthesize Scaffolding
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
 }
+
