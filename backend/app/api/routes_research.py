@@ -23,7 +23,9 @@ from app.engines.research_studio_engine import (
     export_research_manuscript_latex,
     export_research_manuscript_docx,
     IEEE_SECTION_BLUEPRINTS,
-    generate_autonomous_ieee_paper
+    IEEE_ACADEMIC_RULES_FAQ,
+    generate_autonomous_ieee_paper,
+    analyze_existing_project_to_ieee_paper
 )
 from app.engines.pdf_chat_engine import (
     extract_and_index_pdf,
@@ -78,6 +80,15 @@ class DraftSectionRequest(BaseModel):
 
 class AutonomousPaperRequest(BaseModel):
     instructions: Optional[str] = Field(None, description="Optional focus instructions for autonomous paper generation")
+
+class AnalyzeProjectRequest(BaseModel):
+    title: str = Field(..., min_length=3, description="Paper / Project Title")
+    topic: Optional[str] = Field(None, description="Domain / Area (e.g. Blockchain & AI)")
+    project_description: str = Field(..., min_length=10, description="Detailed description of the college/client project, code, modules, tech stack")
+    implemented_features: Optional[str] = Field(None, description="What was actually built and coded (UI, APIs, database, smart contracts)")
+    proposed_extensions: Optional[str] = Field(None, description="Extra research features / theoretical ideas to propose (Academic Liberty)")
+    screenshot_notes: Optional[str] = Field(None, description="Description of available project screenshots or experimental outputs")
+    authors: Optional[List[Dict[str, str]]] = Field(None, description="List of authors: name, department, institution, location, email")
 
 
 # --- Endpoints ---
@@ -286,6 +297,69 @@ def get_ieee_blueprints():
     for each section of an IEEE standard research publication.
     """
     return {"success": True, "blueprints": IEEE_SECTION_BLUEPRINTS}
+
+
+@router.get("/academic-rules-faq")
+def get_academic_rules_faq():
+    """
+    Returns definitive guidelines on IEEE paper page limits, column requirements,
+    academic liberty (college project vs research framework), and proper screenshot placement.
+    """
+    return {"success": True, "faq": IEEE_ACADEMIC_RULES_FAQ}
+
+
+@router.post("/projects/analyze-existing-project")
+def analyze_existing_project_endpoint(payload: AnalyzeProjectRequest):
+    """
+    College/Client Project to IEEE Paper Conversion Engine:
+    Deconstructs existing code, project reports, and screenshots. Formulates the overarching
+    architectural model (Academic Liberty in Section III) and validates the implemented prototype
+    with formal figure references and metrics in Section VI.
+    Persists manuscript into workspace database and returns Overleaf-ready LaTeX code.
+    """
+    analysis = analyze_existing_project_to_ieee_paper(
+        title=payload.title,
+        project_description=payload.project_description,
+        implemented_features=payload.implemented_features,
+        proposed_extensions=payload.proposed_extensions,
+        screenshot_notes=payload.screenshot_notes,
+        domain_topic=payload.topic,
+        authors=payload.authors
+    )
+
+    proj_id = str(uuid.uuid4())
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # Create new research project record
+    cursor.execute("""
+        INSERT INTO research_projects (
+            id, user_id, title, topic, problem_statement, research_questions_json,
+            objectives_json, hypotheses_json, methodology_plan, outline_json,
+            sections_json, current_stage
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        proj_id,
+        "demo-user-1",
+        payload.title,
+        payload.topic or payload.title,
+        f"Addressing challenges in {payload.topic or payload.title} through a decentralized, verified architecture.",
+        json.dumps(["How does the proposed framework optimize throughput and verification latency?", "What empirical gains are achieved over traditional centralized architectures?"]),
+        json.dumps(["Design an immutable verification architecture", "Empirically evaluate prototype throughput and latency"]),
+        json.dumps(["The proposed system will reduce latency by over 40%", "Verification accuracy will sustain 99%+"]),
+        "Experimental prototype validation coupled with formal mathematical modeling.",
+        json.dumps(list(analysis["sections"].keys())),
+        json.dumps(analysis["sections"]),
+        9  # Set to stage 9 (Final Review / Export)
+    ))
+    conn.commit()
+    conn.close()
+
+    return {
+        **analysis,
+        "project_id": proj_id,
+        "overleaf_endpoint": "https://www.overleaf.com/docs"
+    }
 
 
 @router.post("/projects/{project_id}/generate-autonomous-paper")

@@ -24,7 +24,12 @@ import {
   Eye,
   Sliders,
   Database,
-  ExternalLink
+  ExternalLink,
+  Users,
+  Trash2,
+  CheckSquare,
+  Code,
+  Image as ImageIcon
 } from "lucide-react";
 
 const STAGES = [
@@ -65,6 +70,32 @@ export default function ResearchStudioPage() {
   const [showBlueprintModal, setShowBlueprintModal] = useState(false);
   const [blueprints, setBlueprints] = useState<any>(null);
   const [overleafLoading, setOverleafLoading] = useState(false);
+
+  // College/Client Project Analyzer Modal State
+  const [showProjectAnalyzerModal, setShowProjectAnalyzerModal] = useState(false);
+  const [analyzerLoading, setAnalyzerLoading] = useState(false);
+  const [analyzerTitle, setAnalyzerTitle] = useState("Empowering Creators with a Blockchain-Based IP Protection System");
+  const [analyzerTopic, setAnalyzerTopic] = useState("Blockchain, Smart Contracts, and AI-Driven Copyright Verification");
+  const [analyzerDescription, setAnalyzerDescription] = useState(
+    "A full-stack decentralized application built using React/Next.js for creator frontend, Python FastAPI backend, Solidity smart contracts deployed on Ethereum Sepolia testnet, and IPFS for decentralized media storage."
+  );
+  const [analyzerImplemented, setAnalyzerImplemented] = useState(
+    "MetaMask Web3 wallet authentication, SHA-3 file hashing, IPFS media pinning, smart contract digital asset registration with immutable timestamp, creator portfolio dashboard with registered asset table, and certificate download."
+  );
+  const [analyzerProposed, setAnalyzerProposed] = useState(
+    "AI-driven content monitoring using Vision Transformers (ViT) to scan online repositories for copyright violations, automated royalty distribution across co-creators, and cross-chain arbitration protocol."
+  );
+  const [analyzerScreenshots, setAnalyzerScreenshots] = useState(
+    "Fig. 1: Prototype dashboard interface showing registered digital assets and connected Web3 wallet; Fig. 2: IP registration receipt with transaction hash on Sepolia block explorer; Fig. 3: Empirical evaluation benchmark table demonstrating 50 TPS throughput and 3.2s execution latency."
+  );
+  const [analyzerAuthors, setAnalyzerAuthors] = useState([
+    { name: "Chinni Ganesh Kumar", department: "Dept of Artificial Intelligence & Machine Learning", institution: "NRI Institute Of Technology", location: "Agiripalli, India", email: "ganeshkumar.chinni@gmail.com" },
+    { name: "M Ravindra Babu", department: "Dept of Artificial Intelligence & Machine Learning", institution: "NRI Institute Of Technology", location: "Agiripalli, India", email: "ravindramodepalli23@gmail.com" }
+  ]);
+
+  // IEEE Academic Rules FAQ State
+  const [academicFaq, setAcademicFaq] = useState<any>(null);
+  const [blueprintActiveTab, setBlueprintActiveTab] = useState<"blueprints" | "limits" | "liberty" | "screenshots" | "checklist">("blueprints");
 
   // SciSpace Matrix State (Stage 4)
   const [literatureMatrix, setLiteratureMatrix] = useState<any[]>([]);
@@ -314,6 +345,65 @@ export default function ResearchStudioPage() {
     }
   };
 
+  const fetchAcademicFaq = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/research/academic-rules-faq");
+      const data = await res.json();
+      if (data.faq) setAcademicFaq(data.faq);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleAnalyzeExistingProject = async () => {
+    if (!analyzerTitle.trim() || !analyzerDescription.trim()) return;
+    setAnalyzerLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/research/projects/analyze-existing-project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: analyzerTitle,
+          topic: analyzerTopic,
+          project_description: analyzerDescription,
+          implemented_features: analyzerImplemented,
+          proposed_extensions: analyzerProposed,
+          screenshot_notes: analyzerScreenshots,
+          authors: analyzerAuthors
+        })
+      });
+      const data = await res.json();
+      if (data.project_id) {
+        setShowProjectAnalyzerModal(false);
+        await fetchProjects();
+        await loadProjectDetails(data.project_id);
+        setCurrentStage(9);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAnalyzerLoading(false);
+    }
+  };
+
+  const handleAddAuthor = () => {
+    setAnalyzerAuthors([
+      ...analyzerAuthors,
+      { name: "New Co-Author", department: "Dept of Computer Science & Engineering", institution: "NRI Institute Of Technology", location: "Agiripalli, India", email: "coauthor@example.com" }
+    ]);
+  };
+
+  const handleRemoveAuthor = (idx: number) => {
+    if (analyzerAuthors.length <= 1) return;
+    setAnalyzerAuthors(analyzerAuthors.filter((_, i) => i !== idx));
+  };
+
+  const handleUpdateAuthor = (idx: number, field: string, val: string) => {
+    const updated = [...analyzerAuthors];
+    updated[idx] = { ...updated[idx], [field]: val };
+    setAnalyzerAuthors(updated);
+  };
+
   const handleAutoGenerateFullPaper = async () => {
     if (!currentProject) return;
     setAutoGenLoading(true);
@@ -401,13 +491,22 @@ export default function ResearchStudioPage() {
             <button
               onClick={() => {
                 fetchBlueprints();
+                fetchAcademicFaq();
                 setShowBlueprintModal(true);
               }}
               className="px-4 py-2 rounded-[60px] bg-[#1a0e08] hover:bg-[#2e190f] border border-[#B08D57]/60 text-xs font-bold text-[#E6C687] transition-all flex items-center gap-1.5 shadow-sm"
-              title="View mandatory content and formatting rules for each section"
+              title="View IEEE requirements, page/column limits, research liberty rules, and screenshot guidelines"
             >
               <BookOpen className="w-3.5 h-3.5 text-[#B08D57]" />
-              IEEE Blueprint Guide
+              IEEE Blueprint &amp; Rules
+            </button>
+            <button
+              onClick={() => setShowProjectAnalyzerModal(true)}
+              className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold transition-all flex items-center gap-1.5 shadow-md hover:brightness-110 active:scale-95 border border-[#E6C687]/50"
+              title="Transform your existing college or client project into an authentic publication-ready IEEE Conference Paper"
+            >
+              <FolderOpen className="w-3.5 h-3.5 text-[#120A05]" />
+              <span>🎓 Convert College Project</span>
             </button>
             <button
               onClick={handleAutoGenerateFullPaper}
@@ -974,19 +1073,19 @@ export default function ResearchStudioPage() {
           </div>
         )}
 
-        {/* ================= IEEE SECTION BLUEPRINT GUIDE MODAL ================= */}
+        {/* ================= IEEE SECTION BLUEPRINT GUIDE & ACADEMIC RULES MODAL ================= */}
         {showBlueprintModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <div className="w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-2xl bg-[#120a05] border border-[#B08D57]/70 p-6 shadow-2xl space-y-6">
+            <div className="w-full max-w-5xl max-h-[88vh] overflow-y-auto rounded-2xl bg-[#120a05] border border-[#B08D57]/70 p-6 shadow-2xl space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-[#3b2314]">
                 <div className="flex items-center gap-2.5">
                   <BookOpen className="w-5 h-5 text-[#B08D57]" />
                   <div>
                     <h3 className="font-serif text-lg font-bold text-[#F5EFE1]">
-                      IEEE Standard Research Publication Blueprint Guide
+                      IEEE Standard Publication Blueprint &amp; Academic Liberty Rules
                     </h3>
                     <p className="text-xs text-[#A89279]">
-                      Mandatory contents, structural alignments, and mathematical formatting required for peer-reviewed conference publications.
+                      Official IEEE Conference specifications, page/column limits, research liberty guidelines, and screenshot alignment rules.
                     </p>
                   </div>
                 </div>
@@ -998,35 +1097,243 @@ export default function ResearchStudioPage() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {blueprints &&
-                  Object.entries(blueprints).map(([secKey, secVal]: [string, any], idx: number) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-2 hover:border-[#B08D57]/50 transition-all"
-                    >
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-serif font-bold text-[#F5EFE1]">{secVal.title}</h4>
-                        <span className="text-[10px] font-mono text-[#B08D57] bg-[#24150c] px-2 py-0.5 rounded-full border border-[#B08D57]/40">
-                          {secVal.alignment_rule?.slice(0, 24)}...
-                        </span>
-                      </div>
-                      <p className="text-xs text-[#A89279] leading-relaxed">{secVal.description}</p>
-                      <div className="space-y-1 pt-1 border-t border-[#24130a]">
-                        <span className="text-[10px] font-mono text-[#B08D57] uppercase font-bold block">
-                          Mandatory Contents:
-                        </span>
-                        <ul className="space-y-1 text-xs text-[#D9C7A3]">
-                          {secVal.must_contain?.map((item: string, iIdx: number) => (
-                            <li key={iIdx} className="list-disc list-inside leading-relaxed text-[11px]">
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  ))}
+              {/* Sub-tab Switcher */}
+              <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-xl bg-[#0b0502] border border-[#3b2314]">
+                <button
+                  onClick={() => setBlueprintActiveTab("blueprints")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    blueprintActiveTab === "blueprints" ? "bg-[#2b180d] text-[#E6C687] border border-[#B08D57]" : "text-[#A89279] hover:text-white"
+                  }`}
+                >
+                  📋 11 IEEE Section Blueprints
+                </button>
+                <button
+                  onClick={() => setBlueprintActiveTab("limits")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    blueprintActiveTab === "limits" ? "bg-[#2b180d] text-[#E6C687] border border-[#B08D57]" : "text-[#A89279] hover:text-white"
+                  }`}
+                >
+                  📐 Page Limits &amp; Columns
+                </button>
+                <button
+                  onClick={() => setBlueprintActiveTab("liberty")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    blueprintActiveTab === "liberty" ? "bg-[#2b180d] text-[#E6C687] border border-[#B08D57]" : "text-[#A89279] hover:text-white"
+                  }`}
+                >
+                  💡 Project vs Academic Liberty
+                </button>
+                <button
+                  onClick={() => setBlueprintActiveTab("screenshots")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    blueprintActiveTab === "screenshots" ? "bg-[#2b180d] text-[#E6C687] border border-[#B08D57]" : "text-[#A89279] hover:text-white"
+                  }`}
+                >
+                  🖼️ Screenshots &amp; Results Alignment
+                </button>
+                <button
+                  onClick={() => setBlueprintActiveTab("checklist")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    blueprintActiveTab === "checklist" ? "bg-[#2b180d] text-[#E6C687] border border-[#B08D57]" : "text-[#A89279] hover:text-white"
+                  }`}
+                >
+                  ✅ Reviewer Acceptance Checklist
+                </button>
               </div>
+
+              {/* Tab 1: Section Blueprints */}
+              {blueprintActiveTab === "blueprints" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {blueprints &&
+                    Object.entries(blueprints).map(([secKey, secVal]: [string, any], idx: number) => (
+                      <div
+                        key={idx}
+                        className="p-4 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-2 hover:border-[#B08D57]/50 transition-all"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-serif font-bold text-[#F5EFE1]">{secVal.title}</h4>
+                          <span className="text-[10px] font-mono text-[#B08D57] bg-[#24150c] px-2 py-0.5 rounded-full border border-[#B08D57]/40">
+                            {secVal.alignment_rule?.slice(0, 24)}...
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#A89279] leading-relaxed">{secVal.description}</p>
+                        <div className="space-y-1 pt-1 border-t border-[#24130a]">
+                          <span className="text-[10px] font-mono text-[#B08D57] uppercase font-bold block">
+                            Mandatory Contents:
+                          </span>
+                          <ul className="space-y-1 text-xs text-[#D9C7A3]">
+                            {secVal.must_contain?.map((item: string, iIdx: number) => (
+                              <li key={iIdx} className="list-disc list-inside leading-relaxed text-[11px]">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {/* Tab 2: Page Limits & Columns */}
+              {blueprintActiveTab === "limits" && (
+                <div className="p-5 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-4">
+                  <div className="border-b border-[#24130a] pb-3">
+                    <h4 className="text-base font-serif font-bold text-[#E6C687]">
+                      {academicFaq?.page_and_column_rules?.title || "Page Limits & Column Standards"}
+                    </h4>
+                    <p className="text-xs text-[#A89279] mt-1">
+                      Strict formatting rules mandated by IEEE Conference Publications (IEEEtran format).
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Column Format</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.page_and_column_rules?.columns || "Strictly 2 Columns (Standard 58 picas / ~7.25 inches width, 0.25 inch column separation)"}
+                      </p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Standard Page Limit</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.page_and_column_rules?.page_limit || "Standard Conference: 4 to 6 pages. (Short paper: 4 pages max; Regular paper: 6 pages max. Extra pages incur $100-$150/page fee up to 8 pages)"}
+                      </p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Typography Hierarchy</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.page_and_column_rules?.typography || "Title: 24pt Bold. Section Headings: 10pt Small Caps (Roman numerals). Body Text: 10pt Regular Times New Roman. Table/Figure Captions: 8pt Regular."}
+                      </p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Abstract Constraints</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.page_and_column_rules?.abstract_rule || "Abstract must be 150-250 words, single paragraph, plain text. No math equations, no footnotes, and NO citations like [1]."}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-[#24150c]/80 border border-[#B08D57]/40 text-xs text-[#E6C687]">
+                    💡 <span className="font-bold">Final Column Balance Rule: </span>
+                    {academicFaq?.page_and_column_rules?.last_page_rule || "The two columns on the final page (References) must be balanced evenly in height using the flushend or balance package."}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 3: College Project vs Academic Liberty */}
+              {blueprintActiveTab === "liberty" && (
+                <div className="p-5 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-4">
+                  <div className="border-b border-[#24130a] pb-3">
+                    <h4 className="text-base font-serif font-bold text-[#E6C687]">
+                      {academicFaq?.project_vs_research_liberty?.title || "College/Client Project vs Academic Research Liberty"}
+                    </h4>
+                    <p className="text-xs text-[#A89279] mt-1">
+                      {academicFaq?.project_vs_research_liberty?.core_principle || "A college/client project is an implementation artifact, whereas an IEEE research paper is an academic scientific contribution."}
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-[#24150c] to-[#1a0e08] border border-[#B08D57]/50 space-y-2">
+                    <span className="text-xs font-mono font-bold text-[#E6C687] uppercase tracking-wider block">
+                      The Fundamental Golden Rule:
+                    </span>
+                    <p className="text-xs text-[#F5EFE1] leading-relaxed">
+                      {academicFaq?.project_vs_research_liberty?.liberty_rule || "You 100% HAVE research liberty to propose advanced modules, theoretical frameworks, and prospective architectures beyond what was coded."}
+                    </p>
+                  </div>
+                  <div className="space-y-3 pt-2">
+                    <span className="text-xs font-mono font-bold text-[#B08D57] uppercase tracking-wider block">
+                      How to Structure Without Peer-Review Discrepancies:
+                    </span>
+                    <div className="space-y-2.5 text-xs text-[#D9C7A3]">
+                      {(academicFaq?.project_vs_research_liberty?.how_to_structure || [
+                        "Section III (Proposed Architectural Framework): Propose the full, comprehensive system architecture (both implemented core + advanced conceptual modules like AI scanning, zero-knowledge proofs, or cross-chain bridges).",
+                        "Section VI (Prototype Implementation & Experimental Evaluation): Explicitly state: 'To empirically validate the feasibility of the proposed framework, an experimental prototype was implemented...' and report actual results from what was coded.",
+                        "Reviewer Safety: By clearly distinguishing the 'Architectural Framework' from the 'Experimental Prototype', reviewers will praise your architectural vision and validate your proof-of-concept without raising discrepancies!"
+                      ]).map((step: string, sIdx: number) => (
+                        <div key={sIdx} className="p-3 rounded-lg bg-[#140a04] border border-[#3b2314] flex items-start gap-2.5">
+                          <span className="w-5 h-5 rounded-full bg-[#2b180d] text-[#B08D57] border border-[#B08D57]/40 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                            {sIdx + 1}
+                          </span>
+                          <p className="leading-relaxed">{step}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 4: Screenshots & Alignment */}
+              {blueprintActiveTab === "screenshots" && (
+                <div className="p-5 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-4">
+                  <div className="border-b border-[#24130a] pb-3">
+                    <h4 className="text-base font-serif font-bold text-[#E6C687]">
+                      {academicFaq?.screenshot_and_figure_guidelines?.title || "Screenshot Placement & Results Matching"}
+                    </h4>
+                    <p className="text-xs text-[#A89279] mt-1">
+                      How to present project UI screenshots and empirical graphs according to IEEE production guidelines.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Column Placement Rule</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.screenshot_and_figure_guidelines?.figure_placement || "Strictly place figures at the TOP or BOTTOM of columns (never floated in the middle of text). Use [htbp] or [t] / [b]."}
+                      </p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Clean Cropping Standard</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.screenshot_and_figure_guidelines?.clean_cropping || "Never include raw browser chrome, URL bars, operating system taskbars, or desktop backgrounds. Crop strictly to the active UI component or dashboard."}
+                      </p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Caption Conventions</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.screenshot_and_figure_guidelines?.caption_convention || "Figure captions go BELOW the figure: 'Fig. 1. Prototype dashboard for cryptographic asset hashing and wallet authentication.' (Table captions go ABOVE the table)."}
+                      </p>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#140a04] border border-[#3b2314] space-y-1.5">
+                      <span className="text-[11px] font-mono font-bold text-[#B08D57] block">Conceptual vs Implemented Artifacts</span>
+                      <p className="text-[#D9C7A3]">
+                        {academicFaq?.screenshot_and_figure_guidelines?.conceptual_vs_implemented || "For implemented modules, use clean UI screenshots and performance metric tables in Section VI. For conceptual/extended features, use architectural block diagrams or dataflow flowcharts in Section III."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 5: Reviewer Acceptance Checklist */}
+              {blueprintActiveTab === "checklist" && (
+                <div className="p-5 rounded-xl bg-[#0b0502] border border-[#3b2314] space-y-4">
+                  <div className="border-b border-[#24130a] pb-3">
+                    <h4 className="text-base font-serif font-bold text-[#E6C687]">
+                      Peer-Review Acceptance Checklist
+                    </h4>
+                    <p className="text-xs text-[#A89279] mt-1">
+                      Checklist used by IEEE conference reviewers to score technical rigor and format compliance.
+                    </p>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    {(academicFaq?.reviewer_acceptance_checklist || [
+                      { item: "Title", status: "Mandatory", rule: "Concise, title case, no abbreviations, no math symbols." },
+                      { item: "Abstract & Keywords", status: "Mandatory", rule: "Self-contained summary without citations or equations. 4-6 IEEE taxonomy keywords." },
+                      { item: "Comparative Drawbacks Table", status: "High Impact", rule: "Tabular comparison of 4-5 existing works highlighting their specific limitations vs your proposal." },
+                      { item: "Mathematical Formulations", status: "High Impact", rule: "At least 3-5 numbered equations with all parameters and variables rigorously defined." },
+                      { item: "Empirical Benchmark Metrics", status: "Mandatory", rule: "Quantitative metrics (TPS, latency, accuracy, cost savings) with a summary table in Section VI." },
+                      { item: "References", status: "Mandatory", rule: "15-25 references in strict IEEE bracketed numerical format [1], [2], sorted in order of appearance." }
+                    ]).map((chk: any, cIdx: number) => (
+                      <div key={cIdx} className="p-3 rounded-lg bg-[#140a04] border border-[#3b2314] flex items-center justify-between gap-3">
+                        <div className="space-y-0.5">
+                          <span className="font-bold text-[#F5EFE1]">{chk.item}</span>
+                          <p className="text-[11px] text-[#A89279]">{chk.rule}</p>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 border ${
+                          chk.status === "Mandatory" ? "bg-red-950/60 text-red-300 border-red-500/40" : "bg-amber-950/60 text-amber-300 border-amber-500/40"
+                        }`}>
+                          {chk.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="pt-4 border-t border-[#3b2314] flex flex-col sm:flex-row items-center justify-between gap-3">
                 <span className="text-xs text-[#A89279]">
@@ -1042,6 +1349,212 @@ export default function ResearchStudioPage() {
                   <Sparkles className="w-4 h-4 text-purple-300" />
                   Auto-Generate This Entire Paper Now
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= COLLEGE / CLIENT PROJECT ANALYZER MODAL ================= */}
+        {showProjectAnalyzerModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#120a05] border border-[#B08D57] p-6 shadow-2xl space-y-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[#3b2314]">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#B08D57] to-[#53351F] flex items-center justify-center text-[#120A05] shadow-md font-bold">
+                    🎓
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-lg font-bold text-[#F5EFE1]">
+                      Convert Existing Project to IEEE Conference Paper
+                    </h3>
+                    <p className="text-xs text-[#A89279]">
+                      Transforms college or client projects into an authentic IEEE paper. Maps your code as the Implemented Prototype (Section VI) and expands visionary research modules in Section III.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowProjectAnalyzerModal(false)}
+                  className="px-3 py-1 rounded-full bg-[#1e1008] border border-[#3b2314] text-xs font-bold text-[#A89279] hover:text-[#F5EFE1]"
+                >
+                  ✕ Close
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                {/* Title & Domain */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[#A89279] mb-1 font-semibold">Manuscript / Project Title:</label>
+                    <input
+                      type="text"
+                      value={analyzerTitle}
+                      onChange={(e) => setAnalyzerTitle(e.target.value)}
+                      placeholder="e.g. Empowering Creators with a Blockchain-Based IP Protection System"
+                      className="w-full p-2.5 rounded-xl bg-[#080402] border border-[#3b2314] text-[#F5EFE1] focus:border-[#B08D57] outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[#A89279] mb-1 font-semibold">Domain &amp; Research Topic:</label>
+                    <input
+                      type="text"
+                      value={analyzerTopic}
+                      onChange={(e) => setAnalyzerTopic(e.target.value)}
+                      placeholder="e.g. Blockchain, Smart Contracts, and AI-Driven Copyright Verification"
+                      className="w-full p-2.5 rounded-xl bg-[#080402] border border-[#3b2314] text-[#F5EFE1] focus:border-[#B08D57] outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* College Project Details */}
+                <div>
+                  <label className="block text-[#A89279] mb-1 font-semibold">
+                    1. What was built in your college/client project? (Code, Frameworks, Architecture):
+                  </label>
+                  <textarea
+                    value={analyzerDescription}
+                    onChange={(e) => setAnalyzerDescription(e.target.value)}
+                    rows={2}
+                    placeholder="Describe your tech stack, database, APIs, and overall system workflow..."
+                    className="w-full p-2.5 rounded-xl bg-[#080402] border border-[#3b2314] text-[#F5EFE1] focus:border-[#B08D57] outline-none resize-none font-sans"
+                  />
+                </div>
+
+                {/* Implemented Features vs Proposed Extensions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3 rounded-xl bg-[#080402] border border-[#3b2314] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-emerald-400 font-semibold">
+                        2. Implemented Features (Physically Coded):
+                      </label>
+                      <span className="text-[10px] text-emerald-400/80 font-mono">Mapped to Sec VI</span>
+                    </div>
+                    <textarea
+                      value={analyzerImplemented}
+                      onChange={(e) => setAnalyzerImplemented(e.target.value)}
+                      rows={3}
+                      placeholder="List features that actually work in code: UI dashboard, hashing, MetaMask, smart contracts..."
+                      className="w-full p-2 rounded-lg bg-[#120a05] border border-[#2b180d] text-[#F5EFE1] focus:border-emerald-500/50 outline-none resize-none font-sans text-xs"
+                    />
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-[#080402] border border-[#3b2314] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-amber-300 font-semibold">
+                        3. Extended Research Modules (Academic Liberty):
+                      </label>
+                      <span className="text-[10px] text-amber-300/80 font-mono">Mapped to Sec III</span>
+                    </div>
+                    <textarea
+                      value={analyzerProposed}
+                      onChange={(e) => setAnalyzerProposed(e.target.value)}
+                      rows={3}
+                      placeholder="Features you want to propose in the paper: AI violation scanner, automated royalty sharing, cross-chain..."
+                      className="w-full p-2 rounded-lg bg-[#120a05] border border-[#2b180d] text-[#F5EFE1] focus:border-amber-500/50 outline-none resize-none font-sans text-xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Screenshots & Experimental Notes */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[#A89279] font-semibold">
+                      4. Available Project Screenshots &amp; Benchmark Metrics:
+                    </label>
+                    <span className="text-[10px] text-[#B08D57] font-mono">Figures Fig. 1, 2, 3</span>
+                  </div>
+                  <textarea
+                    value={analyzerScreenshots}
+                    onChange={(e) => setAnalyzerScreenshots(e.target.value)}
+                    rows={2}
+                    placeholder="Describe your screenshots (e.g., Fig. 1: Dashboard; Fig. 2: Transaction receipt; Throughput: 50 TPS; Latency: 3-5s)..."
+                    className="w-full p-2.5 rounded-xl bg-[#080402] border border-[#3b2314] text-[#F5EFE1] focus:border-[#B08D57] outline-none resize-none font-sans"
+                  />
+                </div>
+
+                {/* Authors Section */}
+                <div className="space-y-2 pt-2 border-t border-[#3b2314]">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[#A89279] font-semibold flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-[#B08D57]" />
+                      5. Authors &amp; Institutional Affiliations (IEEE Grid):
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleAddAuthor}
+                      className="px-2.5 py-1 rounded-full bg-[#1e1008] border border-[#B08D57]/50 text-[10px] font-bold text-[#E6C687] hover:bg-[#2b180d]"
+                    >
+                      + Add Co-Author
+                    </button>
+                  </div>
+                  <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
+                    {analyzerAuthors.map((auth, aIdx) => (
+                      <div key={aIdx} className="grid grid-cols-1 sm:grid-cols-5 gap-2 p-2 rounded-lg bg-[#080402] border border-[#24130a] items-center">
+                        <input
+                          type="text"
+                          value={auth.name}
+                          onChange={(e) => handleUpdateAuthor(aIdx, "name", e.target.value)}
+                          placeholder="Author Name"
+                          className="p-1.5 rounded bg-[#120a05] border border-[#3b2314] text-[#F5EFE1] text-[11px]"
+                        />
+                        <input
+                          type="text"
+                          value={auth.department}
+                          onChange={(e) => handleUpdateAuthor(aIdx, "department", e.target.value)}
+                          placeholder="Department"
+                          className="p-1.5 rounded bg-[#120a05] border border-[#3b2314] text-[#F5EFE1] text-[11px]"
+                        />
+                        <input
+                          type="text"
+                          value={auth.institution}
+                          onChange={(e) => handleUpdateAuthor(aIdx, "institution", e.target.value)}
+                          placeholder="College / University"
+                          className="p-1.5 rounded bg-[#120a05] border border-[#3b2314] text-[#F5EFE1] text-[11px]"
+                        />
+                        <input
+                          type="text"
+                          value={auth.email}
+                          onChange={(e) => handleUpdateAuthor(aIdx, "email", e.target.value)}
+                          placeholder="Email Address"
+                          className="p-1.5 rounded bg-[#120a05] border border-[#3b2314] text-[#F5EFE1] text-[11px]"
+                        />
+                        <div className="flex items-center gap-1 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAuthor(aIdx)}
+                            disabled={analyzerAuthors.length <= 1}
+                            className="p-1.5 rounded text-red-400 hover:bg-red-950/40 disabled:opacity-30"
+                            title="Remove author"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit / Action Bar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-[#3b2314]">
+                <div className="text-[11px] text-[#A89279]">
+                  ⚡ The AI Gateway synthesizes all 10 IEEE sections + Overleaf-ready LaTeX code in ~10 seconds.
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowProjectAnalyzerModal(false)}
+                    className="px-4 py-2 rounded-[60px] bg-[#1e1008] text-xs font-bold text-[#A89279] hover:text-[#F5EFE1]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAnalyzeExistingProject}
+                    disabled={analyzerLoading}
+                    className="px-6 py-2.5 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold hover:brightness-110 active:scale-95 shadow-xl flex items-center gap-2 border border-[#E6C687]/40 disabled:opacity-50"
+                  >
+                    {analyzerLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#120A05]" /> : <Sparkles className="w-3.5 h-3.5 text-[#120A05]" />}
+                    <span>{analyzerLoading ? "Synthesizing IEEE Paper..." : "⚡ Transform to Publication-Ready IEEE Paper"}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
