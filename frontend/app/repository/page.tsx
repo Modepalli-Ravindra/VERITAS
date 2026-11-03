@@ -120,23 +120,23 @@ export default function RepositoryPage() {
   );
 
   return (
-    <div className="w-full space-y-7 py-2">
+    <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
       
       {/* Vault Header & Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#4E3424] pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-[#B08D57] uppercase tracking-wider">
+            <span className="font-mono text-xs text-[#f2572b] uppercase tracking-wider">
               Institutional Vault
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-[#140E0A] border border-[#4E3424] text-[10px] font-mono text-emerald-400">
+            <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[10px] font-mono text-emerald-400">
               Active Index
             </span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#F5EFE1] tracking-tight mt-1">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
             Submissions Archive
           </h1>
-          <p className="text-xs text-[#A88462] mt-1 font-sans">
+          <p className="text-xs text-[#a3a3a3] mt-1 font-sans">
             Reference literature, past cohort assignments, and thesis manuscripts indexed for local cross-collusion auditing.
           </p>
         </div>

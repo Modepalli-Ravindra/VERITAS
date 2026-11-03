@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-[#090604] text-[#F5EFE3] font-sans antialiased w-full overflow-x-hidden selection:bg-[#C49A58]/30 selection:text-[#F5EFE3]">
+      <body className="min-h-screen bg-[#171717] text-[#FFFFFF] font-sans antialiased w-full overflow-x-hidden selection:bg-[#f2572b]/30 selection:text-white">
         <AppLayoutClient>{children}</AppLayoutClient>
       </body>
     </html>

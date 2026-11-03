@@ -7,6 +7,7 @@ import {
   FileText, Code2, Upload, ArrowRight, Loader2, 
   LogOut, ShieldCheck, Database, Check, Clock, User 
 } from "lucide-react";
+import JuicyLoader from "@/components/JuicyLoader";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -157,38 +158,38 @@ export default function DashboardPage() {
   const charCount = content.length;
 
   return (
-    <div className="w-full space-y-6 py-2">
+    <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
       
       {/* Session Metadata Toolbar - Glassmorphic Panel */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 glass-panel rounded-2xl text-xs">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#140E0A]/80 backdrop-blur-md border border-[#4E3424] flex items-center justify-center text-[#B08D57] font-serif font-bold text-sm shadow-sm">
+          <div className="w-9 h-9 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 flex items-center justify-center text-[#f2572b] font-serif font-bold text-sm shadow-sm">
             {currentUser?.name ? currentUser.name.charAt(0) : "V"}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm text-[#F5EFE1]">
+              <span className="font-semibold text-sm text-white">
                 {currentUser?.name || "Auditor"}
               </span>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#140E0A]/80 border border-[#4E3424] text-[#B08D57]">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[#f2572b]">
                 {currentUser?.role || "Researcher"}
               </span>
             </div>
-            <span className="text-[11px] text-[#A88462]">
+            <span className="text-[11px] text-[#a3a3a3]">
               {currentUser?.institution || "Institutional Seat"}
             </span>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#A88462]">
+        <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#a3a3a3]">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
-            <span>Vault: Ready</span>
+            <span>Local Vault: Ready</span>
           </div>
           <span>•</span>
           <button
             onClick={handleLogout}
-            className="text-[#A88462] hover:text-rose-400 transition-colors flex items-center gap-1.5 font-sans"
+            className="text-[#a3a3a3] hover:text-[#f2572b] transition-colors flex items-center gap-1.5 font-sans"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>
@@ -306,25 +307,25 @@ export default function DashboardPage() {
             <button
               onClick={handleStartScan}
               disabled={isScanning || !content.trim()}
-              className="px-7 py-3 rounded-full btn-3d-gold disabled:opacity-40 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
+              className="px-7 py-3 rounded-full btn-juicy disabled:opacity-40 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-md shadow-[#f2572b]/25"
             >
               {isScanning ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#120B07]" />
+                  <JuicyLoader size="sm" />
                   <span>Auditing Submission...</span>
                 </>
               ) : (
                 <>
                   <span>Execute Verification Audit</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#120B07]" />
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
                 </>
               )}
             </button>
           </div>
 
           {isScanning && (
-            <div className="p-3 bg-[#140E0A]/80 backdrop-blur-md border border-[#4E3424] rounded-xl flex items-center gap-3 text-xs text-[#A88462] font-sans">
-              <Loader2 className="w-4 h-4 animate-spin text-[#B08D57] shrink-0" />
+            <div className="p-3 bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-xl flex items-center gap-3 text-xs text-[#a3a3a3] font-sans">
+              <JuicyLoader size="sm" />
               <span>{statusText}</span>
             </div>
           )}

@@ -23,6 +23,7 @@ import {
   TrendingUp,
   Cpu
 } from "lucide-react";
+import JuicyLoader from "@/components/JuicyLoader";
 
 const SAMPLE_TEXT_GRAMMAR = `In order to conduct an analysis of the neural networks, their is a algorithm that has the capability to get significant results. The experiments was conducted by the team?? It is evident that the end result completely eliminate past history errors.`;
 
@@ -292,63 +293,57 @@ export default function WritingStudioPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0d0704] text-[#F5EFE1] pt-24 pb-20 px-4 sm:px-6 lg:px-8 selection:bg-[#B08D57]/30">
-      {/* Background ambient lighting */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-[#B08D57]/5 rounded-full blur-[140px]" />
-        <div className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-[#53351F]/10 rounded-full blur-[160px]" />
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10 space-y-8">
-        
-        {/* Header Banner */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-[#53351F]/50">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#24150c] border border-[#B08D57]/40 shadow-sm text-xs font-semibold uppercase tracking-wider text-[#D9C7A3] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#B08D57]" />
-              VERITAS // Writing & Research Intelligence
+    <div className="h-full w-full flex flex-col overflow-hidden bg-[#171717] text-white p-4 sm:p-6 space-y-4">
+      {/* Header Banner */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-3 border-b border-white/[0.08] shrink-0">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-[#f2572b]/40 shadow-sm text-xs font-semibold uppercase tracking-wider text-[#e5e5e5] mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#f2572b]" />
+            VERITAS // Writing &amp; Research Intelligence
+          </div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Scholarly Writing &amp; Citation Studio
+          </h1>
+          <p className="mt-0.5 text-xs text-[#a3a3a3] max-w-2xl font-sans">
+            Multi-provider LLM API gateway (Groq, Gemini, OpenRouter, NVIDIA), rule-based grammar audit, 10-mode stylistic rewrite studio, and anti-bypass forensics.
+          </p>
+          {gatewayStatus && (
+            <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/[0.03] border border-emerald-500/40 text-xs font-mono text-emerald-300 mt-2 shadow-sm">
+              <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Multi-LLM Gateway Active: 4 Providers Connected (Groq / Gemini / OpenRouter / NVIDIA)</span>
             </div>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#F5EFE1]">
-              Scholarly Writing & Citation Studio
-            </h1>
-            <p className="mt-1 text-sm text-[#A89279] max-w-2xl font-sans">
-              Multi-provider LLM API gateway (Groq, Gemini, OpenRouter, NVIDIA), rule-based grammar audit, 10-mode stylistic rewrite studio, and anti-bypass forensics.
-            </p>
-            {gatewayStatus && (
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#150a04] border border-emerald-500/40 text-xs font-mono text-emerald-300 mt-2.5 shadow-sm">
-                <Cpu className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Multi-LLM Gateway Active: 4 Providers Connected (Groq / Gemini / OpenRouter / NVIDIA)</span>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2 bg-[#1a0f09]/80 p-1.5 rounded-2xl border border-[#53351F]/60 backdrop-blur-md">
-            {[
-              { id: "grammar", label: "Grammar & Clarity", icon: CheckCircle2 },
-              { id: "rewrite", label: "Rewrite Studio", icon: PenTool },
-              { id: "citations", label: "Citations (250M)", icon: BookOpen },
-              { id: "forensics", label: "Anti-Bypass Forensics", icon: ShieldAlert },
-            ].map((t) => {
-              const Icon = t.icon;
-              const isActive = activeTab === t.id;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => switchTab(t.id as any)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                    isActive
-                      ? "bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] shadow-lg shadow-black/40 font-bold"
-                      : "text-[#C4B296] hover:text-[#F5EFE1] hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          )}
         </div>
 
+        <div className="flex items-center gap-1.5 bg-[#1f1f1f]/80 p-1.5 rounded-2xl border border-white/[0.08] backdrop-blur-md">
+          {[
+            { id: "grammar", label: "Grammar & Clarity", icon: CheckCircle2 },
+            { id: "rewrite", label: "Rewrite Studio", icon: PenTool },
+            { id: "citations", label: "Citations (250M)", icon: BookOpen },
+            { id: "forensics", label: "Anti-Bypass Forensics", icon: ShieldAlert },
+          ].map((t) => {
+            const Icon = t.icon;
+            const isActive = activeTab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id as any)}
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  isActive
+                    ? "bg-[#f2572b] text-white shadow-md shadow-[#f2572b]/20"
+                    : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Scrollable Content Pane */}
+      <div className="flex-1 overflow-y-auto pr-1 pb-4 space-y-4">
         {/* ================= TAB 1: GRAMMAR & READABILITY ================= */}
         {activeTab === "grammar" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

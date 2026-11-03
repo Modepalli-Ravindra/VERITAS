@@ -74,32 +74,32 @@ export default function HistoryPage() {
   });
 
   return (
-    <div className="w-full space-y-7 py-2">
+    <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
       
       {/* Header & New Audit CTA */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#4E3424] pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-[#B08D57] uppercase tracking-wider">
+            <span className="font-mono text-xs text-[#f2572b] uppercase tracking-wider">
               Audit Records
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-[#140E0A] border border-[#4E3424] text-[10px] font-mono text-emerald-400">
+            <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[10px] font-mono text-emerald-400">
               Active Ledger
             </span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#F5EFE1] tracking-tight mt-1">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
             Submissions Audit Ledger
           </h1>
-          <p className="text-xs text-[#A88462] mt-1 font-sans">
+          <p className="text-xs text-[#a3a3a3] mt-1 font-sans">
             Chronological registry of manuscripts, research papers, and source code files analyzed for originality.
           </p>
         </div>
 
         <Link
           href="/dashboard"
-          className="px-5 py-2.5 rounded-xl bg-[#B08D57] hover:bg-[#C5A065] text-[#140E0A] text-xs sm:text-sm font-semibold transition-all shadow-md shadow-[#B08D57]/20 flex items-center gap-2 font-sans"
+          className="px-5 py-2.5 rounded-full btn-juicy text-xs font-bold transition-all shadow-md shadow-[#f2572b]/25 flex items-center gap-2"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 text-white" />
           <span>New Audit</span>
         </Link>
       </div>

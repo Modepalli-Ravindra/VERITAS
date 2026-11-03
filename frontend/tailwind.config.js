@@ -8,38 +8,39 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // User-selected Premium Espresso Brown & Antique Gold Dark Palette
-        // #140E0A (Base), #261A13 (Surface), #4E3424 (Border), #A88462 (Mocha Tan), #D9C7A3 (Champagne), #B08D57 (Gold Accent)
+        // High-Fashion Obsidian & Juicy Sunset Orange (#171717 and #f2572b)
         theme: {
-          base: "#140E0A",       // Deep Espresso Dark Brown Base
-          surface: "#261A13",    // Dark Chocolate Brown Surface
-          elevated: "#382419",   // Elevated Chestnut Brown
-          border: "#4E3424",     // Rich Warm Brown Border
-          accent: "#B08D57",     // Antique Gold / Bronze Accent
-          secondary: "#A88462",  // Warm Mocha Tan
-          cream: "#D9C7A3",      // Champagne Ivory Cream
-          light: "#F5EFE1",      // Bright Ivory Parchment
-          charcoal: "#4E3424",   // Muted border / divider
-          muted: "#A88462",      // Secondary readable text
+          base: "#171717",       // Deep Matte Obsidian Dark Charcoal
+          surface: "#1f1f1f",    // Smooth Charcoal Surface
+          elevated: "#262626",   // Elevated Layer
+          border: "#333333",     // Subtle Crisp Border
+          accent: "#f2572b",     // Juicy Electric Sunset Orange
+          accentHover: "#ff6d42",// Vibrant Hover
+          secondary: "#a3a3a3",  // Neutral Silver Gray
+          cream: "#e5e5e5",      // Crisp Light Silver
+          light: "#ffffff",      // Pure White
+          charcoal: "#262626",   // Muted divider
+          muted: "#737373",      // Secondary text
+          orange: "#f2572b",     // Direct Juicy Orange Accent
         },
-        // Keep claude aliases mapped to new theme
+        // Mapped aliases
         claude: {
-          bg: "#140E0A",
-          card: "#261A13",
-          elevated: "#382419",
-          sidebar: "#1B120D",
-          border: "#4E3424",
-          borderDark: "#6B4731",
-          primary: "#B08D57",
-          primaryHover: "#C5A065",
-          primaryDark: "#8C6E3D",
-          text: "#D9C7A3",
-          muted: "#A88462",
-          dim: "#4E3424",
+          bg: "#171717",
+          card: "#1f1f1f",
+          elevated: "#262626",
+          sidebar: "#141414",
+          border: "#333333",
+          borderDark: "#404040",
+          primary: "#f2572b",
+          primaryHover: "#ff6d42",
+          primaryDark: "#d84318",
+          text: "#e5e5e5",
+          muted: "#a3a3a3",
+          dim: "#262626",
         }
       },
       fontFamily: {
-        serif: ["Merriweather", "Georgia", "Cambria", "serif"],
+        serif: ["Playfair Display", "Merriweather", "Georgia", "serif"],
         sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       }

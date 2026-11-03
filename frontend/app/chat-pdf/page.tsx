@@ -25,6 +25,7 @@ import {
   Sliders,
   Scale
 } from "lucide-react";
+import JuicyLoader from "@/components/JuicyLoader";
 
 const SUGGESTED_PROMPTS = [
   "Explain the core methodology and algorithmic workflow.",
@@ -198,59 +199,59 @@ export default function ChatPdfPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0704] text-[#F5EFE1] pt-24 pb-20 px-4 sm:px-6 lg:px-8 selection:bg-[#B08D57]/30">
-      <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-[#53351F]/50">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#24150c] border border-[#B08D57]/40 text-xs font-semibold text-[#D9C7A3] mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#B08D57]" />
-              SciSpace-Grade Grounded Research Intelligence
-            </div>
-            <h1 className="font-serif text-3xl font-bold text-[#F5EFE1]">
-              Chat &amp; Compare Research Papers (Local RAG)
-            </h1>
-            <p className="text-xs text-[#A89279]">
-              Ask complex questions across uploaded PDF manuscripts or perform cross-paper synthesis with verifiable page-level evidence. Zero external API cost.
-            </p>
+    <div className="h-full w-full flex flex-col overflow-hidden bg-[#171717] text-white p-4 sm:p-6 space-y-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-white/[0.08] shrink-0">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-[#f2572b]/40 text-xs font-semibold text-[#e5e5e5] mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#f2572b]" />
+            SciSpace-Grade Grounded Research Intelligence
           </div>
-
-          <div className="flex items-center gap-3">
-            {/* Mode Toggle */}
-            <div className="flex items-center bg-[#150c07] p-1 rounded-[60px] border border-[#3b2314]">
-              <button
-                onClick={() => setChatMode("single")}
-                className={`px-3.5 py-1.5 rounded-[60px] text-xs font-bold transition-all flex items-center gap-1.5 ${
-                  chatMode === "single"
-                    ? "bg-[#B08D57] text-[#120A05] shadow-sm"
-                    : "text-[#A89279] hover:text-[#F5EFE1]"
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                Single Paper
-              </button>
-              <button
-                onClick={() => setChatMode("compare")}
-                className={`px-3.5 py-1.5 rounded-[60px] text-xs font-bold transition-all flex items-center gap-1.5 ${
-                  chatMode === "compare"
-                    ? "bg-[#B08D57] text-[#120A05] shadow-sm"
-                    : "text-[#A89279] hover:text-[#F5EFE1]"
-                }`}
-              >
-                <GitCompare className="w-3.5 h-3.5" />
-                Comparative Chat
-              </button>
-            </div>
-
-            <label className="cursor-pointer px-4 py-2 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-[#E6C687]/40">
-              {uploading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-              <span>{uploading ? "Indexing PDF..." : "Upload PDF"}</span>
-              <input type="file" accept=".pdf" onChange={handleFileUpload} className="hidden" />
-            </label>
-          </div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white">
+            Chat &amp; Compare Research Papers (Local RAG)
+          </h1>
+          <p className="text-xs text-[#a3a3a3]">
+            Ask complex questions across uploaded PDF manuscripts or perform cross-paper synthesis with verifiable page-level evidence. Zero external API cost.
+          </p>
         </div>
 
+        <div className="flex items-center gap-3">
+          {/* Mode Toggle */}
+          <div className="flex items-center bg-[#1f1f1f] p-1 rounded-full border border-white/[0.08]">
+            <button
+              onClick={() => setChatMode("single")}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                chatMode === "single"
+                  ? "bg-[#f2572b] text-white shadow-sm"
+                  : "text-[#a3a3a3] hover:text-white"
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              Single Paper
+            </button>
+            <button
+              onClick={() => setChatMode("compare")}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                chatMode === "compare"
+                  ? "bg-[#f2572b] text-white shadow-sm"
+                  : "text-[#a3a3a3] hover:text-white"
+              }`}
+            >
+              <GitCompare className="w-3.5 h-3.5" />
+              Comparative Chat
+            </button>
+          </div>
+
+          <label className="cursor-pointer px-4 py-2 rounded-full btn-juicy text-xs font-bold shadow-md shadow-[#f2572b]/25 transition-all flex items-center gap-2">
+            {uploading ? <JuicyLoader size="sm" /> : <Upload className="w-3.5 h-3.5 text-white" />}
+            <span>{uploading ? "Indexing PDF..." : "Upload PDF"}</span>
+            <input type="file" accept=".pdf" onChange={handleFileUpload} className="hidden" />
+          </label>
+        </div>
+      </div>
+
+      {/* Main Content Body */}
+      <div className="flex-1 overflow-y-auto pr-1 pb-4 space-y-4">
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left: Paper Library (4 cols) */}
@@ -551,14 +552,14 @@ export default function ChatPdfPage() {
               <button
                 onClick={() => handleSendMessage()}
                 disabled={chatMode === "compare" ? (compareLoading || selectedPaperIds.length < 2) : (chatLoading || !query.trim())}
-                className="px-5 py-2.5 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                className="px-5 py-2.5 rounded-full btn-juicy text-xs font-bold shadow-md shadow-[#f2572b]/25 transition-all flex items-center gap-1.5 disabled:opacity-50"
               >
                 {(chatLoading || compareLoading) ? (
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <JuicyLoader size="sm" />
                 ) : chatMode === "compare" ? (
-                  <Scale className="w-3.5 h-3.5" />
+                  <Scale className="w-3.5 h-3.5 text-white" />
                 ) : (
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-3.5 h-3.5 text-white" />
                 )}
                 <span>{chatMode === "compare" ? "Compare" : "Send"}</span>
               </button>
