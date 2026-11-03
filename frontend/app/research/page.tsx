@@ -201,24 +201,68 @@ export default function ResearchStudioPage() {
     }
   };
 
-  const handleExportManuscript = async () => {
+  const handleExportManuscript = async (formatType: "markdown" | "latex" | "docx" | any = "markdown") => {
     if (!currentProject) return;
+    const fmt = typeof formatType === "string" ? formatType : "markdown";
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/export?format_type=markdown`, {
-        method: "POST"
-      });
-      const data = await res.json();
-      if (data.content) {
-        // Download markdown file
-        const blob = new Blob([data.content], { type: "text/markdown;charset=utf-8;" });
+      const safeTitle = currentProject.title.replace(/[^a-zA-Z0-9_\-]/g, "_");
+      if (fmt === "docx") {
+        const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/download?format_type=docx`);
+        const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `${currentProject.title.replace(/\s+/g, "_")}_Manuscript.md`);
+        link.setAttribute("download", `${safeTitle}_Manuscript.docx`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+      } else if (fmt === "latex") {
+        const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/download?format_type=latex`);
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${safeTitle}_IEEE_Conference.tex`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/export?format_type=markdown`, {
+          method: "POST"
+        });
+        const data = await res.json();
+        if (data.content) {
+          const blob = new Blob([data.content], { type: "text/markdown;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `${safeTitle}_Manuscript.md`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
       }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleExportMatrixCSV = async () => {
+    if (!literatureMatrix || literatureMatrix.length === 0) return;
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/research/matrix/export-csv", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ matrix_rows: literatureMatrix })
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${(currentProject?.title || "veritas").replace(/[^a-zA-Z0-9_\-]/g, "_")}_Literature_Matrix.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (e) {
       console.error(e);
     }
@@ -272,7 +316,7 @@ export default function ResearchStudioPage() {
               {saving ? "Autosaving..." : "Save Project"}
             </button>
             <button
-              onClick={handleExportManuscript}
+              onClick={() => handleExportManuscript("markdown")}
               className="px-4 py-2 rounded-[60px] bg-[#1a0f09] hover:bg-[#2b180d] border border-[#53351F] text-xs font-bold text-[#D9C7A3] hover:text-[#F5EFE1] transition-all flex items-center gap-1.5"
             >
               <Download className="w-3.5 h-3.5 text-[#B08D57]" />
@@ -471,7 +515,16 @@ export default function ResearchStudioPage() {
                     8-Column structured synthesis of peer-reviewed literature across Objectives, Datasets, Methods, Results, Limitations, and Gaps.
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleExportMatrixCSV}
+                    disabled={literatureMatrix.length === 0}
+                    className="px-4 py-2 rounded-[60px] bg-[#1a100a] hover:bg-[#2b180d] border border-emerald-500/50 text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-all disabled:opacity-40"
+                    title="Export 8-column comparative literature review matrix to CSV"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Export Matrix (.CSV)
+                  </button>
                   <button
                     onClick={() => fetchMatrix(matrixTopic || currentProject?.topic || "Transformer Attention")}
                     disabled={matrixLoading}
@@ -715,7 +768,7 @@ export default function ResearchStudioPage() {
         {/* ================= STAGE 9: INTEGRITY & EXPORT ================= */}
         {currentStage === 9 && (
           <div className="p-6 rounded-2xl bg-[#170e08]/90 border border-[#53351F]/70 backdrop-blur-xl shadow-xl max-w-4xl mx-auto space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-[#3b2314]">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-[#3b2314] gap-4">
               <div>
                 <h3 className="font-serif text-xl font-bold text-[#F5EFE1]">
                   Stage 19: Manuscript Review &amp; Publication Export
@@ -724,13 +777,32 @@ export default function ResearchStudioPage() {
                   Validate research integrity across all engines and export formatted publication manuscript.
                 </p>
               </div>
-              <button
-                onClick={handleExportManuscript}
-                className="px-6 py-2.5 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-sm font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-[#E6C687]/40"
-              >
-                <Download className="w-4 h-4" />
-                Export Full Manuscript (.MD)
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleExportManuscript("docx")}
+                  className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-blue-700 to-indigo-800 text-white text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 border border-blue-400/30"
+                  title="Export styled Microsoft Word (.docx) publication document"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Word (.DOCX)
+                </button>
+                <button
+                  onClick={() => handleExportManuscript("latex")}
+                  className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-emerald-800 to-teal-900 text-white text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 border border-emerald-400/30"
+                  title="Export IEEEtran LaTeX (.tex) for Overleaf / ArXiv submission"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  LaTeX (.TEX)
+                </button>
+                <button
+                  onClick={() => handleExportManuscript("markdown")}
+                  className="px-4 py-2 rounded-[60px] bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 border border-[#E6C687]/40"
+                  title="Export raw Markdown (.md)"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Markdown (.MD)
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

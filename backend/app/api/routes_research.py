@@ -7,7 +7,9 @@ comparative literature review matrix, and manuscript drafting.
 import uuid
 import json
 import time
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query
+import io
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Response
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 
@@ -16,9 +18,17 @@ from app.engines.research_studio_engine import (
     generate_research_scaffolding,
     synthesize_literature_matrix,
     discover_research_gaps,
-    export_research_manuscript
+    export_research_manuscript,
+    export_matrix_csv,
+    export_research_manuscript_latex,
+    export_research_manuscript_docx
 )
-from app.engines.pdf_chat_engine import extract_and_index_pdf, answer_paper_query, PaperRAGIndex
+from app.engines.pdf_chat_engine import (
+    extract_and_index_pdf,
+    answer_paper_query,
+    compare_multiple_papers,
+    PaperRAGIndex
+)
 from app.engines.search_engine import search_openalex_catalog
 
 router = APIRouter(prefix="/api/research", tags=["Research Studio"])
@@ -52,6 +62,13 @@ class MatrixGenerateRequest(BaseModel):
 class ChatPaperRequest(BaseModel):
     paper_id: str = Field(..., description="ID of uploaded paper")
     query: str = Field(..., min_length=2, description="Question about paper")
+
+class ComparePaperRequest(BaseModel):
+    paper_ids: List[str] = Field(..., min_items=2, description="IDs of papers to compare")
+    query: Optional[str] = Field("Compare main findings, methodologies, and limitations", description="Question or focus query")
+
+class ExportMatrixCSVRequest(BaseModel):
+    matrix_rows: List[Dict[str, Any]]
 
 
 # --- Endpoints ---
@@ -215,7 +232,7 @@ def update_research_project(project_id: str, payload: UpdateProjectRequest):
 @router.post("/projects/{project_id}/export")
 def export_project(project_id: str, format_type: str = Query("markdown")):
     """
-    Exports drafted research paper into publication-ready Markdown or text.
+    Exports drafted research paper into publication-ready Markdown (.md), LaTeX (.tex), or Word (.docx).
     """
     conn = get_db()
     cursor = conn.cursor()
@@ -226,13 +243,76 @@ def export_project(project_id: str, format_type: str = Query("markdown")):
     if not row:
         raise HTTPException(status_code=404, detail="Project not found")
 
-    content = export_research_manuscript(dict(row), format_type)
-    return {
-        "success": True,
-        "format": format_type,
-        "title": row["title"],
-        "content": content
-    }
+    project_dict = dict(row)
+    safe_title = "".join(c for c in (row["title"] or "manuscript") if c.isalnum() or c in (' ', '_', '-')).strip().replace(' ', '_')
+
+    fmt = format_type.lower()
+    if fmt in ["latex", "tex"]:
+        content = export_research_manuscript_latex(project_dict)
+        return {
+            "success": True,
+            "format": "latex",
+            "title": row["title"],
+            "filename": f"{safe_title}.tex",
+            "content": content
+        }
+    elif fmt == "docx":
+        docx_bytes = export_research_manuscript_docx(project_dict)
+        return StreamingResponse(
+            io.BytesIO(docx_bytes),
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": f'attachment; filename="{safe_title}.docx"'}
+        )
+    else:
+        content = export_research_manuscript(project_dict, format_type)
+        return {
+            "success": True,
+            "format": format_type,
+            "title": row["title"],
+            "filename": f"{safe_title}.md",
+            "content": content
+        }
+
+
+@router.get("/projects/{project_id}/download")
+def download_project_manuscript(project_id: str, format_type: str = Query("docx")):
+    """
+    Direct browser download of drafted manuscript as Word (.docx), LaTeX (.tex), or Markdown (.md).
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    project_dict = dict(row)
+    safe_title = "".join(c for c in (row["title"] or "manuscript") if c.isalnum() or c in (' ', '_', '-')).strip().replace(' ', '_')
+
+    fmt = format_type.lower()
+    if fmt == "docx":
+        docx_bytes = export_research_manuscript_docx(project_dict)
+        return StreamingResponse(
+            io.BytesIO(docx_bytes),
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": f'attachment; filename="{safe_title}.docx"'}
+        )
+    elif fmt in ["latex", "tex"]:
+        content = export_research_manuscript_latex(project_dict)
+        return Response(
+            content=content,
+            media_type="application/x-tex",
+            headers={"Content-Disposition": f'attachment; filename="{safe_title}.tex"'}
+        )
+    else:
+        content = export_research_manuscript(project_dict, "markdown")
+        return Response(
+            content=content,
+            media_type="text/markdown",
+            headers={"Content-Disposition": f'attachment; filename="{safe_title}.md"'}
+        )
 
 
 # --- SciSpace Literature Matrix & Gap Analysis ---
@@ -252,6 +332,43 @@ def generate_matrix(payload: MatrixGenerateRequest):
         "matrix": matrix,
         "research_gaps": gaps
     }
+
+
+@router.post("/matrix/export-csv")
+def export_matrix_to_csv(payload: ExportMatrixCSVRequest):
+    """
+    Exports provided literature matrix rows to downloadable CSV format.
+    """
+    csv_text = export_matrix_csv(payload.matrix_rows)
+    return Response(
+        content=csv_text,
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="veritas_literature_matrix.csv"'}
+    )
+
+
+@router.get("/projects/{project_id}/matrix-csv")
+def export_project_matrix_csv(project_id: str):
+    """
+    Fetches the saved literature matrix for a project and downloads as CSV file.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT title, literature_matrix_json FROM research_projects WHERE id = ?", (project_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    matrix = json.loads(row["literature_matrix_json"] or "[]")
+    csv_text = export_matrix_csv(matrix)
+    safe_title = "".join(c for c in (row["title"] or "matrix") if c.isalnum() or c in (' ', '_', '-')).strip().replace(' ', '_')
+    return Response(
+        content=csv_text,
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{safe_title}_matrix.csv"'}
+    )
 
 
 # --- Interactive PDF Assistant & Local RAG Chat ---
@@ -347,6 +464,44 @@ def chat_with_pdf(payload: ChatPaperRequest):
         "answer": answer_data["answer"],
         "citations": answer_data["citations"],
         "grounded": answer_data["grounded"]
+    }
+
+
+@router.post("/pdf/compare")
+def compare_papers_endpoint(payload: ComparePaperRequest):
+    """
+    SciSpace-grade Multi-Paper Comparative Chat.
+    Interrogates 2 or more uploaded papers simultaneously, synthesizes comparative analysis,
+    extracts key findings, agreements, and divergences with exact page numbers.
+    """
+    indices = []
+    for pid in payload.paper_ids:
+        idx = ACTIVE_PDF_INDICES.get(pid)
+        if not idx:
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute("SELECT title, chunks_json FROM research_library_papers WHERE id = ?", (pid,))
+            row = cursor.fetchone()
+            conn.close()
+            if row:
+                idx = PaperRAGIndex(paper_id=pid, title=row["title"])
+                chunks = json.loads(row["chunks_json"] or "[]")
+                for ch in chunks:
+                    idx.add_chunk(page_num=ch.get("page", 1), text=ch.get("text", ""))
+                ACTIVE_PDF_INDICES[pid] = idx
+        if idx:
+            indices.append(idx)
+
+    if len(indices) < 2:
+        raise HTTPException(
+            status_code=400,
+            detail=f"At least 2 uploaded papers are required for comparative chat. Found {len(indices)} valid paper(s)."
+        )
+
+    comparison_data = compare_multiple_papers(indices, query=payload.query or "Compare main findings, methodologies, and limitations")
+    return {
+        "success": True,
+        "comparison": comparison_data
     }
 
 

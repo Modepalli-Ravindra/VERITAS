@@ -228,3 +228,162 @@ def export_research_manuscript(project: Dict[str, Any], format_type: str = "mark
         lines.append("\n")
 
     return "\n".join(lines)
+
+
+def export_matrix_csv(matrix: List[Dict[str, Any]]) -> str:
+    """
+    Exports the 8-column literature review matrix into formatted CSV string.
+    """
+    import csv
+    import io
+
+    output = io.StringIO()
+    writer = csv.writer(output, quoting=csv.QUOTE_ALL)
+    writer.writerow([
+        "Paper Title", "Publication Year", "Venue", "DOI",
+        "Research Objective", "Dataset", "Methodology",
+        "Key Results", "Limitations", "Identified Research Gap"
+    ])
+
+    for row in matrix:
+        writer.writerow([
+            row.get("paper_title", ""),
+            row.get("year", ""),
+            row.get("venue", ""),
+            row.get("doi", ""),
+            row.get("objective", ""),
+            row.get("dataset", ""),
+            row.get("methodology", ""),
+            row.get("results", ""),
+            row.get("limitations", ""),
+            row.get("research_gap", "")
+        ])
+
+    return output.getvalue()
+
+
+def export_research_manuscript_latex(project: Dict[str, Any]) -> str:
+    """
+    Generates an IEEE/ACM-compatible publication LaTeX (.tex) manuscript ready for Overleaf.
+    """
+    title = project.get("title", "Untitled Research Paper")
+    sections = project.get("sections_json", {})
+    if isinstance(sections, str):
+        try:
+            sections = json.loads(sections)
+        except Exception:
+            sections = {}
+
+    abstract_text = sections.get("Abstract", SECTION_TEMPLATES.get("Abstract", ""))
+    keywords_text = sections.get("Keywords", "Machine Learning, Academic Integrity, Transformer Architecture, Calibration")
+
+    latex_lines = [
+        r"\documentclass[conference]{IEEEtran}",
+        r"\usepackage{cite}",
+        r"\usepackage{amsmath,amssymb,amsfonts}",
+        r"\usepackage{algorithmic}",
+        r"\usepackage{graphicx}",
+        r"\usepackage{textcomp}",
+        r"\usepackage{xcolor}",
+        r"\usepackage{hyperref}",
+        "",
+        rf"\title{{{title}}}",
+        "",
+        r"\author{\IEEEauthorblockN{Dr. Lead Researcher}",
+        r"\IEEEauthorblockA{\textit{Veritas Academic & Integrity Studio} \\",
+        r"Stanford Integrity & Research Lab \\",
+        r"researcher@veritas.edu}",
+        r"}",
+        "",
+        r"\begin{document}",
+        r"\maketitle",
+        "",
+        r"\begin{abstract}",
+        abstract_text,
+        r"\end{abstract}",
+        "",
+        r"\begin{IEEEkeywords}",
+        keywords_text,
+        r"\end{IEEEkeywords}",
+        ""
+    ]
+
+    for sec in STANDARD_SECTIONS:
+        if sec in ["Title", "Abstract", "Keywords", "References"]:
+            continue
+
+        latex_lines.append(rf"\section{{{sec}}}")
+        body = sections.get(sec, SECTION_TEMPLATES.get(sec, f"% [Draft for {sec}]"))
+        # Clean latex special chars
+        clean_body = body.replace("%", r"\%").replace("&", r"\&").replace("_", r"\_")
+        latex_lines.append(clean_body)
+        latex_lines.append("")
+
+    # References section
+    ref_body = sections.get("References", "")
+    latex_lines.extend([
+        r"\begin{thebibliography}{00}",
+        r"\bibitem{vaswani2017} A. Vaswani et al., ``Attention is all you need,'' in \textit{Adv. Neural Inf. Process. Syst.}, 2017.",
+        r"\end{thebibliography}",
+        "",
+        r"\end{document}"
+    ])
+
+    return "\n".join(latex_lines)
+
+
+def export_research_manuscript_docx(project: Dict[str, Any]) -> bytes:
+    """
+    Generates a professionally styled Microsoft Word (.docx) publication manuscript.
+    """
+    import io
+    import docx
+    from docx.shared import Pt, Inches, RGBColor
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+    doc = docx.Document()
+    sections = project.get("sections_json", {})
+    if isinstance(sections, str):
+        try:
+            sections = json.loads(sections)
+        except Exception:
+            sections = {}
+
+    title = project.get("title", "Untitled Research Paper")
+
+    # Document Title
+    p_title = doc.add_paragraph()
+    p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_title = p_title.add_run(title)
+    r_title.font.name = "Times New Roman"
+    r_title.font.size = Pt(20)
+    r_title.font.bold = True
+    r_title.font.color.rgb = RGBColor(0x1a, 0x1a, 0x1a)
+
+    # Author metadata
+    p_auth = doc.add_paragraph()
+    p_auth.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_auth = p_auth.add_run("Dr. Lead Researcher\nVeritas Academic Integrity & Research Intelligence Studio\n")
+    r_auth.font.name = "Times New Roman"
+    r_auth.font.size = Pt(11)
+    r_auth.font.italic = True
+
+    for sec in STANDARD_SECTIONS:
+        if sec == "Title":
+            continue
+
+        h = doc.add_heading(sec, level=1)
+        h.paragraph_format.space_before = Pt(12)
+        h.paragraph_format.space_after = Pt(4)
+
+        body = sections.get(sec, SECTION_TEMPLATES.get(sec, f"[Content drafted for {sec}...]"))
+        p = doc.add_paragraph()
+        p.paragraph_format.line_spacing = 1.15
+        p.paragraph_format.space_after = Pt(6)
+        r = p.add_run(body)
+        r.font.name = "Times New Roman"
+        r.font.size = Pt(11)
+
+    bio = io.BytesIO()
+    doc.save(bio)
+    return bio.getvalue()
