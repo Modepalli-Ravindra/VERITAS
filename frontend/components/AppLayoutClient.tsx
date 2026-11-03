@@ -17,12 +17,12 @@ import {
 import Navbar from "@/components/Navbar";
 
 const APP_NAV_ITEMS = [
-  { name: "Research Studio", href: "/research", icon: BookOpenIcon, desc: "IEEE Papers & Literature" },
-  { name: "PDF Assistant", href: "/chat-pdf", icon: ChatBubbleLeftRightIcon, desc: "SciSpace Multi-Paper RAG" },
-  { name: "Originality Studio", href: "/dashboard", icon: DocumentMagnifyingGlassIcon, desc: "Plagiarism & AI Detection" },
-  { name: "Writing Studio", href: "/writing", icon: PencilSquareIcon, desc: "Humanizer & Paraphraser" },
-  { name: "Submissions Archive", href: "/repository", icon: CircleStackIcon, desc: "Indexed Manuscripts" },
-  { name: "Audit Ledger", href: "/history", icon: ClockIcon, desc: "Verification Log" },
+  { name: "Originality Studio", href: "/dashboard", icon: DocumentMagnifyingGlassIcon, desc: "Step 1: Plagiarism & AI Scanner" },
+  { name: "Writing Studio", href: "/writing", icon: PencilSquareIcon, desc: "Step 2: AI Humanizer, Paraphrase & Grammar" },
+  { name: "Research Studio", href: "/research", icon: BookOpenIcon, desc: "Step 3: 9-Stage IEEE Paper Builder" },
+  { name: "PDF Assistant", href: "/chat-pdf", icon: ChatBubbleLeftRightIcon, desc: "Step 4: Multi-Paper Literature RAG" },
+  { name: "Archive", href: "/repository", icon: CircleStackIcon, desc: "Institutional Submissions Vault" },
+  { name: "Ledger", href: "/history", icon: ClockIcon, desc: "Verification Audit History" },
 ];
 
 export default function AppLayoutClient({
@@ -134,6 +134,7 @@ export default function AppLayoutClient({
               <Link
                 key={item.name}
                 href={item.href}
+                title={item.desc}
                 className={`h-[36px] flex items-center gap-1.5 px-3 rounded-full text-xs font-semibold tracking-wide transition-all border ${
                   isActive
                     ? "bg-[#f2572b]/15 text-[#f2572b] border-[#f2572b] shadow-sm shadow-[#f2572b]/20"

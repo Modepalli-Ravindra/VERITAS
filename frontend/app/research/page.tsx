@@ -590,7 +590,7 @@ export default function ResearchStudioPage() {
         {/* ================= STAGE 1: TOPIC & PROBLEM ================= */}
         {currentStage === 1 && currentProject && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 space-y-4 backdrop-blur-xl shadow-xl">
+            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] space-y-4 backdrop-blur-xl shadow-xl">
               <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-white/[0.08]">
                 Stage 1: Research Topic &amp; Context
               </span>
@@ -609,7 +609,7 @@ export default function ResearchStudioPage() {
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 space-y-4 backdrop-blur-xl shadow-xl">
+            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] space-y-4 backdrop-blur-xl shadow-xl">
               <span className="text-xs font-mono font-bold tracking-wider text-[#f2572b] uppercase block pb-2 border-b border-white/[0.08]">
                 Stage 2: Formal Problem Statement
               </span>
@@ -635,7 +635,7 @@ export default function ResearchStudioPage() {
         {/* ================= STAGE 2: RQs & OBJECTIVES ================= */}
         {currentStage === 2 && currentProject && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 space-y-4 backdrop-blur-xl shadow-xl">
+            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] space-y-4 backdrop-blur-xl shadow-xl">
               <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-white/[0.08]">
                 Stage 3: Research Questions (RQs)
               </span>
@@ -649,7 +649,7 @@ export default function ResearchStudioPage() {
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 space-y-4 backdrop-blur-xl shadow-xl">
+            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] space-y-4 backdrop-blur-xl shadow-xl">
               <span className="text-xs font-mono font-bold tracking-wider text-[#f2572b] uppercase block pb-2 border-b border-white/[0.08]">
                 Stage 4: Research Objectives
               </span>
@@ -676,7 +676,7 @@ export default function ResearchStudioPage() {
 
         {/* ================= STAGE 3: HYPOTHESES ================= */}
         {currentStage === 3 && currentProject && (
-          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 space-y-4 backdrop-blur-xl shadow-xl max-w-4xl mx-auto">
+          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] space-y-4 backdrop-blur-xl shadow-xl w-full max-w-[96%] mx-auto">
             <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-white/[0.08]">
               Stage 5: Scientific Hypotheses Formulation
             </span>
@@ -722,7 +722,7 @@ export default function ResearchStudioPage() {
         {/* ================= STAGE 4: SCISPACE LITERATURE MATRIX ================= */}
         {currentStage === 4 && (
           <div className="space-y-4">
-            <div className="p-5 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 backdrop-blur-xl shadow-xl space-y-4">
+            <div className="p-5 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] backdrop-blur-xl shadow-xl space-y-4">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
                 <div>
                   <h3 className="font-serif text-lg font-bold text-white">
@@ -800,8 +800,8 @@ export default function ResearchStudioPage() {
 
         {/* ================= STAGE 5: RESEARCH GAP DISCOVERY ================= */}
         {currentStage === 5 && (
-          <div className="space-y-4 max-w-4xl mx-auto">
-            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 backdrop-blur-xl shadow-xl space-y-4">
+          <div className="space-y-4 w-full max-w-[96%] mx-auto">
+            <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] backdrop-blur-xl shadow-xl space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
                 <div>
                   <h3 className="font-serif text-lg font-bold text-white">
@@ -843,7 +843,7 @@ export default function ResearchStudioPage() {
 
         {/* ================= STAGE 6: METHODOLOGY PLAN ================= */}
         {currentStage === 6 && currentProject && (
-          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 backdrop-blur-xl shadow-xl max-w-4xl mx-auto space-y-4">
+          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] backdrop-blur-xl shadow-xl w-full max-w-[96%] mx-auto space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
               <div>
                 <h3 className="font-serif text-lg font-bold text-white">
@@ -871,7 +871,7 @@ export default function ResearchStudioPage() {
 
         {/* ================= STAGE 7: 17-SECTION OUTLINE ================= */}
         {currentStage === 7 && currentProject && (
-          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 backdrop-blur-xl shadow-xl max-w-4xl mx-auto space-y-4">
+          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] backdrop-blur-xl shadow-xl w-full max-w-[96%] mx-auto space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
               <div>
                 <h3 className="font-serif text-lg font-bold text-white">
@@ -915,7 +915,7 @@ export default function ResearchStudioPage() {
         {currentStage === 8 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left: Section Navigator */}
-            <div className="lg:col-span-4 p-4 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 backdrop-blur-xl space-y-2 max-h-[620px] overflow-y-auto">
+            <div className="lg:col-span-4 p-4 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] backdrop-blur-xl space-y-2 max-h-[620px] overflow-y-auto">
               <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-white/[0.08]">
                 Manuscript Sections (17)
               </span>
@@ -1000,7 +1000,7 @@ export default function ResearchStudioPage() {
 
         {/* ================= STAGE 9: INTEGRITY & EXPORT ================= */}
         {currentStage === 9 && (
-          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/10/70 backdrop-blur-xl shadow-xl max-w-4xl mx-auto space-y-6">
+          <div className="p-6 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.06] backdrop-blur-xl shadow-xl w-full max-w-[96%] mx-auto space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-white/[0.08] gap-4">
               <div>
                 <h3 className="font-serif text-xl font-bold text-white">

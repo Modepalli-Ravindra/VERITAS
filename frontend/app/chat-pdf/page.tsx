@@ -245,8 +245,9 @@ export default function ChatPdfPage() {
 
       {/* Main Content Body */}
       <div className="flex-1 overflow-y-auto pr-1 pb-4 space-y-4">
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div className="w-full max-w-[96%] mx-auto space-y-4">
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           {/* Left: Paper Library (4 cols) */}
           <div className="lg:col-span-4 glass-card rounded-3xl p-5 space-y-4 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
@@ -564,8 +565,8 @@ export default function ChatPdfPage() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
+  </div>
   );
 }

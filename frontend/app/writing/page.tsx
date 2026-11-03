@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   PenTool,
   Sparkles,
@@ -14,19 +14,13 @@ import {
   Search,
   ExternalLink,
   RefreshCw,
-  Sliders,
-  FileText,
-  HelpCircle,
-  Hash,
-  Eye,
-  ArrowRight,
-  TrendingUp,
-  Cpu
+  ArrowRight
 } from "lucide-react";
 import JuicyLoader from "@/components/JuicyLoader";
 
 export default function WritingStudioPage() {
-  const [activeTab, setActiveTab] = useState<"grammar" | "rewrite" | "citations" | "forensics">("grammar");
+  const [activeTab, setActiveTab] = useState<"rewrite" | "grammar" | "citations" | "forensics">("rewrite");
+  const [title, setTitle] = useState("");
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -35,7 +29,7 @@ export default function WritingStudioPage() {
   const [grammarReport, setGrammarReport] = useState<any>(null);
 
   // Rewrite state
-  const [rewriteMode, setRewriteMode] = useState("academic_formal");
+  const [rewriteMode, setRewriteMode] = useState("ai_humanize");
   const [rewriteResult, setRewriteResult] = useState<any>(null);
 
   // Citation state
@@ -53,7 +47,6 @@ export default function WritingStudioPage() {
   const [gatewayLoading, setGatewayLoading] = useState(false);
   const [gatewayProvider, setGatewayProvider] = useState<string>("");
 
-  // Auto-run gateway status on mount
   useEffect(() => {
     fetchGatewayStatus();
   }, []);
@@ -142,7 +135,6 @@ export default function WritingStudioPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // 1. Run Grammar Analysis
   const handleRunGrammar = async (textToScan = inputText) => {
     setLoading(true);
     try {
@@ -162,7 +154,6 @@ export default function WritingStudioPage() {
     }
   };
 
-  // 2. Apply single grammar fix to input text
   const applyGrammarFix = (issue: any) => {
     const updated =
       inputText.slice(0, issue.start) + issue.replacement + inputText.slice(issue.end);
@@ -170,7 +161,6 @@ export default function WritingStudioPage() {
     handleRunGrammar(updated);
   };
 
-  // 3. Run Rewrite
   const handleRunRewrite = async (mode = rewriteMode, textToRewrite = inputText) => {
     setLoading(true);
     try {
@@ -190,7 +180,6 @@ export default function WritingStudioPage() {
     }
   };
 
-  // 4. Run Citation Audit
   const handleRunCitationAudit = async (textToAudit = inputText) => {
     setLoading(true);
     try {
@@ -210,7 +199,6 @@ export default function WritingStudioPage() {
     }
   };
 
-  // 5. Search Literature (OpenAlex 250M)
   const handleSearchSources = async () => {
     if (!searchQuery.trim()) return;
     setSearching(true);
@@ -227,7 +215,6 @@ export default function WritingStudioPage() {
     }
   };
 
-  // 6. Run Forensics Evasion Audit
   const handleRunForensics = async (textToInspect = inputText) => {
     setLoading(true);
     try {
@@ -247,15 +234,10 @@ export default function WritingStudioPage() {
     }
   };
 
-  // Tab switch helper
-  const switchTab = (tab: "grammar" | "rewrite" | "citations" | "forensics") => {
-    setActiveTab(tab);
-  };
-
   const REWRITE_MODES = [
-    { id: "ai_humanize", name: "Deep AI Humanizer (Gateway LLM)", desc: "High burstiness, human sentence cadence, strips AI robotic artifacts." },
+    { id: "ai_humanize", name: "Deep AI Humanizer (Gateway LLM)", desc: "High burstiness, natural human cadence, strips AI robotic artifacts." },
     { id: "academic_formal", name: "Academic Formal", desc: "Scholarly diction, hedges, and objective register." },
-    { id: "paraphrase_academic", name: "Smart Paraphrase (< 15% Sim)", desc: "Inverts syntax and substitutes formal synonyms to drop plagiarism." },
+    { id: "paraphrase_academic", name: "Smart Paraphrase (< 15% Sim)", desc: "Inverts syntax and formal synonyms to drop plagiarism score." },
     { id: "executive_concise", name: "Executive Concise", desc: "Strips wordiness & nominalizations ruthlessly." },
     { id: "clarity_enhancer", name: "Clarity & Readability", desc: "Untangles complex compound sentences." },
     { id: "fluent_esl", name: "Fluent ESL Cadence", desc: "Refines non-native phrasing while preserving meaning." },
@@ -265,298 +247,207 @@ export default function WritingStudioPage() {
     { id: "casual_accessible", name: "Plain English", desc: "Translates dense jargon for general public audiences." },
   ];
 
+  const wordCount = inputText.trim() ? inputText.trim().split(/\s+/).length : 0;
+  const lineCount = inputText ? inputText.split("\n").length : 0;
+  const charCount = inputText.length;
+
   return (
-    <div className="h-full w-full flex flex-col overflow-hidden bg-[#171717] text-white p-4 sm:p-6 space-y-4">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pb-3 border-b border-white/[0.08] shrink-0">
-        <div>
-          <h1 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white">
-            Scholarly Writing &amp; Citation Studio
-          </h1>
-        </div>
+    <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
+      {/* 95% WIDE WORKBENCH CONTAINER */}
+      <div className="w-full max-w-[96%] mx-auto space-y-4">
+        {/* SMART BENTO GRID FOR WORKBENCH */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          {/* BENTO TILE 1: Main Analysis & Writing Editor (8 cols) - Glassmorphism */}
+          <div className="lg:col-span-8 glass-panel rounded-3xl overflow-hidden shadow-2xl space-y-4 p-6 sm:p-7">
+            
+            {/* Embedded Workspace Mode Switcher (Zero bulky header, identical to /dashboard) */}
+            <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.06] pb-4">
+              {[
+                { id: "rewrite", label: "Deep AI Humanizer & Paraphraser", icon: PenTool },
+                { id: "grammar", label: "Grammar & Clarity Audit", icon: CheckCircle2 },
+                { id: "citations", label: "OpenAlex 250M Citations", icon: BookOpen },
+                { id: "forensics", label: "Anti-Bypass Forensics", icon: ShieldAlert },
+              ].map((t) => {
+                const Icon = t.icon;
+                const isActive = activeTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setActiveTab(t.id as any)}
+                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                      isActive
+                        ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 shadow-sm font-semibold"
+                        : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{t.label}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-        <div className="flex items-center gap-1.5 bg-[#141414] p-1 rounded-xl border border-white/10">
-          {[
-            { id: "grammar", label: "Grammar & Clarity", icon: CheckCircle2 },
-            { id: "rewrite", label: "Rewrite Studio", icon: PenTool },
-            { id: "citations", label: "Citations (250M)", icon: BookOpen },
-            { id: "forensics", label: "Anti-Bypass Forensics", icon: ShieldAlert },
-          ].map((t) => {
-            const Icon = t.icon;
-            const isActive = activeTab === t.id;
-            return (
-              <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id as any)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  isActive
-                    ? "bg-[#f2572b]/15 text-[#f2572b] border border-[#f2572b]/40 font-semibold shadow-sm"
-                    : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.04]"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{t.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+            {/* Document Header & Quick Actions */}
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+              <input
+                type="text"
+                placeholder={
+                  activeTab === "rewrite"
+                    ? "Manuscript Section / Paragraph Title (e.g. Chapter 3: Methodology)"
+                    : activeTab === "grammar"
+                    ? "Document Title for Grammar Audit"
+                    : activeTab === "citations"
+                    ? "Citation Context / Bibliography Topic"
+                    : "Forensic Audit Target Name"
+                }
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="flex-1 glass-input rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#f2572b] font-sans"
+              />
 
-      {/* Scrollable Content Pane */}
-      <div className="flex-1 overflow-y-auto pr-1 pb-4 space-y-4">
-        {/* ================= TAB 1: GRAMMAR & READABILITY ================= */}
-        {activeTab === "grammar" && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            {/* Editor Side */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-                  <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
-                    Document Editor ({inputText.length} chars)
-                  </span>
-                  <div className="flex gap-2">
+              <div className="flex items-center gap-2 shrink-0">
+                {inputText && (
+                  <button
+                    onClick={() => handleCopy(inputText)}
+                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-white/[0.06] glass-card hover:bg-white/[0.06] text-xs font-medium text-[#a3a3a3] hover:text-white transition-colors"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? "Copied" : "Copy Source"}</span>
+                  </button>
+                )}
+                {inputText && (
+                  <button
+                    onClick={() => setInputText("")}
+                    className="px-3 py-2 rounded-xl border border-white/[0.06] glass-card hover:bg-white/[0.06] text-xs font-medium text-[#a3a3a3] hover:text-rose-400 transition-colors"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* MAIN TEXT EDITOR CONTAINER */}
+            <div className="relative border border-white/[0.06] rounded-2xl glass-input overflow-hidden focus-within:border-[#f2572b]">
+              <textarea
+                rows={11}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder={
+                  activeTab === "rewrite"
+                    ? "Paste AI-generated manuscript text, student essay, or paragraphs to humanize cadence, strip robotic artifacts, or drop plagiarism similarity below 15%..."
+                    : activeTab === "grammar"
+                    ? "Paste manuscript or research excerpt to audit 60+ academic redundancy traps, wordiness, passive voice, and readability..."
+                    : activeTab === "citations"
+                    ? "Paste manuscript section to check in-text citations against the reference list and verify authentic Crossref DOIs..."
+                    : "Paste document text to inspect for hidden token-breaking characters, zero-width space injections (\\u200B), and foreign Cyrillic homoglyph tricks..."
+                }
+                className="w-full bg-transparent p-4 text-xs text-white placeholder:text-[#737373] focus:outline-none resize-y font-sans leading-relaxed"
+              />
+
+              {/* Editor Telemetry Bar */}
+              <div className="border-t border-white/[0.06] bg-[#1a1a1a]/80 px-4 py-2.5 flex items-center justify-between text-[11px] font-mono text-[#a3a3a3]">
+                <div className="flex items-center gap-4">
+                  <span>Words: <strong className="text-white tabular-nums">{wordCount}</strong></span>
+                  <span>Lines: <strong className="text-white tabular-nums">{lineCount}</strong></span>
+                  <span>Characters: <strong className="text-white tabular-nums">{charCount}</strong></span>
+                </div>
+                <span>UTF-8 Document</span>
+              </div>
+            </div>
+
+            {/* ACTION TRIGGERS FOR ACTIVE TAB */}
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+              {activeTab === "rewrite" && (
+                <>
+                  <div className="text-xs text-[#a3a3a3]">
+                    Active Register: <strong className="text-[#f2572b]">{REWRITE_MODES.find(m => m.id === rewriteMode)?.name}</strong>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleCopy(inputText)}
-                      className="text-xs text-[#a3a3a3] hover:text-white flex items-center gap-1"
+                      onClick={handleRunHumanize}
+                      disabled={loading || !inputText.trim()}
+                      className="px-5 py-2.5 rounded-full btn-juicy text-white text-xs font-bold shadow-md shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-40"
                     >
-                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>Copy</span>
+                      {loading ? <JuicyLoader size="sm" /> : <Sparkles className="w-3.5 h-3.5 text-white" />}
+                      <span>Deep AI Humanizer</span>
+                    </button>
+                    <button
+                      onClick={handleRunPlagiarismRemoval}
+                      disabled={loading || !inputText.trim()}
+                      className="px-4 py-2.5 rounded-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white text-xs font-semibold transition-all flex items-center gap-1.5 disabled:opacity-40"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Paraphrase (&lt; 15% Sim)</span>
                     </button>
                   </div>
-                </div>
+                </>
+              )}
 
-                <textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  rows={12}
-                  className="w-full mt-4 p-4 rounded-xl bg-[#141414] border border-white/10 text-sm text-white font-sans focus:outline-none focus:border-[#f2572b] transition-all resize-y placeholder:text-[#737373]"
-                  placeholder="Paste academic manuscript or essay to audit grammar, style, and readability..."
-                />
-
-                <div className="mt-4 flex items-center justify-between">
+              {activeTab === "grammar" && (
+                <>
                   <span className="text-xs text-[#737373]">
                     Auditing 60+ academic redundancy rules &amp; homophone traps locally.
                   </span>
                   <button
                     onClick={() => handleRunGrammar(inputText)}
-                    disabled={loading}
-                    className="h-10 px-5 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
+                    disabled={loading || !inputText.trim()}
+                    className="px-6 py-2.5 rounded-full btn-juicy text-white text-xs font-bold shadow-md shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-40"
                   >
-                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                    <span>Analyze Writing</span>
+                    {loading ? <JuicyLoader size="sm" /> : <Sparkles className="w-3.5 h-3.5 text-white" />}
+                    <span>Audit Grammar &amp; Clarity</span>
                   </button>
-                </div>
-              </div>
+                </>
+              )}
 
-              {/* Readability Scorecard */}
-              {grammarReport?.metrics && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
-                    <div className="text-xs text-[#a3a3a3] font-mono">Flesch Reading Ease</div>
-                    <div className="text-2xl font-bold font-serif text-white mt-1">
-                      {grammarReport.metrics.flesch_reading_ease}
-                    </div>
-                    <div className="text-[11px] text-[#f2572b] mt-0.5">{grammarReport.metrics.reading_level}</div>
-                  </div>
+              {activeTab === "citations" && (
+                <>
+                  <span className="text-xs text-[#737373]">
+                    Crossref DOI verification &amp; OpenAlex 250M catalog.
+                  </span>
+                  <button
+                    onClick={() => handleRunCitationAudit(inputText)}
+                    disabled={loading || !inputText.trim()}
+                    className="px-6 py-2.5 rounded-full btn-juicy text-white text-xs font-bold shadow-md shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-40"
+                  >
+                    {loading ? <JuicyLoader size="sm" /> : <RefreshCw className="w-3.5 h-3.5 text-white" />}
+                    <span>Audit Document Citations</span>
+                  </button>
+                </>
+              )}
 
-                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
-                    <div className="text-xs text-[#a3a3a3] font-mono">Grade Level (FKGL)</div>
-                    <div className="text-2xl font-bold font-serif text-white mt-1">
-                      Grade {grammarReport.metrics.flesch_kincaid_grade}
-                    </div>
-                    <div className="text-[11px] text-[#a3a3a3] mt-0.5">Gunning Fog: {grammarReport.metrics.gunning_fog}</div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
-                    <div className="text-xs text-[#a3a3a3] font-mono">Complex Words</div>
-                    <div className="text-2xl font-bold font-serif text-white mt-1">
-                      {grammarReport.metrics.complex_word_count}
-                    </div>
-                    <div className="text-[11px] text-[#a3a3a3] mt-0.5">{grammarReport.metrics.syllables_per_word} syll/word</div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-[#141414] border border-white/10">
-                    <div className="text-xs text-[#a3a3a3] font-mono">Reading Time</div>
-                    <div className="text-2xl font-bold font-serif text-white mt-1">
-                      {grammarReport.metrics.reading_time_seconds}s
-                    </div>
-                    <div className="text-[11px] text-[#a3a3a3] mt-0.5">Speaking: {grammarReport.metrics.speaking_time_seconds}s</div>
-                  </div>
-                </div>
+              {activeTab === "forensics" && (
+                <>
+                  <span className="text-xs text-[#737373]">
+                    Deep unicode byte analysis for zero-width spaces and Cyrillic swaps.
+                  </span>
+                  <button
+                    onClick={() => handleRunForensics(inputText)}
+                    disabled={loading || !inputText.trim()}
+                    className="px-6 py-2.5 rounded-full btn-juicy text-white text-xs font-bold shadow-md shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-40"
+                  >
+                    {loading ? <JuicyLoader size="sm" /> : <ShieldAlert className="w-3.5 h-3.5 text-white" />}
+                    <span>Audit Adversarial Manipulation</span>
+                  </button>
+                </>
               )}
             </div>
 
-            {/* Suggestions & Issues Column */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-                  <div>
-                    <h3 className="font-serif text-base font-bold text-white">Linguistic Issues</h3>
-                    <p className="text-xs text-[#a3a3a3]">
-                      Found {grammarReport?.total_issues || 0} issues • Clarity Score:{" "}
-                      <span className="font-bold text-[#f2572b]">{grammarReport?.clarity_score || 100}/100</span>
-                    </p>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl border border-[#f2572b]/60 flex items-center justify-center font-bold text-sm text-white bg-[#262626]">
-                    {grammarReport?.clarity_score || 100}
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-3 max-h-[520px] overflow-y-auto pr-1">
-                  {grammarReport?.issues?.length === 0 ? (
-                    <div className="py-12 text-center text-[#a3a3a3] text-sm">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                      Clean manuscript! No critical grammatical, punctuation, or redundancy issues detected.
-                    </div>
-                  ) : (
-                    grammarReport?.issues?.map((issue: any) => {
-                      const isGrammar = issue.category === "grammar";
-                      const isWordiness = issue.category === "wordiness";
-                      const isPassive = issue.category === "passive_voice";
-
-                      return (
-                        <div
-                          key={issue.id}
-                          className="p-3.5 rounded-xl bg-[#141414] border border-white/10 hover:border-[#f2572b]/60 transition-all space-y-2"
-                        >
-                          <div className="flex items-center justify-between text-xs">
-                            <span
-                              className={`px-2 py-0.5 rounded-full font-mono uppercase font-bold text-[10px] ${
-                                isGrammar
-                                  ? "bg-rose-950/60 text-rose-300 border border-rose-800/50"
-                                  : isWordiness
-                                  ? "bg-amber-950/60 text-amber-300 border border-amber-800/50"
-                                  : isPassive
-                                  ? "bg-sky-950/60 text-sky-300 border border-sky-800/50"
-                                  : "bg-purple-950/60 text-purple-300 border border-purple-800/50"
-                              }`}
-                            >
-                              {issue.category.replace("_", " ")}
-                            </span>
-                            <span className="text-[#737373] text-[11px] capitalize">{issue.severity}</span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="line-through text-rose-400/90 font-mono text-xs">{issue.original}</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-[#a3a3a3]" />
-                            <span className="text-emerald-400 font-mono font-bold text-xs">{issue.replacement}</span>
-                          </div>
-
-                          <p className="text-xs text-[#a3a3a3]">{issue.explanation}</p>
-
-                          <div className="pt-1 flex justify-end">
-                            <button
-                              onClick={() => applyGrammarFix(issue)}
-                              className="h-7 px-3 rounded-lg bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/50 text-xs text-white font-semibold transition-all"
-                            >
-                              Apply Fix
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= TAB 2: REWRITE STUDIO ================= */}
-        {activeTab === "rewrite" && (
-          <div className="space-y-5">
-            {/* Mode Selectors */}
-            <div className="glass-card rounded-3xl p-5 border border-white/[0.08] bg-[#1a1a1a]/90 backdrop-blur-xl">
-              <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block mb-3">
-                Select Rewriting Register (9 Specialized Modes)
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {REWRITE_MODES.map((mode) => {
-                  const isSel = rewriteMode === mode.id;
-                  return (
-                    <button
-                      key={mode.id}
-                      onClick={() => {
-                        setRewriteMode(mode.id);
-                        handleRunRewrite(mode.id, inputText);
-                      }}
-                      className={`p-3 rounded-xl text-left border transition-all ${
-                        isSel
-                          ? "bg-[#29170e] border-[#f2572b] shadow-lg shadow-black/30"
-                          : "bg-[#141414] border-white/10 hover:border-white/20 text-[#a3a3a3]"
-                      }`}
-                    >
-                      <div className={`text-xs font-bold ${isSel ? "text-white" : "text-[#e5e5e5]"}`}>
-                        {mode.name}
-                      </div>
-                      <div className="text-[11px] text-[#737373] line-clamp-1 mt-0.5">{mode.desc}</div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Side-by-Side Diff Comparison */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-              {/* Left: Input Text */}
-              <div className="glass-panel rounded-3xl border border-white/[0.08] bg-[#1a1a1a]/90 p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
-                  <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
-                    Original Source Text
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2 pt-1 pb-1">
-                  <button
-                    onClick={handleRunHumanize}
-                    disabled={loading || !inputText.trim()}
-                    className="flex-1 h-9 px-3 rounded-xl bg-purple-950/60 hover:bg-purple-900/60 border border-purple-500/40 text-xs font-semibold text-purple-200 hover:text-white shadow-sm flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
-                    title="Deeply humanize text to reduce AI detection scores"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-purple-300" />
-                    <span>Deep AI Humanizer (Gateway LLM)</span>
-                  </button>
-                  <button
-                    onClick={handleRunPlagiarismRemoval}
-                    disabled={loading || !inputText.trim()}
-                    className="flex-1 h-9 px-3 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-xs font-semibold text-emerald-300 hover:text-white shadow-sm flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
-                    title="Smart paraphrase to drop similarity below 15%"
-                  >
-                    <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Remove Plagiarism (&lt; 15% Sim)</span>
-                  </button>
-                </div>
-
-                <textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  rows={8}
-                  className="w-full p-4 rounded-xl bg-[#141414] border border-white/10 text-sm text-white font-sans focus:outline-none focus:border-[#f2572b] transition-all resize-y placeholder:text-[#737373]"
-                  placeholder="Paste text to rewrite..."
-                />
-                <button
-                  onClick={() => handleRunRewrite(rewriteMode, inputText)}
-                  disabled={loading}
-                  className="w-full h-10 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 border border-transparent"
-                >
-                  {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
-                  <span>Execute Scholarly Rewrite ({REWRITE_MODES.find((m) => m.id === rewriteMode)?.name})</span>
-                </button>
-              </div>
-
-              {/* Right: Rewritten Output */}
-              <div className="glass-panel rounded-3xl border border-white/[0.08] bg-[#1a1a1a]/90 p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+            {/* REWRITTEN OUTPUT TILE */}
+            {activeTab === "rewrite" && rewriteResult && (
+              <div className="mt-4 p-5 rounded-2xl bg-[#141414] border border-white/[0.06] space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-mono font-bold tracking-wider text-[#f2572b] uppercase">
                       Rewritten Output
                     </span>
                     {(rewriteResult?.provider || gatewayProvider) && (
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#262626] border border-emerald-500/60 font-mono text-[10px] text-emerald-400">
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-950/40 border border-emerald-800/40 font-mono text-[10px] text-emerald-400">
                         ⚡ {rewriteResult?.provider || gatewayProvider}
                       </span>
                     )}
                   </div>
-                  {rewriteResult && (
+                  <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleCopy(rewriteResult.rewritten_text)}
                       className="text-xs text-[#f2572b] hover:text-white flex items-center gap-1 font-semibold"
@@ -564,389 +455,319 @@ export default function WritingStudioPage() {
                       {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>Copy Rewritten</span>
                     </button>
-                  )}
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#141414] border border-white/10 min-h-[200px] text-sm text-white leading-relaxed font-sans overflow-y-auto max-h-[350px]">
-                  {loading ? (
-                    <div className="flex items-center justify-center h-40 text-xs text-[#a3a3a3] gap-2">
-                      <RefreshCw className="w-4 h-4 animate-spin text-[#f2572b]" />
-                      Generating stylized scholarly transformation via Gateway...
-                    </div>
-                  ) : rewriteResult?.diff_tokens ? (
-                    <div>
-                      {rewriteResult.diff_tokens.map((token: any, idx: number) => {
-                        if (token.type === "delete") {
-                          return (
-                            <span
-                              key={idx}
-                              className="line-through bg-rose-950/40 text-rose-300 px-1 py-0.5 rounded text-xs mx-0.5"
-                            >
-                              {token.text}
-                            </span>
-                          );
-                        } else if (token.type === "insert") {
-                          return (
-                            <span
-                              key={idx}
-                              className="bg-emerald-950/50 text-emerald-300 font-semibold px-1 py-0.5 rounded text-xs mx-0.5 border border-emerald-700/40"
-                            >
-                              {token.text}
-                            </span>
-                          );
-                        }
-                        return <span key={idx}>{token.text}</span>;
-                      })}
-                    </div>
-                  ) : rewriteResult?.rewritten_text ? (
-                    <p className="whitespace-pre-wrap">{rewriteResult.rewritten_text}</p>
-                  ) : (
-                    <p className="text-[#737373] text-xs">Run the rewrite engine or choose Deep AI Humanizer above.</p>
-                  )}
+                <div className="text-xs text-white leading-relaxed font-sans max-h-[300px] overflow-y-auto whitespace-pre-wrap">
+                  {rewriteResult.rewritten_text}
                 </div>
 
-                {/* Rewrite Deltas */}
                 {rewriteResult?.deltas && (
-                  <div className="flex items-center justify-between text-xs px-2 text-[#a3a3a3]">
-                    <span>
-                      Words: {rewriteResult.deltas.word_count_change > 0 ? `+${rewriteResult.deltas.word_count_change}` : rewriteResult.deltas.word_count_change}
-                    </span>
-                    <span>
-                      Reading Ease: {rewriteResult.deltas.reading_ease_change > 0 ? `+${rewriteResult.deltas.reading_ease_change}` : rewriteResult.deltas.reading_ease_change} pts
-                    </span>
-                    <span className="text-emerald-400 font-mono">Semantic Core Preserved</span>
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-white/[0.06] text-[#a3a3a3]">
+                    <span>Words: {rewriteResult.deltas.word_count_change > 0 ? `+${rewriteResult.deltas.word_count_change}` : rewriteResult.deltas.word_count_change}</span>
+                    <span>Reading Ease: {rewriteResult.deltas.reading_ease_change > 0 ? `+${rewriteResult.deltas.reading_ease_change}` : rewriteResult.deltas.reading_ease_change} pts</span>
+                    <span className="text-emerald-400 font-mono text-[11px]">Semantic Core Preserved</span>
                   </div>
                 )}
               </div>
-            </div>
+            )}
 
-            {/* Ethics & Integrity Disclaimer */}
-            <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 text-xs text-[#a3a3a3] flex items-start gap-3">
-              <ShieldAlert className="w-4 h-4 text-[#f2572b] shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold text-white">Academic Ethics Notice: </span>
-                Veritas Rewrite Studio is engineered for linguistic clarity, non-native English cadence, and rhetorical conciseness. It preserves underlying academic truth and factual citations without attempting to conceal AI generation.
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= TAB 3: CITATION STUDIO & 250M SEARCH ================= */}
-        {activeTab === "citations" && (
-          <div className="space-y-6">
-            {/* OpenAlex 250M Live Search Bar */}
-            <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
-                <div>
-                  <h3 className="font-serif text-base font-bold text-white">
-                    OpenAlex 250M Academic Catalog &amp; Citation Generator
-                  </h3>
-                  <p className="text-xs text-[#a3a3a3]">
-                    Search 250M+ open publications, retrieve DOIs, and generate instant peer-reviewed citations.
-                  </p>
-                </div>
-                <div className="flex gap-1.5 bg-[#141414] p-1 rounded-xl border border-white/10">
-                  {(["apa7", "mla9", "ieee", "bibtex"] as const).map((style) => (
-                    <button
-                      key={style}
-                      onClick={() => setSelectedCitationStyle(style)}
-                      className={`px-3 py-1 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
-                        selectedCitationStyle === style
-                          ? "bg-[#f2572b] text-white shadow-sm"
-                          : "text-[#a3a3a3] hover:text-white"
-                      }`}
-                    >
-                      {style}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a3a3a3]" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSearchSources()}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#141414] border border-white/10 text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#f2572b] transition-all"
-                    placeholder="Search papers by title, author, or research field (e.g. Attention Is All You Need, CRISPR gene editing)..."
-                  />
-                </div>
-                <button
-                  onClick={handleSearchSources}
-                  disabled={searching}
-                  className="h-10 px-5 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
-                >
-                  {searching ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                  <span>Search</span>
-                </button>
-              </div>
-
-              {/* Search Results List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                {searchResults.map((paper: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl bg-[#141414] border border-white/10 hover:border-[#f2572b]/70 transition-all space-y-2.5"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="text-sm font-serif font-bold text-white leading-tight line-clamp-2">
-                        {paper.title}
-                      </h4>
-                      {paper.doi && (
-                        <a
-                          href={`https://doi.org/${paper.doi.replace('https://doi.org/','')}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[#f2572b] hover:text-white shrink-0"
-                          title="Open DOI URL"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
-
-                    <div className="text-xs text-[#a3a3a3] flex items-center gap-2 flex-wrap">
-                      <span>{paper.authors?.join(", ") || "Unknown Authors"}</span>
-                      <span>•</span>
-                      <span className="font-mono">{paper.year}</span>
-                      <span>•</span>
-                      <span className="italic">{paper.venue}</span>
-                    </div>
-
-                    {/* Pre-formatted citation in selected style */}
-                    <div className="p-2.5 rounded-xl bg-[#0d0d0d] border border-white/10 text-xs font-mono text-[#e5e5e5] select-all flex items-center justify-between gap-2">
-                      <div className="truncate">{paper.citations?.[selectedCitationStyle] || paper.title}</div>
+            {/* OPENALEX CITATION SEARCH */}
+            {activeTab === "citations" && (
+              <div className="mt-4 p-5 rounded-2xl bg-[#141414] border border-white/[0.06] space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-white/[0.06]">
+                  <span className="text-xs font-mono font-bold tracking-wider text-[#f2572b] uppercase">
+                    OpenAlex 250M Academic Publication Search
+                  </span>
+                  <div className="flex gap-1.5 bg-[#0f0f0f] p-1 rounded-xl border border-white/[0.06]">
+                    {(["apa7", "mla9", "ieee", "bibtex"] as const).map((style) => (
                       <button
-                        onClick={() => handleCopy(paper.citations?.[selectedCitationStyle] || paper.title)}
-                        className="text-[#a3a3a3] hover:text-[#f2572b] shrink-0"
-                        title="Copy Citation"
+                        key={style}
+                        onClick={() => setSelectedCitationStyle(style)}
+                        className={`px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
+                          selectedCitationStyle === style
+                            ? "bg-[#f2572b] text-white shadow-sm"
+                            : "text-[#a3a3a3] hover:text-white"
+                        }`}
                       >
-                        <Copy className="w-3.5 h-3.5" />
+                        {style}
                       </button>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Phantom / Hallucinated Citation Checker */}
-            <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.08]">
-                <div>
-                  <h3 className="font-serif text-base font-bold text-white">
-                    Phantom &amp; Hallucinated Citation Audit
-                  </h3>
-                  <p className="text-xs text-[#a3a3a3]">
-                    Cross-checks in-text citations against the bibliography and queries Crossref to uncover fabricated LLM citations.
-                  </p>
                 </div>
-                <button
-                  onClick={() => handleRunCitationAudit(inputText)}
-                  disabled={loading}
-                  className="h-8 px-3 rounded-lg bg-[#262626] border border-[#f2572b]/60 text-xs font-bold text-white hover:bg-[#382419] transition-all flex items-center gap-1.5"
-                >
-                  {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                  <span>Audit Citations</span>
-                </button>
-              </div>
 
-              <textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                rows={6}
-                className="w-full p-4 rounded-xl bg-[#141414] border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-[#f2572b] transition-all placeholder:text-[#737373]"
-                placeholder="Paste document with in-text citations and reference list..."
-              />
-
-              {citationAudit && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-xs font-mono text-[#a3a3a3]">
-                    <span>In-text Citations: {citationAudit.in_text_citation_count}</span>
-                    <span>Bibliography Entries: {citationAudit.bibliography_count}</span>
-                    <span className="text-amber-400">
-                      Orphaned: {citationAudit.orphaned_citations?.length || 0}
-                    </span>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a3a3a3]" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSearchSources()}
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#171717] border border-white/[0.06] text-xs text-white placeholder:text-[#737373] focus:outline-none focus:border-[#f2572b] transition-all"
+                      placeholder="Search 250M+ papers by title, author, or DOI..."
+                    />
                   </div>
+                  <button
+                    onClick={handleSearchSources}
+                    disabled={searching}
+                    className="h-10 px-4 rounded-xl btn-juicy text-white text-xs font-bold transition-all flex items-center gap-1.5"
+                  >
+                    {searching ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                    <span>Search</span>
+                  </button>
+                </div>
 
-                  <div className="space-y-2">
-                    {citationAudit.references_verified?.map((ref: any, idx: number) => {
-                      const isReal = ref.verification?.status === "VERIFIED_AUTHENTIC";
-                      const isPhantom = ref.verification?.status === "HALLUCINATED_PHANTOM";
+                {searchResults.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1">
+                    {searchResults.map((paper: any, idx: number) => (
+                      <div key={idx} className="p-3.5 rounded-xl bg-[#171717] border border-white/[0.06] space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="text-xs font-serif font-bold text-white line-clamp-2">{paper.title}</h4>
+                          {paper.doi && (
+                            <a href={`https://doi.org/${paper.doi.replace('https://doi.org/','')}`} target="_blank" rel="noreferrer" className="text-[#f2572b] hover:text-white shrink-0">
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-[#a3a3a3] truncate">{paper.authors?.join(", ") || "Unknown Authors"} • {paper.year}</div>
+                        <div className="p-2 rounded-lg bg-[#0d0d0d] border border-white/[0.06] text-[11px] font-mono text-[#e5e5e5] select-all flex items-center justify-between gap-2">
+                          <div className="truncate">{paper.citations?.[selectedCitationStyle] || paper.title}</div>
+                          <button onClick={() => handleCopy(paper.citations?.[selectedCitationStyle] || paper.title)} className="text-[#a3a3a3] hover:text-[#f2572b]">
+                            <Copy className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
+          </div>
+
+          {/* BENTO SIDEBAR: Configuration, Metrics & Workflow Bridge (4 cols) */}
+          <div className="lg:col-span-4 space-y-5">
+            {activeTab === "rewrite" && (
+              <>
+                {/* Tile 1: Register Selector */}
+                <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl">
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#f2572b]">
+                    <PenTool className="w-4 h-4" />
+                    <span>REWRITE REGISTER &amp; CADENCE</span>
+                  </div>
+                  <div className="space-y-1.5 max-h-[360px] overflow-y-auto pr-1">
+                    {REWRITE_MODES.map((mode) => {
+                      const isSel = rewriteMode === mode.id;
                       return (
-                        <div
-                          key={idx}
-                          className={`p-3.5 rounded-xl border transition-all ${
-                            isReal
-                              ? "bg-emerald-950/20 border-emerald-800/40"
-                              : isPhantom
-                              ? "bg-rose-950/30 border-rose-800/60"
-                              : "bg-[#141414] border-white/10"
+                        <button
+                          key={mode.id}
+                          onClick={() => {
+                            setRewriteMode(mode.id);
+                            if (inputText.trim()) handleRunRewrite(mode.id, inputText);
+                          }}
+                          className={`w-full p-2.5 rounded-xl text-left border transition-all ${
+                            isSel
+                              ? "bg-[#f2572b]/15 border-[#f2572b]/50 text-white shadow-sm"
+                              : "bg-[#141414]/60 border-white/[0.04] hover:border-white/10 text-[#a3a3a3] hover:text-white"
                           }`}
                         >
-                          <div className="flex items-center justify-between gap-2 text-xs">
-                            <span className="font-mono font-bold text-white">{ref.id}</span>
-                            <span
-                              className={`px-2 py-0.5 rounded-full font-mono text-[10px] uppercase font-bold ${
-                                isReal
-                                  ? "bg-emerald-950 text-emerald-300 border border-emerald-700/50"
-                                  : isPhantom
-                                  ? "bg-rose-950 text-rose-300 border border-rose-700/50"
-                                  : "bg-amber-950 text-amber-300 border border-amber-700/50"
-                              }`}
-                            >
-                              {ref.verification?.status?.replace("_", " ")}
-                            </span>
-                          </div>
-                          <p className="text-xs text-[#e5e5e5] mt-1.5 font-sans">{ref.text}</p>
-                          <div className="text-[11px] text-[#a3a3a3] mt-1">
-                            {ref.verification?.verdict}
-                          </div>
-                        </div>
+                          <div className="text-xs font-bold leading-tight">{mode.name}</div>
+                          <div className="text-[11px] text-[#737373] line-clamp-1 mt-0.5">{mode.desc}</div>
+                        </button>
                       );
                     })}
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        )}
 
-        {/* ================= TAB 4: FORENSICS & ANTI-BYPASS ================= */}
-        {activeTab === "forensics" && (
-          <div className="space-y-6">
-            <div className="glass-card rounded-3xl p-5 sm:p-6 border border-white/[0.08] bg-[#1a1a1a]/90 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="pb-3 border-b border-white/[0.08]">
-                <h3 className="font-serif text-base font-bold text-white">
-                  Document Forensics &amp; Adversarial Evasion Auditor
-                </h3>
-                <p className="text-xs text-[#a3a3a3]">
-                  Detects student evasion tricks: Zero-width space injections (\u200B), Cyrillic/Greek homoglyph substitutions, and token-breaking characters.
-                </p>
-              </div>
+                {/* Tile 2: Workflow Bridge to Originality Studio */}
+                <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl">
+                  <div className="text-xs font-mono text-[#a3a3a3] uppercase tracking-wider">
+                    Next Workflow Step
+                  </div>
+                  <p className="text-xs text-[#a3a3a3] leading-relaxed">
+                    Once you have humanized or paraphrased your manuscript, scan it for institutional plagiarism &amp; AI attribution.
+                  </p>
+                  <Link
+                    href="/dashboard"
+                    className="w-full h-10 rounded-xl btn-juicy text-white text-xs font-bold transition-all shadow-sm shadow-[#f2572b]/25 flex items-center justify-center gap-2 hover:brightness-110"
+                  >
+                    <span>Scan in Originality Studio</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-white" />
+                  </Link>
+                </div>
+              </>
+            )}
 
-              <textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                rows={6}
-                className="w-full p-4 rounded-xl bg-[#141414] border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-[#f2572b] transition-all placeholder:text-[#737373]"
-                placeholder="Paste document to inspect for adversarial unicode evasion tricks..."
-              />
-
-              <div className="flex justify-end">
-                <button
-                  onClick={() => handleRunForensics(inputText)}
-                  disabled={loading}
-                  className="h-10 px-5 rounded-xl btn-juicy text-white text-xs font-bold shadow-sm shadow-[#f2572b]/25 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 border border-transparent"
-                >
-                  {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
-                  <span>Audit Adversarial Manipulation</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Forensics Report View */}
-            {forensicsReport && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                {/* Score & Summary Card */}
-                <div className="lg:col-span-5 p-5 sm:p-6 rounded-3xl glass-card bg-[#1a1a1a]/90 border border-white/[0.08] space-y-4 backdrop-blur-xl shadow-2xl">
+            {activeTab === "grammar" && (
+              <>
+                {/* Tile 1: Readability Scorecard */}
+                <div className="glass-card rounded-3xl p-6 space-y-4 shadow-xl">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
-                      Evasion Threat Status
+                    <span className="text-xs font-mono text-[#f2572b] uppercase tracking-wider font-semibold">
+                      Readability Scorecard
                     </span>
-                    <span
-                      className={`px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase ${
-                        forensicsReport.threat_level === "CLEAN"
-                          ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
-                          : forensicsReport.threat_level === "SUSPICIOUS"
-                          ? "bg-amber-950 text-amber-300 border border-amber-800"
-                          : "bg-rose-950 text-rose-300 border border-rose-800"
-                      }`}
-                    >
-                      {forensicsReport.threat_level.replace("_", " ")}
-                    </span>
+                    {grammarReport && (
+                      <span className="text-xs font-bold text-white bg-[#141414] px-2.5 py-1 rounded-full border border-white/[0.06]">
+                        Score: <span className="text-[#f2572b]">{grammarReport.clarity_score}/100</span>
+                      </span>
+                    )}
                   </div>
 
-                  <div className="text-4xl font-serif font-bold text-white">
-                    {forensicsReport.evasion_score}
-                    <span className="text-sm font-sans text-[#a3a3a3] font-normal"> / 100 Threat Index</span>
-                  </div>
-
-                  <p className="text-xs text-[#a3a3a3] leading-relaxed">{forensicsReport.summary}</p>
-
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10">
-                      <div className="text-[11px] text-[#a3a3a3]">Zero-Width Injections</div>
-                      <div className="text-xl font-bold font-mono text-white mt-1">
-                        {forensicsReport.zero_width_count}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div className="p-3 rounded-2xl bg-[#141414] border border-white/[0.06]">
+                      <div className="text-[11px] text-[#a3a3a3]">Reading Ease</div>
+                      <div className="text-lg font-bold font-serif text-white mt-0.5">
+                        {grammarReport?.metrics?.flesch_reading_ease || "—"}
                       </div>
+                      <div className="text-[10px] text-[#f2572b]">{grammarReport?.metrics?.reading_level || "Ready"}</div>
                     </div>
-                    <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10">
-                      <div className="text-[11px] text-[#a3a3a3]">Homoglyph Swaps</div>
-                      <div className="text-xl font-bold font-mono text-white mt-1">
-                        {forensicsReport.homoglyph_count}
+
+                    <div className="p-3 rounded-2xl bg-[#141414] border border-white/[0.06]">
+                      <div className="text-[11px] text-[#a3a3a3]">Grade Level</div>
+                      <div className="text-lg font-bold font-serif text-white mt-0.5">
+                        {grammarReport?.metrics?.flesch_kincaid_grade ? `Grade ${grammarReport.metrics.flesch_kincaid_grade}` : "—"}
                       </div>
+                      <div className="text-[10px] text-[#a3a3a3]">FKGL Index</div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-[#141414] border border-white/[0.06]">
+                      <div className="text-[11px] text-[#a3a3a3]">Complex Words</div>
+                      <div className="text-lg font-bold font-serif text-white mt-0.5">
+                        {grammarReport?.metrics?.complex_word_count ?? "—"}
+                      </div>
+                      <div className="text-[10px] text-[#a3a3a3]">Vocabulary</div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-[#141414] border border-white/[0.06]">
+                      <div className="text-[11px] text-[#a3a3a3]">Reading Time</div>
+                      <div className="text-lg font-bold font-serif text-white mt-0.5">
+                        {grammarReport?.metrics?.reading_time_seconds ? `${grammarReport.metrics.reading_time_seconds}s` : "—"}
+                      </div>
+                      <div className="text-[10px] text-[#a3a3a3]">Estimated</div>
                     </div>
                   </div>
-
-                  {/* Sanitized Text Action */}
-                  {forensicsReport.is_adversarial && (
-                    <div className="pt-2">
-                      <button
-                        onClick={() => {
-                          setInputText(forensicsReport.sanitized_text);
-                          handleCopy(forensicsReport.sanitized_text);
-                        }}
-                        className="w-full h-8 px-3 rounded-lg bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/60 text-xs text-white font-semibold transition-all flex items-center justify-center gap-1.5"
-                      >
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Replace With Clean Sanitized Text</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
 
-                {/* Anomalies Inspector */}
-                <div className="lg:col-span-7 p-5 sm:p-6 rounded-3xl glass-card bg-[#1a1a1a]/90 border border-white/[0.08] space-y-3 backdrop-blur-xl shadow-2xl">
-                  <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase block pb-2 border-b border-white/[0.08]">
-                    Detected Forensic Anomalies ({forensicsReport.anomalies?.length || 0})
-                  </span>
+                {/* Tile 2: Linguistic Issues */}
+                <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                    <span className="text-xs font-mono text-[#f2572b] uppercase tracking-wider font-semibold">
+                      Detected Issues ({grammarReport?.issues?.length || 0})
+                    </span>
+                  </div>
 
-                  <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
-                    {forensicsReport.anomalies?.length === 0 ? (
-                      <div className="py-12 text-center text-[#a3a3a3] text-xs">
-                        <CheckCircle2 className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-                        Clean encoding: no hidden characters or foreign homoglyphs.
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                    {grammarReport?.issues?.length === 0 ? (
+                      <div className="py-8 text-center text-xs text-[#a3a3a3]">
+                        <CheckCircle2 className="w-6 h-6 text-emerald-400 mx-auto mb-1.5" />
+                        Clean text! No grammar issues found.
                       </div>
                     ) : (
-                      forensicsReport.anomalies?.map((ano: any, idx: number) => (
-                        <div
-                          key={idx}
-                          className="p-3.5 rounded-xl bg-[#141414] border border-white/10 text-xs space-y-1"
-                        >
-                          <div className="flex items-center justify-between font-mono">
-                            <span className="text-[#f2572b] font-bold">{ano.codepoint}</span>
-                            <span className="text-[#737373]">{ano.char_name}</span>
+                      grammarReport?.issues?.map((issue: any) => (
+                        <div key={issue.id} className="p-3 rounded-xl bg-[#141414] border border-white/[0.06] text-xs space-y-1.5">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="text-rose-400 line-through">{issue.original}</span>
+                            <ArrowRight className="w-3 h-3 text-[#a3a3a3]" />
+                            <span className="text-emerald-400 font-bold">{issue.replacement}</span>
                           </div>
-                          <div className="text-white font-mono text-[11px] bg-[#080402] px-2.5 py-1 rounded-lg">
-                            Context: &ldquo;{ano.context}&rdquo;
+                          <p className="text-[11px] text-[#a3a3a3]">{issue.explanation}</p>
+                          <div className="flex justify-end">
+                            <button
+                              onClick={() => applyGrammarFix(issue)}
+                              className="h-6 px-2.5 rounded-lg bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/50 text-[11px] text-white font-semibold transition-all"
+                            >
+                              Apply
+                            </button>
                           </div>
-                          <p className="text-[#a3a3a3] text-[11px]">{ano.description}</p>
                         </div>
                       ))
                     )}
                   </div>
                 </div>
-              </div>
+              </>
             )}
-          </div>
-        )}
 
+            {activeTab === "citations" && (
+              <>
+                <div className="glass-card rounded-3xl p-6 space-y-4 shadow-xl">
+                  <div className="text-xs font-mono text-[#f2572b] uppercase tracking-wider font-semibold">
+                    Phantom Citation Verification
+                  </div>
+                  <p className="text-xs text-[#a3a3a3] leading-relaxed">
+                    Paste references into the main editor to audit DOIs against Crossref and uncover fabricated citations.
+                  </p>
+                  {citationAudit && (
+                    <div className="space-y-2 pt-2 border-t border-white/[0.06]">
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-[#a3a3a3]">Verified:</span>
+                        <strong className="text-white">{citationAudit.references_verified?.length || 0}</strong>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-[#a3a3a3]">Orphaned:</span>
+                        <strong className="text-amber-400">{citationAudit.orphaned_citations?.length || 0}</strong>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
+            {activeTab === "forensics" && (
+              <>
+                <div className="glass-card rounded-3xl p-6 space-y-4 shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-[#f2572b] uppercase tracking-wider font-semibold">
+                      Evasion Threat Status
+                    </span>
+                    {forensicsReport && (
+                      <span className="text-xs font-bold text-white bg-[#141414] px-2.5 py-1 rounded-full border border-white/[0.06]">
+                        {forensicsReport.threat_level}
+                      </span>
+                    )}
+                  </div>
+
+                  {forensicsReport ? (
+                    <div className="space-y-3">
+                      <div className="text-3xl font-serif font-bold text-white">
+                        {forensicsReport.evasion_score}
+                        <span className="text-xs font-sans text-[#a3a3a3] font-normal"> / 100 Threat</span>
+                      </div>
+                      <p className="text-xs text-[#a3a3a3]">{forensicsReport.summary}</p>
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <div className="p-3 rounded-xl bg-[#141414] border border-white/[0.06]">
+                          <div className="text-[11px] text-[#a3a3a3]">Zero-Width</div>
+                          <div className="text-base font-bold text-white mt-0.5">{forensicsReport.zero_width_count}</div>
+                        </div>
+                        <div className="p-3 rounded-xl bg-[#141414] border border-white/[0.06]">
+                          <div className="text-[11px] text-[#a3a3a3]">Homoglyphs</div>
+                          <div className="text-base font-bold text-white mt-0.5">{forensicsReport.homoglyph_count}</div>
+                        </div>
+                      </div>
+                      {forensicsReport.is_adversarial && (
+                        <button
+                          onClick={() => {
+                            setInputText(forensicsReport.sanitized_text);
+                            handleCopy(forensicsReport.sanitized_text);
+                          }}
+                          className="w-full h-8 px-3 rounded-lg bg-[#262626] hover:bg-[#382419] border border-[#f2572b]/60 text-xs text-white font-semibold transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Replace With Clean Sanitized Text</span>
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[#a3a3a3]">Run forensic audit to detect invisible unicode character injections.</p>
+                  )}
+                </div>
+              </>
+            )}
+
+          </div>
+
+        </div>
       </div>
     </div>
   );
 }
-

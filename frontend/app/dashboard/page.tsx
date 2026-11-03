@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   FileText, Code2, Upload, ArrowRight, Loader2, 
-  LogOut, ShieldCheck, Database, Check, Clock, User 
+  LogOut, ShieldCheck, Database, Check, Clock, User,
+  PenTool, BookOpen, Sparkles
 } from "lucide-react";
 import JuicyLoader from "@/components/JuicyLoader";
 
@@ -135,8 +136,10 @@ export default function DashboardPage() {
 
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
-      {/* SMART BENTO GRID FOR WORKBENCH */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      {/* 95% WIDE WORKBENCH CONTAINER */}
+      <div className="w-full max-w-[96%] mx-auto space-y-4">
+        {/* SMART BENTO GRID FOR WORKBENCH */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         {/* BENTO TILE 1: Main Analysis Editor (8 cols) - Glassmorphism */}
         <div className="lg:col-span-8 glass-panel rounded-3xl overflow-hidden shadow-2xl space-y-4 p-6 sm:p-7">
@@ -374,28 +377,63 @@ export default function DashboardPage() {
 
 
 
-          {/* Bento Tile 4: Archive Shortcuts */}
-          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">
-            <span className="text-xs font-mono text-[#f2572b] block">QUICK NAVIGATION:</span>
+          {/* Bento Tile 4: Studio Workflow Shortcuts */}
+          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl">
+            <span className="text-xs font-mono text-[#f2572b] block uppercase tracking-wider font-semibold">
+              Platform Workflow Tools:
+            </span>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <Link
-                href="/repository"
-                className="p-3 bg-white/[0.03] backdrop-blur-md border border-white/[0.08] rounded-xl hover:border-[#f2572b] text-white flex flex-col gap-1 transition-colors"
+                href="/writing"
+                className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-[#f2572b]/50 text-white flex flex-col gap-1 transition-all"
+                title="Deep AI Humanizer, Paraphraser & Grammar Audit"
               >
-                <Database className="w-4 h-4 text-[#f2572b]" />
-                <span className="font-medium">Vault Archive</span>
+                <div className="flex items-center gap-1.5 text-[#f2572b]">
+                  <PenTool className="w-3.5 h-3.5" />
+                  <span className="font-semibold text-xs text-white">Writing Studio</span>
+                </div>
+                <span className="text-[10px] text-[#737373] line-clamp-1">AI Humanizer &amp; Fixes</span>
               </Link>
+
+              <Link
+                href="/research"
+                className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-[#f2572b]/50 text-white flex flex-col gap-1 transition-all"
+                title="9-Stage IEEE Paper Generator"
+              >
+                <div className="flex items-center gap-1.5 text-[#f2572b]">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span className="font-semibold text-xs text-white">Research Studio</span>
+                </div>
+                <span className="text-[10px] text-[#737373] line-clamp-1">IEEE Paper Builder</span>
+              </Link>
+
+              <Link
+                href="/repository"
+                className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-[#f2572b]/50 text-white flex flex-col gap-1 transition-all"
+              >
+                <div className="flex items-center gap-1.5 text-[#f2572b]">
+                  <Database className="w-3.5 h-3.5" />
+                  <span className="font-semibold text-xs text-white">Vault Archive</span>
+                </div>
+                <span className="text-[10px] text-[#737373] line-clamp-1">Institutional Index</span>
+              </Link>
+
               <Link
                 href="/history"
-                className="p-3 bg-white/[0.03] backdrop-blur-md border border-white/[0.08] rounded-xl hover:border-[#f2572b] text-white flex flex-col gap-1 transition-colors"
+                className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-[#f2572b]/50 text-white flex flex-col gap-1 transition-all"
               >
-                <Clock className="w-4 h-4 text-[#f2572b]" />
-                <span className="font-medium">Audit History</span>
+                <div className="flex items-center gap-1.5 text-[#f2572b]">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span className="font-semibold text-xs text-white">Audit History</span>
+                </div>
+                <span className="text-[10px] text-[#737373] line-clamp-1">Verification Dossiers</span>
               </Link>
             </div>
           </div>
 
         </div>
+
+      </div>
 
       </div>
 

@@ -121,8 +121,8 @@ export default function RepositoryPage() {
 
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#171717] text-white">
-      
-      {/* Vault Header & Actions */}
+      <div className="w-full max-w-[96%] mx-auto space-y-4">
+        {/* Vault Header & Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-3 shrink-0">
         <div>
           <h1 className="font-serif text-lg sm:text-xl font-bold text-white tracking-tight">
@@ -284,6 +284,7 @@ export default function RepositoryPage() {
         </div>
       )}
 
+      </div>
     </div>
   );
 }

@@ -48,56 +48,56 @@
    VERITAS LUXURY GLASSMORPHISM SYSTEM (Obsidian & Juicy Orange #171717 / #f2572b)
    ======================================================== */
 .glass-card {
-  background: rgba(23, 23, 23, 0.72);
+  background: rgba(23, 23, 23, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.4);
 }
 
 .glass-card-hover {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glass-card-hover:hover {
-  background: rgba(31, 31, 31, 0.85);
-  border-color: rgba(242, 87, 43, 0.55);
-  box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.6), 0 0 20px 0 rgba(242, 87, 43, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+  background: rgba(31, 31, 31, 0.9);
+  border-color: rgba(242, 87, 43, 0.4);
+  box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(242, 87, 43, 0.1);
   transform: translateY(-2px);
 }
 
 .glass-panel {
-  background: rgba(23, 23, 23, 0.82);
+  background: rgba(23, 23, 23, 0.9);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.5);
 }
 
 .glass-input {
-  background: rgba(23, 23, 23, 0.65);
+  background: rgba(18, 18, 18, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .glass-input:focus {
-  background: rgba(31, 31, 31, 0.9);
+  background: rgba(25, 25, 25, 0.95);
   border-color: #f2572b;
-  box-shadow: 0 0 15px rgba(242, 87, 43, 0.25);
+  box-shadow: 0 0 12px rgba(242, 87, 43, 0.2);
 }
 
 .glass-button-secondary {
-  background: rgba(31, 31, 31, 0.6);
+  background: rgba(28, 28, 28, 0.7);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.25s ease;
 }
 .glass-button-secondary:hover {
-  background: rgba(45, 45, 45, 0.8);
-  border-color: rgba(242, 87, 43, 0.7);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(242, 87, 43, 0.2);
+  background: rgba(40, 40, 40, 0.85);
+  border-color: rgba(242, 87, 43, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 16px rgba(242, 87, 43, 0.15);
 }
 
 .glass-pill {
