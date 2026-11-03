@@ -2,16 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRightIcon, SparklesIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 
 export default function LuxuryRibbonHero() {
-  // Auto-Text Typewriter phrases for hero headline (strictly locked to 2 lines without layout shift)
+  // Auto-Text Typewriter phrases representing all tools in the platform
   const phrases = [
-    "protect academic integrity.",
-    "detect hidden code clones.",
-    "verify authentic human work.",
-    "surface uncredited matches.",
+    "draft IEEE research papers.",
+    "convert college projects to papers.",
+    "detect uncredited matches.",
+    "conduct deep literature review.",
+    "spot hidden code clones.",
+    "chat with scientific PDFs.",
   ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
@@ -211,10 +213,10 @@ export default function LuxuryRibbonHero() {
           transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="text-base sm:text-lg lg:text-xl text-[#F5EFE3]/80 leading-relaxed max-w-3xl mx-auto font-sans font-normal"
         >
-          VERITAS audits research manuscripts, student essays, and software source code for uncredited matches, uncited sources, and AI writing patterns—giving educators, researchers, and students complete confidence in their work.
+          VERITAS is the autonomous academic workspace: convert college projects into IEEE research papers, synthesize literature matrices, audit uncredited matches and code clones, humanize drafts, and chat with scientific PDFs with 100% confidential local execution.
         </motion.p>
 
-        {/* Call to Actions (Studio & Sign In): Balanced, luxury pill buttons */}
+        {/* Call to Actions (Studio & Sign In): Round pill buttons with white text */}
         <motion.div 
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -223,20 +225,20 @@ export default function LuxuryRibbonHero() {
         >
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
             <Link
-              href="/dashboard"
-              className="px-8 sm:px-10 py-3.5 sm:py-4 rounded-full btn-3d-gold text-sm sm:text-base font-bold flex items-center gap-2.5 transition-all cursor-pointer"
+              href="/research"
+              className="px-8 sm:px-10 py-3.5 sm:py-4 rounded-full bg-[#f2572b] hover:brightness-110 border border-[#ff7247] text-white text-sm sm:text-base font-bold flex items-center gap-2.5 transition-all shadow-xl shadow-[#f2572b]/30 cursor-pointer"
             >
-              <span>Open Verification Studio</span>
-              <ArrowRight className="w-4 h-4 text-[#120B07]" />
+              <span className="text-white">Explore Research Studio</span>
+              <ArrowRightIcon className="w-4 h-4 text-white" />
             </Link>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
             <Link
-              href="/login"
-              className="px-8 sm:px-9 py-3.5 sm:py-4 rounded-full btn-3d-signin-gold text-sm sm:text-base font-semibold flex items-center gap-2 cursor-pointer"
+              href="/dashboard"
+              className="px-8 sm:px-9 py-3.5 sm:py-4 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/20 text-white text-sm sm:text-base font-semibold flex items-center gap-2 transition-all shadow-lg cursor-pointer"
             >
-              <span>Sign In to Account</span>
+              <span className="text-white">Originality Studio</span>
             </Link>
           </motion.div>
         </motion.div>

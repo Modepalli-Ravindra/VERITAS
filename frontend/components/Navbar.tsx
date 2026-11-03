@@ -4,10 +4,22 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  FileSearch, Database, Clock, Users, GraduationCap, Layers, ShieldCheck, HelpCircle,
-  Menu, X, LogOut, ArrowRight, PenTool, Sparkles, BookOpen, MessageSquare 
-} from "lucide-react";
+import {
+  ShieldCheckIcon,
+  Squares2X2Icon,
+  AcademicCapIcon,
+  QuestionMarkCircleIcon,
+  BookOpenIcon,
+  ChatBubbleLeftRightIcon,
+  DocumentMagnifyingGlassIcon,
+  PencilSquareIcon,
+  CircleStackIcon,
+  ClockIcon,
+  ArrowRightIcon,
+  ArrowLeftOnRectangleIcon,
+  Bars3Icon,
+  XMarkIcon
+} from "@heroicons/react/24/solid";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -35,20 +47,20 @@ export default function Navbar() {
 
   // Internal application tools (shown inside the workspace)
   const appNavItems = [
-    { name: "Research Studio", href: "/research", icon: BookOpen },
-    { name: "PDF Assistant", href: "/chat-pdf", icon: MessageSquare },
-    { name: "Originality Studio", href: "/dashboard", icon: FileSearch },
-    { name: "Writing Studio", href: "/writing", icon: PenTool },
-    { name: "Submissions Archive", href: "/repository", icon: Database },
-    { name: "Audit Ledger", href: "/history", icon: Clock },
+    { name: "Research Studio", href: "/research", icon: BookOpenIcon },
+    { name: "PDF Assistant", href: "/chat-pdf", icon: ChatBubbleLeftRightIcon },
+    { name: "Originality Studio", href: "/dashboard", icon: DocumentMagnifyingGlassIcon },
+    { name: "Writing Studio", href: "/writing", icon: PencilSquareIcon },
+    { name: "Submissions Archive", href: "/repository", icon: CircleStackIcon },
+    { name: "Audit Ledger", href: "/history", icon: ClockIcon },
   ];
 
   // Public Landing Page navigation (using genuine academic integrity & workflow icons from page sections)
   const landingNavItems = [
-    { name: "Capabilities", href: "/#capabilities", icon: ShieldCheck },
-    { name: "Workflow", href: "/#workflow", icon: Layers },
-    { name: "Audience", href: "/#audience", icon: GraduationCap },
-    { name: "Q&A", href: "/#qa", icon: HelpCircle },
+    { name: "Capabilities", href: "/#capabilities", icon: ShieldCheckIcon },
+    { name: "Workflow", href: "/#workflow", icon: Squares2X2Icon },
+    { name: "Audience", href: "/#audience", icon: AcademicCapIcon },
+    { name: "Q&A", href: "/#qa", icon: QuestionMarkCircleIcon },
   ];
 
   const isLanding = pathname === "/";
@@ -62,7 +74,7 @@ export default function Navbar() {
       className="fixed top-3 left-0 right-0 z-50 w-full flex justify-center px-2 sm:px-4 pointer-events-none transition-all"
     >
       {/* Floating 95% width container with luxury glassmorphism, 1px crisp border and 61px height */}
-      <div className="pointer-events-auto relative w-[95%] max-w-[1440px] rounded-2xl bg-[#171717]/80 backdrop-blur-2xl border border-white/[0.12] shadow-2xl shadow-black/80 hover:border-[#f2572b]/50 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
+      <div className="pointer-events-auto relative w-[95%] max-w-[1440px] rounded-2xl bg-[#171717]/85 backdrop-blur-2xl border border-white/[0.12] shadow-2xl shadow-black/80 hover:border-[#f2572b]/50 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
         <nav className="relative w-full h-[61px] px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all">
         
         {/* Left: Brand Logo + Wordmark */}
@@ -88,7 +100,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Navigation Links (Orange color with border buttons) */}
+        {/* Center: Round Navigation Buttons in #f2572b with White Text */}
         <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 gap-2 sm:gap-2.5 lg:gap-3">
           {activeNavList.map((item) => {
             const Icon = item.icon;
@@ -99,19 +111,19 @@ export default function Navbar() {
                 href={item.href}
                 className={`h-[36px] flex items-center gap-1.5 px-3.5 rounded-full text-xs lg:text-sm font-semibold tracking-wide transition-all border ${
                   isActive
-                    ? "bg-[#f2572b] text-white border-[#f2572b] shadow-md shadow-[#f2572b]/30"
-                    : "bg-[#f2572b]/10 text-[#f2572b] border-[#f2572b]/40 hover:bg-[#f2572b] hover:text-white hover:border-[#f2572b] hover:shadow-md hover:shadow-[#f2572b]/30"
+                    ? "bg-[#f2572b] text-white border-[#ff7247] shadow-md shadow-[#f2572b]/35 brightness-110"
+                    : "bg-[#f2572b] text-white border border-[#ff7247]/70 hover:brightness-110 hover:shadow-md hover:shadow-[#f2572b]/30 shadow-sm shadow-[#f2572b]/20"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
-                <span>{item.name}</span>
+                <Icon className="w-4 h-4 shrink-0 text-white" />
+                <span className="text-white">{item.name}</span>
               </Link>
             );
           })}
         </div>
 
-        {/* Right: Actions & User Session */}
-        <div className="hidden sm:flex items-center gap-4">
+        {/* Right: Actions & User Session (Buttons with White Text & f2572b Round Action) */}
+        <div className="hidden sm:flex items-center gap-3">
           {currentUser ? (
             <div className="flex items-center gap-3 pl-3 border-l border-white/10">
               <div className="text-right">
@@ -129,24 +141,24 @@ export default function Navbar() {
                 title="Sign Out"
                 className="h-[38px] px-3 text-[#a3a3a3] hover:text-[#f2572b] hover:bg-white/[0.05] rounded-xl border border-transparent hover:border-white/10 flex items-center justify-center transition-colors text-sm"
               >
-                <LogOut className="w-4 h-4" />
+                <ArrowLeftOnRectangleIcon className="w-5 h-5 text-[#a3a3a3] hover:text-[#f2572b]" />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="h-[38px] px-5 rounded-full bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white text-xs font-semibold flex items-center justify-center transition-all"
+                className="h-[38px] px-5 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white text-xs font-semibold flex items-center justify-center transition-all shadow-sm"
               >
-                Sign In
+                <span className="text-white">Sign In</span>
               </Link>
               
               <Link
                 href="/signup"
-                className="h-[38px] px-5 rounded-full btn-juicy text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-[#f2572b]/25"
+                className="h-[38px] px-5 rounded-full bg-[#f2572b] hover:brightness-110 border border-[#ff7247] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-[#f2572b]/30"
               >
-                <span>Register</span>
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
+                <span className="text-white">Register</span>
+                <ArrowRightIcon className="w-4 h-4 text-white" />
               </Link>
             </div>
           )}
@@ -156,73 +168,52 @@ export default function Navbar() {
         <div className="flex sm:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 text-[#a3a3a3] hover:text-white rounded-lg hover:bg-white/[0.06]"
+            className="p-1.5 text-white hover:text-[#f2572b] rounded-lg hover:bg-white/[0.06]"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <XMarkIcon className="w-5 h-5 text-white" /> : <Bars3Icon className="w-5 h-5 text-white" />}
           </button>
         </div>
 
         </nav>
 
-        {/* Mobile Drawer with Frosted Glassmorphism */}
+        {/* Mobile Dropdown Menu with white text & f2572b styling */}
         {mobileMenuOpen && (
-          <div className="sm:hidden w-full px-4 py-3 border-t border-white/[0.08] bg-[#171717]/95 backdrop-blur-2xl rounded-b-2xl space-y-2">
-            <div className="space-y-1.5 pb-2 border-b border-white/[0.08]">
+          <div className="md:hidden p-4 pt-2 border-t border-white/10 bg-[#171717] rounded-b-2xl space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               {activeNavList.map((item) => {
                 const Icon = item.icon;
-                const isActive = !isLanding && pathname === item.href;
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all border ${
-                      isActive
-                        ? "bg-[#f2572b] text-white border-[#f2572b] shadow-sm"
-                        : "bg-[#f2572b]/10 text-[#f2572b] border-[#f2572b]/30 hover:bg-[#f2572b] hover:text-white hover:border-[#f2572b]"
-                    }`}
+                    className="p-2.5 rounded-full bg-[#f2572b] text-white flex items-center justify-center gap-2 text-xs font-semibold shadow-sm border border-[#ff7247]/60"
                   >
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span>{item.name}</span>
+                    <Icon className="w-4 h-4 text-white" />
+                    <span className="text-white">{item.name}</span>
                   </Link>
                 );
               })}
             </div>
-
-            <div className="pt-1 flex items-center justify-between">
-              {currentUser ? (
-                <div className="w-full flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-medium text-white">{currentUser.name}</div>
-                    <div className="text-xs text-[#a3a3a3] font-mono">{currentUser.email}</div>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="px-3 py-1.5 text-xs text-rose-300 hover:bg-rose-950/40 rounded-md border border-rose-900/60"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              ) : (
-                <div className="w-full flex items-center gap-2">
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex-1 py-2 text-center rounded-lg text-sm font-medium bg-white/[0.05] border border-white/10 text-white"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/signup"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex-1 py-2 text-center rounded-lg text-sm font-semibold btn-juicy"
-                  >
-                    Register
-                  </Link>
-                </div>
-              )}
-            </div>
+            {!currentUser && (
+              <div className="flex gap-2 pt-2 border-t border-white/10">
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-2 text-center rounded-full bg-white/[0.08] text-white text-xs font-semibold border border-white/15"
+                >
+                  <span className="text-white">Sign In</span>
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-2 text-center rounded-full bg-[#f2572b] text-white text-xs font-bold border border-[#ff7247]"
+                >
+                  <span className="text-white">Register</span>
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>

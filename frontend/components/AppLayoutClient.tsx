@@ -5,28 +5,26 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  PanelLeft,
-  BookOpen,
-  MessageSquare,
-  FileSearch,
-  PenTool,
-  Database,
-  Clock,
-  LogOut,
-  ShieldCheck,
-  ChevronRight,
-  Menu,
-  X
-} from "lucide-react";
+  Bars3BottomLeftIcon,
+  BookOpenIcon,
+  ChatBubbleLeftRightIcon,
+  DocumentMagnifyingGlassIcon,
+  PencilSquareIcon,
+  CircleStackIcon,
+  ClockIcon,
+  ArrowLeftOnRectangleIcon,
+  ShieldCheckIcon,
+  ChevronRightIcon
+} from "@heroicons/react/24/solid";
 import Navbar from "@/components/Navbar";
 
 const APP_NAV_ITEMS = [
-  { name: "Research Studio", href: "/research", icon: BookOpen, desc: "IEEE Papers & Literature" },
-  { name: "PDF Assistant", href: "/chat-pdf", icon: MessageSquare, desc: "SciSpace Multi-Paper RAG" },
-  { name: "Originality Studio", href: "/dashboard", icon: FileSearch, desc: "Plagiarism & AI Detection" },
-  { name: "Writing Studio", href: "/writing", icon: PenTool, desc: "Humanizer & Paraphraser" },
-  { name: "Submissions Archive", href: "/repository", icon: Database, desc: "Indexed Manuscripts" },
-  { name: "Audit Ledger", href: "/history", icon: Clock, desc: "Verification Log" },
+  { name: "Research Studio", href: "/research", icon: BookOpenIcon, desc: "IEEE Papers & Literature" },
+  { name: "PDF Assistant", href: "/chat-pdf", icon: ChatBubbleLeftRightIcon, desc: "SciSpace Multi-Paper RAG" },
+  { name: "Originality Studio", href: "/dashboard", icon: DocumentMagnifyingGlassIcon, desc: "Plagiarism & AI Detection" },
+  { name: "Writing Studio", href: "/writing", icon: PencilSquareIcon, desc: "Humanizer & Paraphraser" },
+  { name: "Submissions Archive", href: "/repository", icon: CircleStackIcon, desc: "Indexed Manuscripts" },
+  { name: "Audit Ledger", href: "/history", icon: ClockIcon, desc: "Verification Log" },
 ];
 
 export default function AppLayoutClient({
@@ -125,7 +123,7 @@ export default function AppLayoutClient({
             title={sidebarOpen ? "Collapse Navigation Sidebar" : "Expand Navigation Sidebar"}
             aria-label="Toggle Navigation Sidebar"
           >
-            <PanelLeft className="w-4 h-4 text-[#e5e5e5]" />
+            <Bars3BottomLeftIcon className="w-5 h-5 text-[#e5e5e5]" />
           </button>
 
           {/* Logo & Name */}
@@ -172,7 +170,7 @@ export default function AppLayoutClient({
                 title="Sign Out"
                 className="p-2 text-[#a3a3a3] hover:text-[#f2572b] hover:bg-white/[0.05] rounded-xl border border-white/[0.08] transition-all text-xs"
               >
-                <LogOut className="w-4 h-4" />
+                <ArrowLeftOnRectangleIcon className="w-5 h-5" />
               </button>
             </div>
           ) : null}
