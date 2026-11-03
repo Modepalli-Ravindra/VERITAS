@@ -25,7 +25,8 @@ from app.engines.research_studio_engine import (
     IEEE_SECTION_BLUEPRINTS,
     IEEE_ACADEMIC_RULES_FAQ,
     generate_autonomous_ieee_paper,
-    analyze_existing_project_to_ieee_paper
+    analyze_existing_project_to_ieee_paper,
+    fetch_and_analyze_github_repo
 )
 from app.engines.pdf_chat_engine import (
     extract_and_index_pdf,
@@ -80,6 +81,9 @@ class DraftSectionRequest(BaseModel):
 
 class AutonomousPaperRequest(BaseModel):
     instructions: Optional[str] = Field(None, description="Optional focus instructions for autonomous paper generation")
+
+class AnalyzeGitHubRepoRequest(BaseModel):
+    github_url: str = Field(..., min_length=5, description="Public GitHub repository URL (e.g. https://github.com/owner/repo)")
 
 class AnalyzeProjectRequest(BaseModel):
     title: str = Field(..., min_length=3, description="Paper / Project Title")
@@ -306,6 +310,19 @@ def get_academic_rules_faq():
     academic liberty (college project vs research framework), and proper screenshot placement.
     """
     return {"success": True, "faq": IEEE_ACADEMIC_RULES_FAQ}
+
+
+@router.post("/projects/inspect-github-repo")
+def inspect_github_repo_endpoint(payload: AnalyzeGitHubRepoRequest):
+    """
+    Inspects a public GitHub repository, extracts README and language stack,
+    and returns synthesized research title, domain, implemented modules, and proposed extensions.
+    """
+    try:
+        data = fetch_and_analyze_github_repo(payload.github_url)
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.post("/projects/analyze-existing-project")

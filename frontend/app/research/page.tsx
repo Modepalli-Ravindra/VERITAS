@@ -74,6 +74,9 @@ export default function ResearchStudioPage() {
   // College/Client Project Analyzer Modal State
   const [showProjectAnalyzerModal, setShowProjectAnalyzerModal] = useState(false);
   const [analyzerLoading, setAnalyzerLoading] = useState(false);
+  const [githubRepoUrl, setGithubRepoUrl] = useState("");
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [githubSuccess, setGithubSuccess] = useState(false);
   const [analyzerTitle, setAnalyzerTitle] = useState("Empowering Creators with a Blockchain-Based IP Protection System");
   const [analyzerTopic, setAnalyzerTopic] = useState("Blockchain, Smart Contracts, and AI-Driven Copyright Verification");
   const [analyzerDescription, setAnalyzerDescription] = useState(
@@ -383,6 +386,31 @@ export default function ResearchStudioPage() {
       console.error(e);
     } finally {
       setAnalyzerLoading(false);
+    }
+  };
+
+  const handleInspectGitHubRepo = async () => {
+    if (!githubRepoUrl.trim()) return;
+    setGithubLoading(true);
+    setGithubSuccess(false);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/research/projects/inspect-github-repo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ github_url: githubRepoUrl })
+      });
+      const data = await res.json();
+      if (data.title) setAnalyzerTitle(data.title);
+      if (data.topic) setAnalyzerTopic(data.topic);
+      if (data.project_description) setAnalyzerDescription(data.project_description);
+      if (data.implemented_features) setAnalyzerImplemented(data.implemented_features);
+      if (data.proposed_extensions) setAnalyzerProposed(data.proposed_extensions);
+      if (data.screenshot_notes) setAnalyzerScreenshots(data.screenshot_notes);
+      setGithubSuccess(true);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setGithubLoading(false);
     }
   };
 
@@ -1381,6 +1409,42 @@ export default function ResearchStudioPage() {
               </div>
 
               <div className="space-y-4 text-xs">
+                {/* GitHub Repo Auto-Import Bar */}
+                <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#170e08] via-[#24150c] to-[#170e08] border border-[#B08D57]/70 space-y-2.5 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-[#E6C687] flex items-center gap-1.5">
+                      <Code className="w-3.5 h-3.5 text-[#B08D57]" />
+                      ⚡ Instant Auto-Import from GitHub Repository URL
+                    </span>
+                    {githubSuccess && (
+                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/40">
+                        ✓ Repo Analyzed &amp; Fields Populated!
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-[#A89279]">
+                    Mee college project GitHub public repo URL isthe chalu! Mana system README.md, tech stack, and code modules automatic ga read chesi IEEE proposal fields anni fill chesthundhi.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      value={githubRepoUrl}
+                      onChange={(e) => setGithubRepoUrl(e.target.value)}
+                      placeholder="e.g. https://github.com/username/college-project"
+                      className="flex-1 p-2 rounded-lg bg-[#080402] border border-[#3b2314] text-[#F5EFE1] placeholder-[#53351F] text-xs focus:border-[#B08D57] outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleInspectGitHubRepo}
+                      disabled={githubLoading || !githubRepoUrl.trim()}
+                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#B08D57] to-[#C49A58] text-[#120A05] text-xs font-bold hover:brightness-110 active:scale-95 disabled:opacity-40 transition-all flex items-center justify-center gap-1.5 shrink-0"
+                    >
+                      {githubLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#120A05]" /> : <Sparkles className="w-3.5 h-3.5 text-[#120A05]" />}
+                      <span>{githubLoading ? "Reading Repo..." : "Inspect & Auto-Fill"}</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Title & Domain */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>

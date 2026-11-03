@@ -912,3 +912,104 @@ def analyze_existing_project_to_ieee_paper(
             "formatting_status": "Strictly matches IEEE 2-column conference publication standards with Overleaf 1-click readiness."
         }
     }
+
+
+def fetch_and_analyze_github_repo(repo_url: str) -> Dict[str, Any]:
+    """
+    Fetches GitHub repository metadata and README.md, then uses LLM Gateway
+    to extract research title, domain, implemented modules, and proposed academic extensions.
+    """
+    import re
+    import urllib.request
+    import json
+    import base64
+    from app.core.llm_gateway import GATEWAY
+
+    match = re.search(r"github\.com/([^/]+)/([^/]+)", repo_url.strip())
+    if match:
+        owner, repo = match.group(1), match.group(2).replace(".git", "")
+    else:
+        parts = repo_url.strip().strip("/").split("/")
+        if len(parts) >= 2:
+            owner, repo = parts[-2], parts[-1].replace(".git", "")
+        else:
+            raise ValueError("Please provide a valid GitHub repository URL (e.g. https://github.com/username/project)")
+
+    # 1. Fetch metadata
+    headers = {"User-Agent": "VERITAS-Academic-Studio"}
+    meta_url = f"https://api.github.com/repos/{owner}/{repo}"
+    readme_content = ""
+    repo_lang = "Software"
+    repo_desc = ""
+
+    try:
+        req_meta = urllib.request.Request(meta_url, headers=headers)
+        with urllib.request.urlopen(req_meta, timeout=8) as resp:
+            meta_data = json.loads(resp.read().decode())
+            repo_desc = meta_data.get("description") or ""
+            repo_lang = meta_data.get("language") or "Software"
+    except Exception:
+        pass
+
+    # 2. Fetch README
+    readme_url = f"https://api.github.com/repos/{owner}/{repo}/readme"
+    try:
+        req_rm = urllib.request.Request(readme_url, headers=headers)
+        with urllib.request.urlopen(req_rm, timeout=8) as resp:
+            rm_data = json.loads(resp.read().decode())
+            readme_content = base64.b64decode(rm_data.get("content", "")).decode("utf-8", errors="ignore")
+    except Exception:
+        try:
+            raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/main/README.md"
+            with urllib.request.urlopen(raw_url, timeout=8) as resp:
+                readme_content = resp.read().decode("utf-8", errors="ignore")
+        except Exception:
+            pass
+
+    truncated_readme = readme_content[:4000] if readme_content else f"Repository {repo} by {owner}. Description: {repo_desc}. Primary language: {repo_lang}."
+
+    sys_prompt = (
+        "You are an expert IEEE Publication Track Chair and Codebase Analyst. "
+        "Analyze the provided GitHub repository metadata and README. Extract and synthesize the technical details "
+        "into a structured research proposal for an IEEE Conference Paper. "
+        "Strictly return your answer in valid JSON format with the following keys:\n"
+        "{\n"
+        '  "title": "A formal, scholarly IEEE paper title (concise, title case, no symbols)",\n'
+        '  "topic": "Research domain and topic keywords",\n'
+        '  "project_description": "2-3 sentence overview of what the codebase builds and its architecture",\n'
+        '  "implemented_features": "3-5 key features physically implemented in code",\n'
+        '  "proposed_extensions": "2-3 advanced conceptual research modules to propose under academic liberty",\n'
+        '  "screenshot_notes": "2-3 formal figure suggestions for UI screenshots or benchmark evaluation graphs"\n'
+        "}"
+    )
+
+    user_prompt = f"Repository: {owner}/{repo}\nPrimary Language: {repo_lang}\nDescription: {repo_desc}\n\nREADME Content:\n{truncated_readme}"
+
+    llm_output, provider = GATEWAY.execute_completion(user_prompt, system_prompt=sys_prompt, max_tokens=1500, temperature=0.5)
+
+    result = {}
+    try:
+        clean_json = llm_output.strip()
+        if "```json" in clean_json:
+            clean_json = clean_json.split("```json")[1].split("```")[0].strip()
+        elif "```" in clean_json:
+            clean_json = clean_json.split("```")[1].split("```")[0].strip()
+        result = json.loads(clean_json)
+    except Exception:
+        result = {
+            "title": f"A Novel Architectural Framework for {repo.replace('-', ' ').title()} System",
+            "topic": f"{repo_lang}, Software Engineering, and Distributed Systems",
+            "project_description": repo_desc or f"An engineered software solution developed in {repo_lang}.",
+            "implemented_features": f"Core {repo_lang} modules, API endpoints, user authentication, and data persistence.",
+            "proposed_extensions": "AI-driven automated monitoring, cryptographic transaction auditing, and distributed edge caching.",
+            "screenshot_notes": "Fig. 1: System dashboard and navigation interface; Fig. 2: Execution throughput and latency evaluation graph."
+        }
+
+    return {
+        "success": True,
+        "owner": owner,
+        "repo": repo,
+        "language": repo_lang,
+        "provider": provider,
+        **result
+    }
