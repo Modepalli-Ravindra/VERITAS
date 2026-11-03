@@ -54,8 +54,8 @@ export default function ResearchStudioPage() {
 
   // New Project Form Modal State
   const [showNewModal, setShowNewModal] = useState(false);
-  const [newTitle, setNewTitle] = useState("Quantum Transformer Calibration for Low-Latency Inference");
-  const [newTopic, setNewTopic] = useState("Transformer Attention, Burstiness Variance, and Adversarial Robustness");
+  const [newTitle, setNewTitle] = useState("");
+  const [newTopic, setNewTopic] = useState("");
 
   // Active Stage (1 to 9)
   const [currentStage, setCurrentStage] = useState(1);
@@ -78,20 +78,12 @@ export default function ResearchStudioPage() {
   const [githubRepoUrl, setGithubRepoUrl] = useState("");
   const [githubLoading, setGithubLoading] = useState(false);
   const [githubSuccess, setGithubSuccess] = useState(false);
-  const [analyzerTitle, setAnalyzerTitle] = useState("Empowering Creators with a Blockchain-Based IP Protection System");
-  const [analyzerTopic, setAnalyzerTopic] = useState("Blockchain, Smart Contracts, and AI-Driven Copyright Verification");
-  const [analyzerDescription, setAnalyzerDescription] = useState(
-    "A full-stack decentralized application built using React/Next.js for creator frontend, Python FastAPI backend, Solidity smart contracts deployed on Ethereum Sepolia testnet, and IPFS for decentralized media storage."
-  );
-  const [analyzerImplemented, setAnalyzerImplemented] = useState(
-    "MetaMask Web3 wallet authentication, SHA-3 file hashing, IPFS media pinning, smart contract digital asset registration with immutable timestamp, creator portfolio dashboard with registered asset table, and certificate download."
-  );
-  const [analyzerProposed, setAnalyzerProposed] = useState(
-    "AI-driven content monitoring using Vision Transformers (ViT) to scan online repositories for copyright violations, automated royalty distribution across co-creators, and cross-chain arbitration protocol."
-  );
-  const [analyzerScreenshots, setAnalyzerScreenshots] = useState(
-    "Fig. 1: Prototype dashboard interface showing registered digital assets and connected Web3 wallet; Fig. 2: IP registration receipt with transaction hash on Sepolia block explorer; Fig. 3: Empirical evaluation benchmark table demonstrating 50 TPS throughput and 3.2s execution latency."
-  );
+  const [analyzerTitle, setAnalyzerTitle] = useState("");
+  const [analyzerTopic, setAnalyzerTopic] = useState("");
+  const [analyzerDescription, setAnalyzerDescription] = useState("");
+  const [analyzerImplemented, setAnalyzerImplemented] = useState("");
+  const [analyzerProposed, setAnalyzerProposed] = useState("");
+  const [analyzerScreenshots, setAnalyzerScreenshots] = useState("");
   const [analyzerAuthors, setAnalyzerAuthors] = useState([
     { name: "Chinni Ganesh Kumar", department: "Dept of Artificial Intelligence & Machine Learning", institution: "NRI Institute Of Technology", location: "Agiripalli, India", email: "ganeshkumar.chinni@gmail.com" },
     { name: "M Ravindra Babu", department: "Dept of Artificial Intelligence & Machine Learning", institution: "NRI Institute Of Technology", location: "Agiripalli, India", email: "ravindramodepalli23@gmail.com" }
@@ -139,8 +131,8 @@ export default function ResearchStudioPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: "Calibrated Transformer Representations for Robust Academic Integrity",
-          topic: "AI Text Detection, Winnowing Fingerprints, and Hallucination Verification"
+          title: "New Research Paper",
+          topic: ""
         })
       });
       const data = await res.json();
@@ -493,72 +485,71 @@ export default function ResearchStudioPage() {
 
   return (
     <div className="h-full w-full flex flex-col overflow-hidden bg-[#171717] text-white p-4 sm:p-6 space-y-4">
-      {/* Top Header & Project Switcher */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-3 border-b border-white/[0.08] shrink-0">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-[#f2572b]/40 shadow-sm text-xs font-semibold uppercase tracking-wider text-[#e5e5e5] mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#f2572b]" />
-            VERITAS // 19-Stage Research Paper Workspace
-          </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white">
-            {currentProject?.title || "Research Paper Development Studio"}
+      {/* Top Header & Compact Action Buttons */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-2.5 border-b border-white/[0.08] shrink-0">
+        <div className="flex items-center gap-3">
+          <h1 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white truncate max-w-xl">
+            {currentProject?.title || "Research Paper Studio"}
           </h1>
-          <p className="mt-0.5 text-xs text-[#a3a3a3] max-w-2xl font-sans">
-            Topic exploration, problem formulation, RQs, hypotheses, SciSpace literature matrix, gap analysis, and 17-section manuscript drafting.
-          </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            onClick={() => setShowProjectAnalyzerModal(true)}
+            className="h-8 px-3 rounded-lg btn-juicy text-xs font-semibold flex items-center gap-1.5 shadow-sm shadow-[#f2572b]/20"
+            title="Convert an existing college or client project into an IEEE paper"
+          >
+            <FolderOpen className="w-3.5 h-3.5 text-white" />
+            <span>Convert College Project</span>
+          </button>
+
+          <button
+            onClick={handleAutoGenerateFullPaper}
+            disabled={autoGenLoading}
+            className="h-8 px-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-medium text-[#e5e5e5] hover:text-white transition-all flex items-center gap-1.5 disabled:opacity-50"
+            title="Autonomously research and draft the complete IEEE paper"
+          >
+            {autoGenLoading ? <JuicyLoader size="sm" /> : <Sparkles className="w-3.5 h-3.5 text-[#f2572b]" />}
+            <span>{autoGenLoading ? "Drafting..." : "Auto-Generate"}</span>
+          </button>
+
           <button
             onClick={() => {
               fetchBlueprints();
               fetchAcademicFaq();
               setShowBlueprintModal(true);
             }}
-            className="px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-semibold text-[#e5e5e5] hover:text-white transition-all flex items-center gap-1.5 shadow-sm"
-            title="View IEEE requirements, page/column limits, research liberty rules, and screenshot guidelines"
+            className="h-8 px-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-medium text-[#e5e5e5] hover:text-white transition-all flex items-center gap-1.5"
+            title="View IEEE requirements and rules"
           >
             <BookOpen className="w-3.5 h-3.5 text-[#f2572b]" />
-            IEEE Blueprint &amp; Rules
+            <span>IEEE Rules</span>
           </button>
-          <button
-            onClick={() => setShowProjectAnalyzerModal(true)}
-            className="px-4 py-1.5 rounded-full btn-juicy text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-[#f2572b]/25"
-            title="Transform your existing college or client project into an authentic publication-ready IEEE Conference Paper"
-          >
-            <FolderOpen className="w-3.5 h-3.5 text-white" />
-            <span>🎓 Convert College Project</span>
-          </button>
-          <button
-            onClick={handleAutoGenerateFullPaper}
-            disabled={autoGenLoading}
-            className="px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-semibold text-[#e5e5e5] hover:text-white transition-all flex items-center gap-1.5 shadow-sm disabled:opacity-50"
-            title="Autonomously research and draft the complete IEEE paper section-by-section"
-          >
-            {autoGenLoading ? <JuicyLoader size="sm" /> : <Sparkles className="w-3.5 h-3.5 text-[#f2572b]" />}
-            <span>{autoGenLoading ? "Synthesizing Full Paper..." : "⚡ Auto-Generate Full Paper"}</span>
-          </button>
+
           <button
             onClick={() => setShowNewModal(true)}
-            className="px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-semibold text-[#e5e5e5] transition-all flex items-center gap-1.5 shadow-sm"
+            className="h-8 px-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-medium text-[#a3a3a3] hover:text-white transition-all flex items-center gap-1"
+            title="Create New Project"
           >
-            <Plus className="w-3.5 h-3.5 text-[#a3a3a3]" />
-            New Project
+            <Plus className="w-3.5 h-3.5" />
+            <span>New</span>
           </button>
+
           <button
             onClick={() => handleAutosaveProject()}
             disabled={saving}
-            className="px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-white text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5 border border-white/15"
+            className="h-8 px-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-medium text-[#a3a3a3] hover:text-white transition-all flex items-center gap-1"
+            title="Save Project"
           >
             {saving ? <JuicyLoader size="sm" /> : <Save className="w-3.5 h-3.5 text-[#f2572b]" />}
-            {saving ? "Autosaving..." : "Save Project"}
+            <span>{saving ? "Saving..." : "Save"}</span>
           </button>
         </div>
       </div>
 
-      {/* 9-Stage Progress Bar / Tab Switcher */}
-      <div className="p-2 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.08] backdrop-blur-xl overflow-x-auto shadow-sm shrink-0">
-        <div className="flex items-center gap-2 min-w-[800px]">
+      {/* Sleek, Slim 9-Stage Progress Bar / Stepper */}
+      <div className="p-1 rounded-xl bg-[#1a1a1a] border border-white/[0.08] backdrop-blur-md overflow-x-auto shadow-sm shrink-0">
+        <div className="flex items-center gap-1 min-w-[760px]">
           {STAGES.map((stg) => {
             const isActive = currentStage === stg.id;
             const isPassed = currentStage > stg.id;
@@ -570,31 +561,24 @@ export default function ResearchStudioPage() {
                   setCurrentStage(stg.id);
                   handleAutosaveProject({ current_stage: stg.id });
                 }}
-                className={`flex-1 flex flex-col items-center justify-center py-2 px-3 rounded-xl transition-all text-center ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg transition-all text-center ${
                   isActive
-                    ? "bg-[#262626] border border-[#f2572b] shadow-md shadow-[#f2572b]/15"
-                    : "hover:bg-white/[0.03] border border-transparent"
+                    ? "bg-[#262626] text-white font-semibold border border-[#f2572b]/50 shadow-sm"
+                    : "text-[#a3a3a3] hover:text-white hover:bg-white/[0.03] border border-transparent"
                 }`}
               >
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold font-mono ${
-                      isActive
-                        ? "bg-[#f2572b] text-white"
-                        : isPassed
-                        ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
-                        : "bg-white/[0.05] text-[#a3a3a3] border border-white/10"
-                    }`}
-                  >
-                    {isPassed ? "✓" : stg.id}
-                  </span>
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#737373]">
-                    {stg.phase}
-                  </span>
-                </div>
-                <span className={`text-xs ${isActive ? "text-white font-bold" : "text-[#a3a3a3]"}`}>
-                  {stg.name}
+                <span
+                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold font-mono shrink-0 ${
+                    isActive
+                      ? "bg-[#f2572b] text-white"
+                      : isPassed
+                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                      : "bg-white/[0.06] text-[#737373]"
+                  }`}
+                >
+                  {isPassed ? "✓" : stg.id}
                 </span>
+                <span className="text-xs whitespace-nowrap truncate">{stg.name}</span>
               </button>
             );
           })}
@@ -956,45 +940,45 @@ export default function ResearchStudioPage() {
             </div>
 
             {/* Right: Section Editor */}
-            <div className="lg:col-span-8 p-5 rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 backdrop-blur-xl space-y-3 shadow-xl">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 border-b border-[white/[0.08]] gap-2">
+            <div className="lg:col-span-8 p-4 sm:p-5 rounded-2xl bg-[#1f1f1f]/90 border border-white/[0.08] backdrop-blur-xl space-y-3 shadow-xl">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-2 border-b border-white/[0.08] gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-serif text-lg font-bold text-[#ffffff]">
+                    <h3 className="font-serif text-base sm:text-lg font-bold text-white">
                       Drafting: {selectedSection}
                     </h3>
                     {draftProvider && (
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#262626] border border-emerald-500/60 font-mono text-[10px] text-emerald-400">
+                      <span className="px-2 py-0.5 rounded-full bg-[#262626] border border-emerald-500/60 font-mono text-[10px] text-emerald-400">
                         ⚡ {draftProvider}
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-[#a3a3a3]">
+                  <span className="text-[11px] text-[#a3a3a3]">
                     {(sectionDrafts[selectedSection] || "").split(/\s+/).filter(Boolean).length} words
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   <button
                     onClick={handleDraftSectionWithGateway}
                     disabled={draftLoading}
-                    className="px-3.5 py-1.5 rounded-[60px] bg-gradient-to-r from-purple-900 to-indigo-900 hover:from-purple-800 hover:to-indigo-800 border border-purple-500/50 text-xs font-bold text-purple-200 hover:text-white shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
+                    className="h-8 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-purple-500/40 text-xs font-medium text-purple-200 hover:text-white shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
                     title="Draft section with multi-provider LLM Gateway"
                   >
                     {draftLoading ? <RefreshCw className="w-3 h-3 animate-spin text-purple-300" /> : <Sparkles className="w-3 h-3 text-purple-300" />}
-                    <span>{draftLoading ? "Drafting..." : "⚡ Draft with LLM Gateway"}</span>
+                    <span>{draftLoading ? "Drafting..." : "⚡ Draft with LLM"}</span>
                   </button>
                   <button
                     onClick={() => handleAutosaveProject()}
-                    className="px-3.5 py-1.5 rounded-[60px] bg-[#262626] border border-[#f2572b]/60 text-xs font-bold text-[#ffffff] hover:bg-[#382419] transition-all flex items-center gap-1"
+                    className="h-8 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-medium text-white hover:border-[#f2572b] transition-all flex items-center gap-1"
                   >
                     <Save className="w-3 h-3 text-[#f2572b]" />
-                    Save Section
+                    <span>Save</span>
                   </button>
                   <button
                     onClick={() => setCurrentStage(9)}
-                    className="px-4 py-1.5 rounded-[60px] btn-juicy text-white text-xs font-bold hover:brightness-110 flex items-center gap-1"
+                    className="h-8 px-3.5 rounded-lg btn-juicy text-white text-xs font-semibold flex items-center gap-1 shadow-sm shadow-[#f2572b]/20"
                   >
-                    Next: Review &amp; Export
+                    <span>Next: Review &amp; Export</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>

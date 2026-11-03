@@ -50,30 +50,6 @@ export default function DashboardPage() {
     router.push("/login");
   };
 
-  const loadSample = (type: "academic" | "ai_essay" | "code_clone") => {
-    if (type === "academic") {
-      setActiveTab("text");
-      setTitle("Attention Is All You Need (Vaswani et al.)");
-      setContent(`The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train.`);
-    } else if (type === "ai_essay") {
-      setActiveTab("text");
-      setTitle("Healthcare AI Transformation (Essay)");
-      setContent(`Artificial intelligence is undeniably revolutionizing modern healthcare. To delve deeper into this multifaceted paradigm, one must recognize how machine learning models facilitate seamless diagnostic precision. Furthermore, the tapestry of healthcare operations is enriched by predictive analytics, which serves as a testament to human ingenuity. Moreover, it is crucial to understand that AI does not replace clinicians, but rather fosters an environment of heightened efficiency and patient care.`);
-    } else if (type === "code_clone") {
-      setActiveTab("code");
-      setCodeLanguage("python");
-      setTitle("quicksort_parameterized.py");
-      setContent(`def quicksort_custom(my_list):
-    if len(my_list) <= 1:
-        return my_list
-    center_element = my_list[len(my_list) // 2]
-    smaller_elements = [item for item in my_list if item < center_element]
-    equal_elements = [item for item in my_list if item == center_element]
-    greater_elements = [item for item in my_list if item > center_element]
-    return quicksort_custom(smaller_elements) + equal_elements + quicksort_custom(greater_elements)`);
-    }
-  };
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -294,7 +270,7 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* BENTO SIDEBAR: Configuration & Presets (4 cols) - Glassmorphism */}
+        {/* BENTO SIDEBAR: Configuration & Integrity Archive (4 cols) - Glassmorphism */}
         <div className="lg:col-span-4 space-y-5">
           
           {/* Bento Tile 2: Cross-Check Repositories */}
@@ -396,30 +372,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Bento Tile 3: Sample Presets */}
-          <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">
-            <span className="text-xs font-mono text-[#f2572b] block">QUICK LOAD SAMPLE:</span>
-            <div className="flex flex-col gap-2 text-xs">
-              <button
-                onClick={() => loadSample("academic")}
-                className="w-full text-left p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] hover:border-[#f2572b] text-white transition-colors"
-              >
-                1. Vaswani et al. Academic Excerpt
-              </button>
-              <button
-                onClick={() => loadSample("ai_essay")}
-                className="w-full text-left p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] hover:border-[#f2572b] text-white transition-colors"
-              >
-                2. AI Cadence Essay Excerpt
-              </button>
-              <button
-                onClick={() => loadSample("code_clone")}
-                className="w-full text-left p-2.5 rounded-xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] hover:border-[#f2572b] text-white transition-colors"
-              >
-                3. Quicksort Code Clone
-              </button>
-            </div>
-          </div>
+
 
           {/* Bento Tile 4: Archive Shortcuts */}
           <div className="glass-card rounded-3xl p-6 space-y-3 shadow-xl border border-white/[0.08] bg-[#1a1a1a]/90">

@@ -25,21 +25,9 @@ import {
 } from "lucide-react";
 import JuicyLoader from "@/components/JuicyLoader";
 
-const SAMPLE_TEXT_GRAMMAR = `In order to conduct an analysis of the neural networks, their is a algorithm that has the capability to get significant results. The experiments was conducted by the team?? It is evident that the end result completely eliminate past history errors.`;
-
-const SAMPLE_TEXT_REWRITE = `In order to get a lot of good results, we looked into the machine learning datasets and it shows that our future plans are beneficial. The dominant sequence models rely on complex recurrent networks.`;
-
-const SAMPLE_TEXT_CITATIONS = `Transformers have replaced recurrent models across sequence tasks (Vaswani et al., 2017). Recent evaluations show deep neural networks struggle with factual hallucinations (Smith and Johnson, 2099).
-
-References
-[1] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., & Polosukhin, I. (2017). Attention Is All You Need. Advances in Neural Information Processing Systems. https://doi.org/10.5555/3295222.3295349
-[2] Smith, J. & Johnson, K. (2099). Universal Quantum Neural Entanglement for Time-Inverted Text Generation. Journal of Hallucinated Science.`;
-
-const SAMPLE_TEXT_FORENSICS = `T\u200Br\u200Ba\u200Bn\u200Bsformer architecture is \u0430wesome. It uses self-attention \u200Bmechanisms to process sequences \u0435fficiently.`;
-
 export default function WritingStudioPage() {
   const [activeTab, setActiveTab] = useState<"grammar" | "rewrite" | "citations" | "forensics">("grammar");
-  const [inputText, setInputText] = useState(SAMPLE_TEXT_GRAMMAR);
+  const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -52,7 +40,7 @@ export default function WritingStudioPage() {
 
   // Citation state
   const [citationAudit, setCitationAudit] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState("Attention Is All You Need transformer");
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [selectedCitationStyle, setSelectedCitationStyle] = useState<"apa7" | "mla9" | "ieee" | "bibtex">("apa7");
@@ -65,9 +53,8 @@ export default function WritingStudioPage() {
   const [gatewayLoading, setGatewayLoading] = useState(false);
   const [gatewayProvider, setGatewayProvider] = useState<string>("");
 
-  // Auto-run initial analysis on mount
+  // Auto-run gateway status on mount
   useEffect(() => {
-    handleRunGrammar(SAMPLE_TEXT_GRAMMAR);
     fetchGatewayStatus();
   }, []);
 
@@ -260,23 +247,9 @@ export default function WritingStudioPage() {
     }
   };
 
-  // Tab switch helpers with sample load
+  // Tab switch helper
   const switchTab = (tab: "grammar" | "rewrite" | "citations" | "forensics") => {
     setActiveTab(tab);
-    if (tab === "grammar") {
-      setInputText(SAMPLE_TEXT_GRAMMAR);
-      handleRunGrammar(SAMPLE_TEXT_GRAMMAR);
-    } else if (tab === "rewrite") {
-      setInputText(SAMPLE_TEXT_REWRITE);
-      handleRunRewrite(rewriteMode, SAMPLE_TEXT_REWRITE);
-    } else if (tab === "citations") {
-      setInputText(SAMPLE_TEXT_CITATIONS);
-      handleRunCitationAudit(SAMPLE_TEXT_CITATIONS);
-      handleSearchSources();
-    } else if (tab === "forensics") {
-      setInputText(SAMPLE_TEXT_FORENSICS);
-      handleRunForensics(SAMPLE_TEXT_FORENSICS);
-    }
   };
 
   const REWRITE_MODES = [
@@ -350,12 +323,6 @@ export default function WritingStudioPage() {
                     Document Editor ({inputText.length} chars)
                   </span>
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => setInputText(SAMPLE_TEXT_GRAMMAR)}
-                      className="text-xs text-[#f2572b] hover:underline"
-                    >
-                      Reset Sample
-                    </button>
                     <button
                       onClick={() => handleCopy(inputText)}
                       className="text-xs text-[#a3a3a3] hover:text-[#ffffff] flex items-center gap-1"
@@ -545,12 +512,6 @@ export default function WritingStudioPage() {
                   <span className="text-xs font-mono font-bold tracking-wider text-[#a3a3a3] uppercase">
                     Original Source Text
                   </span>
-                  <button
-                    onClick={() => setInputText(SAMPLE_TEXT_REWRITE)}
-                    className="text-xs text-[#f2572b] hover:underline"
-                  >
-                    Load Sample
-                  </button>
                 </div>
                 <div className="flex flex-wrap gap-2 pt-1 pb-1">
                   <button
@@ -866,21 +827,13 @@ export default function WritingStudioPage() {
         {activeTab === "forensics" && (
           <div className="space-y-6">
             <div className="rounded-2xl bg-[#1f1f1f]/90 border border-[white/[0.12]]/70 p-5 shadow-2xl backdrop-blur-xl space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[white/[0.08]]">
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-[#ffffff]">
-                    Document Forensics & Adversarial Evasion Auditor
-                  </h3>
-                  <p className="text-xs text-[#a3a3a3]">
-                    Detects student evasion tricks: Zero-width space injections (\u200B), Cyrillic/Greek homoglyph substitutions, and token-breaking characters.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setInputText(SAMPLE_TEXT_FORENSICS)}
-                  className="text-xs text-[#f2572b] hover:underline"
-                >
-                  Load Evasion Attack Sample
-                </button>
+              <div className="pb-2 border-b border-[white/[0.08]]">
+                <h3 className="font-serif text-lg font-bold text-[#ffffff]">
+                  Document Forensics & Adversarial Evasion Auditor
+                </h3>
+                <p className="text-xs text-[#a3a3a3]">
+                  Detects student evasion tricks: Zero-width space injections (\u200B), Cyrillic/Greek homoglyph substitutions, and token-breaking characters.
+                </p>
               </div>
 
               <textarea
