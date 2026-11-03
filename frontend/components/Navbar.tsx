@@ -100,7 +100,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Round Navigation Buttons in #f2572b with White Text */}
+        {/* Center: Navigation Buttons (#f2572b color, no fill, border on hover) */}
         <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 gap-2 sm:gap-2.5 lg:gap-3">
           {activeNavList.map((item) => {
             const Icon = item.icon;
@@ -111,12 +111,12 @@ export default function Navbar() {
                 href={item.href}
                 className={`h-[36px] flex items-center gap-1.5 px-3.5 rounded-full text-xs lg:text-sm font-semibold tracking-wide transition-all border ${
                   isActive
-                    ? "bg-[#f2572b] text-white border-[#ff7247] shadow-md shadow-[#f2572b]/35 brightness-110"
-                    : "bg-[#f2572b] text-white border border-[#ff7247]/70 hover:brightness-110 hover:shadow-md hover:shadow-[#f2572b]/30 shadow-sm shadow-[#f2572b]/20"
+                    ? "bg-[#f2572b]/15 text-[#f2572b] border-[#f2572b] shadow-sm shadow-[#f2572b]/20"
+                    : "bg-transparent text-[#f2572b] border-transparent hover:border-[#f2572b] hover:bg-[#f2572b]/10 hover:shadow-sm hover:shadow-[#f2572b]/20"
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0 text-white" />
-                <span className="text-white">{item.name}</span>
+                <Icon className="w-4 h-4 shrink-0 text-[#f2572b]" />
+                <span className="text-[#f2572b]">{item.name}</span>
               </Link>
             );
           })}
@@ -188,10 +188,10 @@ export default function Navbar() {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-full bg-[#f2572b] text-white flex items-center justify-center gap-2 text-xs font-semibold shadow-sm border border-[#ff7247]/60"
+                    className="p-2.5 rounded-full bg-transparent text-[#f2572b] border border-transparent hover:border-[#f2572b] hover:bg-[#f2572b]/10 flex items-center justify-center gap-2 text-xs font-semibold transition-all"
                   >
-                    <Icon className="w-4 h-4 text-white" />
-                    <span className="text-white">{item.name}</span>
+                    <Icon className="w-4 h-4 text-[#f2572b]" />
+                    <span className="text-[#f2572b]">{item.name}</span>
                   </Link>
                 );
               })}
