@@ -109,7 +109,7 @@ export default function ResearchStudioPage() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/projects");
+      const res = await fetch("/api/research/projects");
       const data = await res.json();
       if (data.projects && data.projects.length > 0) {
         setProjects(data.projects);
@@ -127,7 +127,7 @@ export default function ResearchStudioPage() {
 
   const handleCreateInitialProject = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/projects", {
+      const res = await fetch("/api/research/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -147,7 +147,7 @@ export default function ResearchStudioPage() {
   const loadProjectDetails = async (projId: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${projId}`);
+      const res = await fetch(`/api/research/projects/${projId}`);
       const data = await res.json();
       setCurrentProject(data);
       setCurrentStage(data.current_stage || 1);
@@ -171,7 +171,7 @@ export default function ResearchStudioPage() {
     if (!newTitle.trim() || !newTopic.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/projects", {
+      const res = await fetch("/api/research/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: newTitle, topic: newTopic })
@@ -193,7 +193,7 @@ export default function ResearchStudioPage() {
     if (!currentProject) return;
     setSaving(true);
     try {
-      await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}`, {
+      await fetch(`/api/research/projects/${currentProject.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -214,7 +214,7 @@ export default function ResearchStudioPage() {
   const fetchMatrix = async (topic: string, projId?: string) => {
     setMatrixLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/matrix/generate", {
+      const res = await fetch("/api/research/matrix/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic, limit: 5 })
@@ -243,7 +243,7 @@ export default function ResearchStudioPage() {
     try {
       const safeTitle = currentProject.title.replace(/[^a-zA-Z0-9_\-]/g, "_");
       if (fmt === "docx") {
-        const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/download?format_type=docx`);
+        const res = await fetch(`/api/research/projects/${currentProject.id}/download?format_type=docx`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -253,7 +253,7 @@ export default function ResearchStudioPage() {
         link.click();
         document.body.removeChild(link);
       } else if (fmt === "latex") {
-        const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/download?format_type=latex`);
+        const res = await fetch(`/api/research/projects/${currentProject.id}/download?format_type=latex`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -263,7 +263,7 @@ export default function ResearchStudioPage() {
         link.click();
         document.body.removeChild(link);
       } else {
-        const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/export?format_type=markdown`, {
+        const res = await fetch(`/api/research/projects/${currentProject.id}/export?format_type=markdown`, {
           method: "POST"
         });
         const data = await res.json();
@@ -286,7 +286,7 @@ export default function ResearchStudioPage() {
   const handleExportMatrixCSV = async () => {
     if (!literatureMatrix || literatureMatrix.length === 0) return;
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/matrix/export-csv", {
+      const res = await fetch("/api/research/matrix/export-csv", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ matrix_rows: literatureMatrix })
@@ -308,7 +308,7 @@ export default function ResearchStudioPage() {
     if (!currentProject || !selectedSection) return;
     setDraftLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/draft-section`, {
+      const res = await fetch(`/api/research/projects/${currentProject.id}/draft-section`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -333,7 +333,7 @@ export default function ResearchStudioPage() {
 
   const fetchBlueprints = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/ieee-blueprints");
+      const res = await fetch("/api/research/ieee-blueprints");
       const data = await res.json();
       if (data.blueprints) setBlueprints(data.blueprints);
     } catch (e) {
@@ -343,7 +343,7 @@ export default function ResearchStudioPage() {
 
   const fetchAcademicFaq = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/academic-rules-faq");
+      const res = await fetch("/api/research/academic-rules-faq");
       const data = await res.json();
       if (data.faq) setAcademicFaq(data.faq);
     } catch (e) {
@@ -355,7 +355,7 @@ export default function ResearchStudioPage() {
     if (!analyzerTitle.trim() || !analyzerDescription.trim()) return;
     setAnalyzerLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/projects/analyze-existing-project", {
+      const res = await fetch("/api/research/projects/analyze-existing-project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -387,7 +387,7 @@ export default function ResearchStudioPage() {
     setGithubLoading(true);
     setGithubSuccess(false);
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/research/projects/inspect-github-repo", {
+      const res = await fetch("/api/research/projects/inspect-github-repo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ github_url: githubRepoUrl })
@@ -429,7 +429,7 @@ export default function ResearchStudioPage() {
     if (!currentProject) return;
     setAutoGenLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/generate-autonomous-paper`, {
+      const res = await fetch(`/api/research/projects/${currentProject.id}/generate-autonomous-paper`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ instructions: "Write complete IEEE publication manuscript matching IEEE two-column conference layout with previous works table and formulas." })
@@ -451,7 +451,7 @@ export default function ResearchStudioPage() {
     if (!currentProject) return;
     setOverleafLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/research/projects/${currentProject.id}/overleaf-payload`);
+      const res = await fetch(`/api/research/projects/${currentProject.id}/overleaf-payload`);
       const data = await res.json();
       if (data.success && data.latex_code) {
         // Create dynamic form and POST to Overleaf
@@ -587,6 +587,13 @@ export default function ResearchStudioPage() {
 
       {/* Scrollable Stage Content Container (Internal Scroll Only) */}
       <div className="flex-1 overflow-y-auto pr-1 pb-4 space-y-4">
+        {loading && !currentProject && (
+          <div className="flex flex-col items-center justify-center py-28 space-y-4">
+            <JuicyLoader size="lg" />
+            <p className="text-xs font-mono text-[#a3a3a3] animate-pulse">Initializing Academic Research Workspace...</p>
+          </div>
+        )}
+
         {/* ================= STAGE 1: TOPIC & PROBLEM ================= */}
         {currentStage === 1 && currentProject && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1653,4 +1660,5 @@ export default function ResearchStudioPage() {
     </div>
   );
 }
+
 
