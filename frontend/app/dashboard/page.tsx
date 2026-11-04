@@ -48,7 +48,7 @@ export default function DashboardPage() {
   const handleLogout = () => {
     localStorage.removeItem("veritas_user");
     localStorage.removeItem("veritas_token");
-    router.push("/login");
+    router.push("/");
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

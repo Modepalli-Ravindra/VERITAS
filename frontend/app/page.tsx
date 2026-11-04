@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BookOpenIcon,
   DocumentMagnifyingGlassIcon,
@@ -26,6 +27,17 @@ import {
 import LuxuryRibbonHero from "@/components/LuxuryRibbonHero";
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  // If user is already authenticated, redirect directly into the Dashboard workspace
+  useEffect(() => {
+    const user = localStorage.getItem("veritas_user");
+    const token = localStorage.getItem("veritas_token");
+    if (user && token) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
+
   // Q&A / FAQ Accordion State
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 

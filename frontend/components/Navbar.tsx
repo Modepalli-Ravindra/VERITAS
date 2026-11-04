@@ -42,7 +42,7 @@ export default function Navbar() {
     localStorage.removeItem("veritas_user");
     localStorage.removeItem("veritas_token");
     setCurrentUser(null);
-    router.push("/login");
+    router.push("/");
   };
 
   // Internal application tools (shown inside the workspace)
@@ -125,23 +125,21 @@ export default function Navbar() {
         {/* Right: Actions & User Session (Buttons with White Text & f2572b Round Action) */}
         <div className="hidden sm:flex items-center gap-3">
           {currentUser ? (
-            <div className="flex items-center gap-3 pl-3 border-l border-white/10">
-              <div className="text-right">
-                <div className="text-sm font-medium text-white leading-none">
-                  {currentUser.name}
-                </div>
-                {currentUser.institution && (
-                  <div className="text-xs text-[#a3a3a3] font-mono leading-tight mt-0.5">
-                    {currentUser.institution}
-                  </div>
-                )}
-              </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="h-[38px] px-5 rounded-full bg-[#f2572b] hover:brightness-110 border border-[#ff7247] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-[#f2572b]/30"
+              >
+                <span>Enter Studio</span>
+                <ArrowRightIcon className="w-4 h-4 text-white" />
+              </Link>
               <button
                 onClick={handleLogout}
                 title="Sign Out"
-                className="h-[38px] px-3 text-[#a3a3a3] hover:text-[#f2572b] hover:bg-white/[0.05] rounded-xl border border-transparent hover:border-white/10 flex items-center justify-center transition-colors text-sm"
+                className="h-[38px] px-3.5 text-[#a3a3a3] hover:text-[#f2572b] hover:bg-white/[0.05] rounded-full border border-white/10 hover:border-white/20 flex items-center justify-center gap-1.5 transition-all text-xs font-mono"
               >
-                <ArrowLeftOnRectangleIcon className="w-5 h-5 text-[#a3a3a3] hover:text-[#f2572b]" />
+                <ArrowLeftOnRectangleIcon className="w-4 h-4 text-[#a3a3a3] hover:text-[#f2572b]" />
+                <span>Sign Out</span>
               </button>
             </div>
           ) : (

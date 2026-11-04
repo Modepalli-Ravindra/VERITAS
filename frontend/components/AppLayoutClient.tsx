@@ -55,7 +55,7 @@ export default function AppLayoutClient({
     localStorage.removeItem("veritas_user");
     localStorage.removeItem("veritas_token");
     setCurrentUser(null);
-    router.push("/login");
+    router.push("/");
   };
 
   // If on landing page: keep traditional vertical scroll & landing navbar
@@ -105,9 +105,9 @@ export default function AppLayoutClient({
       {/* 1. TOP BAR: Logo on Left + Navigation in Center + User Profile on Right */}
       <header className="h-[60px] shrink-0 w-full bg-[#171717]/95 backdrop-blur-2xl border-b border-white/[0.08] px-4 sm:px-6 flex items-center justify-between z-30 shadow-sm relative">
         
-        {/* Left: Brand Logo & Wordmark (No sidebar toggle button) */}
+        {/* Left: Brand Logo & Wordmark (Links to Dashboard inside the workspace) */}
         <div className="flex items-center gap-3 shrink-0">
-          <Link href="/" className="flex items-center gap-2.5 group">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group" title="Return to Dashboard">
             <div className="w-[32px] h-[32px] rounded-xl overflow-hidden border border-white/10 bg-[#1f1f1f] flex items-center justify-center shrink-0 shadow-sm group-hover:border-[#f2572b] transition-all">
               <img
                 src="/veritas_logo.jpg"
